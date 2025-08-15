@@ -1,0 +1,476 @@
+import { Metadata } from "next";
+import { wordpressApi, WordPressPost } from "@/lib/wordpress";
+import HomePageClient from "./HomePageClient";
+
+export const metadata: Metadata = {
+  title: "ประชาธรรม | มูลนิธิสนับสนุนสื่อสิ่งแวดล้อม",
+  description:
+    "เราคือกลุ่มคนที่ต้องการสนับสนุนให้เกิดการเปลี่ยนแปลงผ่านการสื่อสารจากคนในท้องถิ่นเอง สนับสนุนให้ผู้คนบอกเล่าเรื่องราวด้วยตัวเอง",
+  openGraph: {
+    title: "ประชาธรรม | มูลนิธิสนับสนุนสื่อสิ่งแวดล้อม",
+    description:
+      "เราคือกลุ่มคนที่ต้องการสนับสนุนให้เกิดการเปลี่ยนแปลงผ่านการสื่อสารจากคนในท้องถิ่นเอง สนับสนุนให้ผู้คนบอกเล่าเรื่องราวด้วยตัวเอง",
+  },
+};
+
+// Revalidate every 60 seconds
+export const revalidate = 60;
+
+async function getFeaturedNews() {
+  try {
+    // First, get the "ข่าวเด่น" category
+    const categories = await wordpressApi.getCategories();
+    const featuredCategory = categories.find(
+      (cat) => cat.name === "ข่าวเด่น" || cat.slug === "featured-news"
+    );
+
+    if (featuredCategory) {
+      // Fetch posts from the featured news category
+      const postsData = await wordpressApi.getPosts({
+        categories: featuredCategory.id.toString(),
+        per_page: 6,
+      });
+      return {
+        posts: postsData.posts,
+        error: null,
+      };
+    } else {
+      // If category not found, return empty array
+      return {
+        posts: [],
+        error: "ไม่พบหมวดหมู่ข่าวเด่น",
+      };
+    }
+  } catch (error) {
+    console.error("Error fetching featured news:", error);
+    return {
+      posts: [],
+      error: "ไม่สามารถโหลดข่าวเด่นได้",
+    };
+  }
+}
+
+export default async function HomePage() {
+  const { posts: featuredPosts, error: featuredError } =
+    await getFeaturedNews();
+  return (
+    <>
+      {/* Hero Section with Background Image and Green Overlay */}
+      <Box
+        position="relative"
+        h="80vh"
+        minH="600px"
+        bgImage="url('/images/hero-1-page-1.jpg')"
+        bgSize="cover"
+        bgPosition="center"
+        bgRepeat="no-repeat"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        {/* Green Overlay */}
+        <Box
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+          bg="prachatham.600"
+          opacity={0.75}
+          zIndex={1}
+        />
+
+        {/* Hero Content */}
+        <Container maxW="7xl" position="relative" zIndex={2}>
+          <Center>
+            <VStack spacing={6} textAlign="center" maxW="4xl" color="white">
+              <Heading
+                as="h1"
+                size="2xl"
+                fontWeight="bold"
+                lineHeight="shorter"
+                color="white"
+                textShadow="2px 2px 4px rgba(0,0,0,0.3)"
+              >
+                เราสนับสนุนการเปลี่ยนแปลงผ่านสื่อชุมชน
+              </Heading>
+              <Text
+                fontSize="xl"
+                lineHeight="tall"
+                maxW="3xl"
+                color="white"
+                textShadow="1px 1px 2px rgba(0,0,0,0.3)"
+              >
+                มูลนิธิประชาธรรม เป็นองค์กรที่มุ่งหวังสร้างการเปลี่ยนแปลงเชิงบวก
+                ผ่านการเสริมสร้างพลังของชุมชนในการสื่อสารและเล่าเรื่องราวของตัวเอง
+              </Text>
+              <Button
+                as={Link}
+                href="/about"
+                colorScheme="whiteAlpha"
+                variant="solid"
+                size="lg"
+                px={8}
+                py={6}
+                fontSize="lg"
+                bg="white"
+                color="prachatham.700"
+                _hover={{
+                  bg: "whiteAlpha.900",
+                  transform: "translateY(-2px)",
+                  boxShadow: "lg",
+                }}
+                transition="all 0.2s ease-in-out"
+              >
+                เรียนรู้เพิ่มเติม
+              </Button>
+            </VStack>
+          </Center>
+        </Container>
+      </Box>
+
+      {/* Featured News Section */}
+      <Box bg="white" py={16}>
+        <Container maxW="7xl">
+          <VStack spacing={8}>
+            <Box textAlign="center" mb={8}>
+              <Heading as="h2" size="xl" color="prachatham.700" mb={4}>
+                ข่าวเด่น
+              </Heading>
+              <Text fontSize="lg" color="gray.600" maxW="2xl" mx="auto">
+                ติดตามข่าวสารและกิจกรรมล่าสุดของมูลนิธิประชาธรรม
+              </Text>
+            </Box>
+
+            {featuredError ? (
+              <Box
+                bg="orange.50"
+                borderColor="orange.200"
+                borderWidth="1px"
+                borderRadius="md"
+                p={6}
+                color="orange.800"
+                textAlign="center"
+              >
+                <Text fontSize="lg">{featuredError}</Text>
+              </Box>
+            ) : featuredPosts.length > 0 ? (
+              <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6} w="full">
+                {featuredPosts.map((post: WordPressPost) => (
+                  <PostCard key={post.id} post={post} />
+                ))}
+              </SimpleGrid>
+            ) : (
+              <Box textAlign="center" py={8} bg="gray.50" borderRadius="md">
+                <Text color="gray.500" fontSize="lg">
+                  ยังไม่มีข่าวเด่น
+                </Text>
+              </Box>
+            )}
+
+            {/* View All News Button */}
+            {featuredPosts.length > 0 && (
+              <Box textAlign="center" mt={8}>
+                <Button
+                  as="a"
+                  href="/posts"
+                  variant="outline"
+                  colorScheme="prachatham"
+                  size="lg"
+                  px={8}
+                >
+                  ดูข่าวทั้งหมด
+                </Button>
+              </Box>
+            )}
+          </VStack>
+        </Container>
+      </Box>
+
+      <Container maxW="7xl" py={16}>
+        <VStack spacing={16}>
+          {/* มูลนิธิเราทำอะไร Section */}
+          <Box w="full">
+            <Heading
+              as="h2"
+              size="xl"
+              color="prachatham.700"
+              textAlign="center"
+              mb={12}
+            >
+              มูลนิธิเราทำอะไร?
+            </Heading>
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap={8}>
+              <VStack
+                bg="white"
+                p={8}
+                borderRadius="lg"
+                shadow="md"
+                spacing={4}
+                textAlign="center"
+                border="1px solid"
+                borderColor="gray.200"
+              >
+                <Box bg="prachatham.100" borderRadius="full" p={4} mb={2}>
+                  <Text fontSize="3xl" color="prachatham.600">
+                    📢
+                  </Text>
+                </Box>
+                <Heading as="h3" size="md" color="gray.800">
+                  สนับสนุนการทำสื่อ
+                </Heading>
+                <Text color="gray.600" lineHeight="tall">
+                  เสริมสร้างศักยภาพของชุมชนในการผลิตสื่อเพื่อการสื่อสารและเล่าเรื่องราวของตนเอง
+                </Text>
+              </VStack>
+
+              <VStack
+                bg="white"
+                p={8}
+                borderRadius="lg"
+                shadow="md"
+                spacing={4}
+                textAlign="center"
+                border="1px solid"
+                borderColor="gray.200"
+              >
+                <Box bg="prachatham.100" borderRadius="full" p={4} mb={2}>
+                  <Text fontSize="3xl" color="prachatham.600">
+                    🌐
+                  </Text>
+                </Box>
+                <Heading as="h3" size="md" color="gray.800">
+                  สร้างเครือข่าย
+                </Heading>
+                <Text color="gray.600" lineHeight="tall">
+                  เชื่อมโยงและสร้างเครือข่ายผู้ผลิตสื่อชุมชนเพื่อแลกเปลี่ยนเรียนรู้
+                </Text>
+              </VStack>
+
+              <VStack
+                bg="white"
+                p={8}
+                borderRadius="lg"
+                shadow="md"
+                spacing={4}
+                textAlign="center"
+                border="1px solid"
+                borderColor="gray.200"
+              >
+                <Box bg="prachatham.100" borderRadius="full" p={4} mb={2}>
+                  <Text fontSize="3xl" color="prachatham.600">
+                    🏠
+                  </Text>
+                </Box>
+                <Heading as="h3" size="md" color="gray.800">
+                  สร้างพื้นที่
+                </Heading>
+                <Text color="gray.600" lineHeight="tall">
+                  สร้างพื้นที่สำหรับการแสดงออกและการสื่อสารของคนในชุมชน
+                </Text>
+              </VStack>
+
+              <VStack
+                bg="white"
+                p={8}
+                borderRadius="lg"
+                shadow="md"
+                spacing={4}
+                textAlign="center"
+                border="1px solid"
+                borderColor="gray.200"
+              >
+                <Box bg="prachatham.100" borderRadius="full" p={4} mb={2}>
+                  <Text fontSize="3xl" color="prachatham.600">
+                    👥
+                  </Text>
+                </Box>
+                <Heading as="h3" size="md" color="gray.800">
+                  พัฒนาบุคลากร
+                </Heading>
+                <Text color="gray.600" lineHeight="tall">
+                  พัฒนาทักษะและความสามารถของนักสื่อสารพลเมืองในท้องถิ่น
+                </Text>
+              </VStack>
+            </SimpleGrid>
+          </Box>
+
+          {/* Statistics Section */}
+          <Box
+            w="full"
+            bg="prachatham.600"
+            borderRadius="xl"
+            py={12}
+            px={8}
+            color="white"
+          >
+            <VStack spacing={8}>
+              <Heading as="h2" size="xl" textAlign="center" color="white">
+                เราทำงานร่วมกับ
+              </Heading>
+              <SimpleGrid columns={{ base: 2, md: 4 }} gap={8} w="full">
+                <Stat textAlign="center">
+                  <StatNumber fontSize="4xl" fontWeight="bold">
+                    4
+                  </StatNumber>
+                  <StatLabel fontSize="lg">เครือข่าย</StatLabel>
+                </Stat>
+                <Stat textAlign="center">
+                  <StatNumber fontSize="4xl" fontWeight="bold">
+                    22
+                  </StatNumber>
+                  <StatLabel fontSize="lg">ชุมชน</StatLabel>
+                </Stat>
+                <Stat textAlign="center">
+                  <StatNumber fontSize="4xl" fontWeight="bold">
+                    600+
+                  </StatNumber>
+                  <StatLabel fontSize="lg">คน</StatLabel>
+                </Stat>
+                <Stat textAlign="center">
+                  <StatNumber fontSize="4xl" fontWeight="bold">
+                    15+
+                  </StatNumber>
+                  <StatLabel fontSize="lg">ปี</StatLabel>
+                </Stat>
+              </SimpleGrid>
+            </VStack>
+          </Box>
+
+          {/* Testimonials Section */}
+          <Box w="full">
+            <Heading
+              as="h2"
+              size="xl"
+              color="prachatham.700"
+              textAlign="center"
+              mb={12}
+            >
+              ลองฟังเสียงของคนที่ได้ทำงานกับเรา
+            </Heading>
+            <SimpleGrid columns={{ base: 1, md: 2 }} gap={8}>
+              <Box
+                bg="white"
+                p={8}
+                borderRadius="lg"
+                shadow="md"
+                border="1px solid"
+                borderColor="gray.200"
+                minH="280px"
+                display="flex"
+                flexDirection="column"
+              >
+                <VStack align="start" spacing={4}>
+                  <Text
+                    fontSize="lg"
+                    color="gray.700"
+                    lineHeight="tall"
+                    fontStyle="italic"
+                  >
+                    &ldquo;ผมอยู่บ้านนอก ไม่เคยรู้จักสื่อประชาธรรมมาก่อน
+                    วันหนึ่ง มี จนท.จากสื่อนี้มาขอพบ
+                    จากนั้นก็ได้ร่วมงานกันหลายโครงการ
+                    เน้นเรื่องการช่วยกันแก้ไขปัญหามลพิษจากสิ่งแวดล้อม
+                    การเพิ่มพื้นที่สีเขียว เป็นต้น&rdquo;
+                  </Text>
+                  <HStack>
+                    <Image
+                      src="/images/prachathamweb-3.jpg"
+                      alt="อนันต์ พรหมลิขิตศิลป์"
+                      width={100}
+                      height={100}
+                      style={{
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                      }}
+                    />
+                    <VStack align="start" spacing={1}>
+                      <Text fontWeight="bold" color="gray.800">
+                        อนันต์ พรหมลิขิตศิลป์
+                      </Text>
+                      <Text color="gray.600" fontSize="sm">
+                        สมาชิกกลุ่มอนุรักษ์มรดกสันกำแพง
+                      </Text>
+                    </VStack>
+                  </HStack>
+                </VStack>
+              </Box>
+
+              <Box
+                bg="white"
+                p={8}
+                borderRadius="lg"
+                shadow="md"
+                border="1px solid"
+                borderColor="gray.200"
+                minH="280px"
+                display="flex"
+                flexDirection="column"
+              >
+                <VStack align="start" spacing={4}>
+                  <Text
+                    fontSize="lg"
+                    color="gray.700"
+                    lineHeight="tall"
+                    fontStyle="italic"
+                  >
+                    &ldquo;ประชาธรรมมาช่วยหนุนเสริม และกระตุ้นสิ่งที่ชุมชนอยากทำ
+                    ช่วยจุดประกายให้ชุมชนทำงานสื่อสารด้วยตัวเอง&rdquo;
+                  </Text>
+                  <HStack>
+                    <Image
+                      src="/images/C5D_5950-scaled.jpg"
+                      alt="ประสงค์ แสงงาม"
+                      width={100}
+                      height={100}
+                      style={{
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                      }}
+                    />
+                    <VStack align="start" spacing={1}>
+                      <Text fontWeight="bold" color="gray.800">
+                        ประสงค์ แสงงาม
+                      </Text>
+                      <Text color="gray.600" fontSize="sm">
+                        เครือข่ายชุมชนคน รักษ์ดอยหลวง เชียงดาว
+                      </Text>
+                    </VStack>
+                  </HStack>
+                </VStack>
+              </Box>
+            </SimpleGrid>
+          </Box>
+
+          {/* Contact Section */}
+          <Box
+            w="full"
+            bg="prachatham.50"
+            borderRadius="xl"
+            p={12}
+            textAlign="center"
+          >
+            <VStack spacing={6}>
+              <Heading as="h2" size="xl" color="prachatham.700">
+                ร่วมงานกับเรา
+              </Heading>
+              <Text fontSize="lg" color="gray.600" maxW="3xl" lineHeight="tall">
+                หากคุณสนใจที่จะร่วมงานกับเรา
+                หรือต้องการความช่วยเหลือในการสื่อสารเรื่องราวของชุมชน
+                ติดต่อเราได้ตลอดเวลา
+              </Text>
+              <HStack spacing={4}>
+                <Button colorScheme="prachatham" size="lg">
+                  ติดต่อเรา
+                </Button>
+                <Button variant="outline" colorScheme="prachatham" size="lg">
+                  ร่วมทำงานกับเรา
+                </Button>
+              </HStack>
+            </VStack>
+          </Box>
+        </VStack>
+      </Container>
+    </>
+  );
+}

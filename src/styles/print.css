@@ -1,0 +1,98 @@
+/* Print styles for better print layout */
+@media print {
+  /* Hide navigation and other non-essential elements */
+  nav,
+  .social-share,
+  .back-to-top {
+    display: none !important;
+  }
+
+  /* Ensure good typography for print */
+  body {
+    font-size: 12pt;
+    line-height: 1.5;
+    color: black;
+    background: white;
+  }
+
+  /* Headers */
+  h1 {
+    font-size: 20pt;
+    margin-bottom: 12pt;
+  }
+
+  h2 {
+    font-size: 16pt;
+    margin-bottom: 10pt;
+    margin-top: 16pt;
+  }
+
+  h3 {
+    font-size: 14pt;
+    margin-bottom: 8pt;
+    margin-top: 12pt;
+  }
+
+  /* Paragraphs */
+  p {
+    margin-bottom: 8pt;
+    text-align: justify;
+  }
+
+  /* Images */
+  img {
+    max-width: 100%;
+    height: auto;
+    page-break-inside: avoid;
+  }
+
+  /* Links */
+  a {
+    color: black;
+    text-decoration: none;
+  }
+
+  a:after {
+    content: " (" attr(href) ")";
+    font-size: 10pt;
+    color: #666;
+  }
+
+  /* Page breaks */
+  h1,
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+
+  /* Tables */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th,
+  td {
+    border: 1px solid black;
+    padding: 4pt;
+    text-align: left;
+  }
+
+  /* Blockquotes */
+  blockquote {
+    border-left: 3pt solid black;
+    padding-left: 12pt;
+    margin: 12pt 0;
+    font-style: italic;
+  }
+
+  /* Lists */
+  ul,
+  ol {
+    margin-bottom: 8pt;
+  }
+
+  li {
+    margin-bottom: 4pt;
+  }
+}
