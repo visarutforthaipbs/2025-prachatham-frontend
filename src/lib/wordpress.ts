@@ -1,8 +1,19 @@
-import axios from "axios";
+// Types for WordPress API responses
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_WORDPRESS_API_URL ||
-  "https://prachatham.com/wp-json/wp/v2";
+// Helper function to get the base API URL based on environment
+function getApiBaseUrl() {
+  // Check if we're in a browser environment vs server-side (build time)
+  const isBrowser = typeof window !== 'undefined';
+  const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
+  
+  if (isProduction && isBrowser) {
+    // In production browser, use our proxy routes to avoid CORS issues
+    return '/api';
+  } else {
+    // In development or server-side (build time), use the direct WordPress API
+    return 'https://prachatham.com/wp-json/wp/v2';
+  }
+}
 
 export interface WordPressPost {
   id: number;
@@ -118,14 +129,10 @@ export interface WordPressMedia {
   };
 }
 
-class WordPressAPI {
-  private client = axios.create({
-    baseURL: BASE_URL,
-    timeout: 30000, // Increased timeout to 30 seconds
-    headers: {
-      "User-Agent": "Prachatham-Next-App/1.0",
-    },
-  });
+export class WordPressAPI {
+  constructor() {
+    // No need for axios client anymore - using fetch with proxy routes
+  }
 
   // Get posts with pagination and embedding
   async getPosts(
@@ -137,20 +144,33 @@ class WordPressAPI {
     } = {}
   ): Promise<{ posts: WordPressPost[]; totalPages: number; total: number }> {
     try {
-      const response = await this.client.get("/posts", {
-        params: {
-          _embed: true,
-          per_page: params.per_page || 12,
-          page: params.page || 1,
-          categories: params.categories,
-          search: params.search,
-        },
+      const searchParams = new URLSearchParams({
+        _embed: 'true',
+        per_page: (params.per_page || 12).toString(),
+        page: (params.page || 1).toString(),
+        ...(params.categories && { categories: params.categories }),
+        ...(params.search && { search: params.search }),
       });
 
+      const apiUrl = getApiBaseUrl();
+      const url = `${apiUrl}/posts?${searchParams.toString()}`;
+
+      const response = await fetch(url, {
+        next: { revalidate: 60 }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const posts = await response.json();
+      const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1');
+      const total = parseInt(response.headers.get('X-WP-Total') || '0');
+
       return {
-        posts: response.data,
-        totalPages: parseInt(response.headers["x-wp-totalpages"] || "1"),
-        total: parseInt(response.headers["x-wp-total"] || "0"),
+        posts,
+        totalPages,
+        total,
       };
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -161,14 +181,21 @@ class WordPressAPI {
   // Get a single post by slug
   async getPostBySlug(slug: string): Promise<WordPressPost | null> {
     try {
-      const response = await this.client.get("/posts", {
-        params: {
-          slug,
-          _embed: true,
-        },
+      const apiUrl = getApiBaseUrl();
+      const url = `${apiUrl}/posts/${slug}`;
+
+      const response = await fetch(url, {
+        next: { revalidate: 60 }
       });
 
-      return response.data[0] || null;
+      if (!response.ok) {
+        if (response.status === 404) {
+          return null;
+        }
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
     } catch (error) {
       console.error("Error fetching post:", error);
       throw new Error("Failed to fetch post");
@@ -178,14 +205,23 @@ class WordPressAPI {
   // Get categories
   async getCategories(): Promise<WordPressCategory[]> {
     try {
-      const response = await this.client.get("/categories", {
-        params: {
-          per_page: 100,
-          hide_empty: true,
-        },
+      const searchParams = new URLSearchParams({
+        per_page: '100',
+        hide_empty: 'true',
       });
 
-      return response.data;
+      const apiUrl = getApiBaseUrl();
+      const url = `${apiUrl}/categories?${searchParams.toString()}`;
+
+      const response = await fetch(url, {
+        next: { revalidate: 300 }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
     } catch (error) {
       console.error("Error fetching categories:", error);
       throw new Error("Failed to fetch categories");
@@ -198,18 +234,30 @@ class WordPressAPI {
     page = 1
   ): Promise<{ posts: WordPressPost[]; totalPages: number }> {
     try {
-      const response = await this.client.get("/posts", {
-        params: {
-          search: query,
-          _embed: true,
-          per_page: 12,
-          page,
-        },
+      const searchParams = new URLSearchParams({
+        search: query,
+        _embed: 'true',
+        per_page: '12',
+        page: page.toString(),
       });
 
+      const apiUrl = getApiBaseUrl();
+      const url = `${apiUrl}/posts?${searchParams.toString()}`;
+
+      const response = await fetch(url, {
+        next: { revalidate: 60 }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const posts = await response.json();
+      const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1');
+
       return {
-        posts: response.data,
-        totalPages: parseInt(response.headers["x-wp-totalpages"] || "1"),
+        posts,
+        totalPages,
       };
     } catch (error) {
       console.error("Error searching posts:", error);
@@ -224,28 +272,45 @@ class WordPressAPI {
   ): Promise<{ posts: WordPressPost[]; totalPages: number }> {
     try {
       // First get the category ID
-      const categoriesResponse = await this.client.get("/categories", {
-        params: { slug: categorySlug },
+      const categoriesParams = new URLSearchParams({ slug: categorySlug });
+      const apiUrl = getApiBaseUrl();
+      
+      const categoriesResponse = await fetch(`${apiUrl}/categories?${categoriesParams.toString()}`, {
+        next: { revalidate: 300 }
       });
 
-      if (!categoriesResponse.data.length) {
+      if (!categoriesResponse.ok) {
+        throw new Error("Failed to fetch categories");
+      }
+
+      const categories = await categoriesResponse.json();
+      if (!categories.length) {
         throw new Error("Category not found");
       }
 
-      const categoryId = categoriesResponse.data[0].id;
+      const categoryId = categories[0].id;
 
-      const response = await this.client.get("/posts", {
-        params: {
-          categories: categoryId,
-          _embed: true,
-          per_page: 12,
-          page,
-        },
+      const postsParams = new URLSearchParams({
+        categories: categoryId.toString(),
+        _embed: 'true',
+        per_page: '12',
+        page: page.toString(),
       });
 
+      const response = await fetch(`${apiUrl}/posts?${postsParams.toString()}`, {
+        next: { revalidate: 60 }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const posts = await response.json();
+      const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1');
+
       return {
-        posts: response.data,
-        totalPages: parseInt(response.headers["x-wp-totalpages"] || "1"),
+        posts,
+        totalPages,
       };
     } catch (error) {
       console.error("Error fetching posts by category:", error);
@@ -265,35 +330,50 @@ class WordPressAPI {
     try {
       // First get the category IDs for the excluded categories
       const excludeCategoryIds: number[] = [];
+      const apiUrl = getApiBaseUrl();
 
       for (const slug of excludeCategorySlugs) {
         try {
-          const categoriesResponse = await this.client.get("/categories", {
-            params: { slug: slug },
+          const categoriesParams = new URLSearchParams({ slug: slug });
+          const categoriesResponse = await fetch(`${apiUrl}/categories?${categoriesParams.toString()}`, {
+            next: { revalidate: 300 }
           });
 
-          if (categoriesResponse.data.length > 0) {
-            excludeCategoryIds.push(categoriesResponse.data[0].id);
+          if (categoriesResponse.ok) {
+            const categories = await categoriesResponse.json();
+            if (categories.length > 0) {
+              excludeCategoryIds.push(categories[0].id);
+            }
           }
         } catch {
           console.warn(`Category ${slug} not found, skipping...`);
         }
       }
 
-      const response = await this.client.get("/posts", {
-        params: {
-          _embed: true,
-          per_page: params.per_page || 12,
-          page: params.page || 1,
-          categories_exclude: excludeCategoryIds.join(","),
-          search: params.search,
-        },
+      const searchParams = new URLSearchParams({
+        _embed: 'true',
+        per_page: (params.per_page || 12).toString(),
+        page: (params.page || 1).toString(),
+        categories_exclude: excludeCategoryIds.join(","),
+        ...(params.search && { search: params.search }),
       });
 
+      const response = await fetch(`${apiUrl}/posts?${searchParams.toString()}`, {
+        next: { revalidate: 60 }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const posts = await response.json();
+      const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1');
+      const total = parseInt(response.headers.get('X-WP-Total') || '0');
+
       return {
-        posts: response.data,
-        totalPages: parseInt(response.headers["x-wp-totalpages"] || "1"),
-        total: parseInt(response.headers["x-wp-total"] || "0"),
+        posts,
+        totalPages,
+        total,
       };
     } catch (error) {
       console.error("Error fetching posts excluding categories:", error);
@@ -309,19 +389,29 @@ class WordPressAPI {
     } = {}
   ): Promise<{ projects: WordPressProject[]; totalPages: number }> {
     try {
-      const response = await axios.get(`${BASE_URL}/projects`, {
-        params: {
-          per_page: params.perPage || 12,
-          page: params.page || 1,
-          _embed: true,
-          status: "publish",
-        },
+      const searchParams = new URLSearchParams({
+        per_page: (params.perPage || 12).toString(),
+        page: (params.page || 1).toString(),
+        _embed: 'true',
+        status: 'publish',
       });
 
-      const totalPages = parseInt(response.headers["x-wp-totalpages"] || "1");
+      const apiUrl = getApiBaseUrl();
+      const url = `${apiUrl}/projects?${searchParams.toString()}`;
+
+      const response = await fetch(url, {
+        next: { revalidate: 60 }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const projects = await response.json();
+      const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1');
 
       return {
-        projects: response.data,
+        projects,
         totalPages,
       };
     } catch (error) {
@@ -333,15 +423,21 @@ class WordPressAPI {
   // Get a single project by slug
   async getProjectBySlug(slug: string): Promise<WordPressProject | null> {
     try {
-      const response = await axios.get(`${BASE_URL}/projects`, {
-        params: {
-          slug: slug,
-          _embed: true,
-          status: "publish",
-        },
+      const apiUrl = getApiBaseUrl();
+      const url = `${apiUrl}/projects/${slug}`;
+
+      const response = await fetch(url, {
+        next: { revalidate: 60 }
       });
 
-      return response.data[0] || null;
+      if (!response.ok) {
+        if (response.status === 404) {
+          return null;
+        }
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
     } catch (error) {
       console.error("Error fetching project by slug:", error);
       return null;
