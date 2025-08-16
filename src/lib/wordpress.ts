@@ -3,15 +3,17 @@
 // Helper function to get the base API URL based on environment
 function getApiBaseUrl() {
   // Check if we're in a browser environment vs server-side (build time)
-  const isBrowser = typeof window !== 'undefined';
-  const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
-  
+  const isBrowser = typeof window !== "undefined";
+  const isProduction =
+    process.env.NODE_ENV === "production" ||
+    process.env.VERCEL_ENV === "production";
+
   if (isProduction && isBrowser) {
     // In production browser, use our proxy routes to avoid CORS issues
-    return '/api';
+    return "/api";
   } else {
     // In development or server-side (build time), use the direct WordPress API
-    return 'https://prachatham.com/wp-json/wp/v2';
+    return "https://prachatham.com/wp-json/wp/v2";
   }
 }
 
@@ -145,7 +147,7 @@ export class WordPressAPI {
   ): Promise<{ posts: WordPressPost[]; totalPages: number; total: number }> {
     try {
       const searchParams = new URLSearchParams({
-        _embed: 'true',
+        _embed: "true",
         per_page: (params.per_page || 12).toString(),
         page: (params.page || 1).toString(),
         ...(params.categories && { categories: params.categories }),
@@ -156,7 +158,7 @@ export class WordPressAPI {
       const url = `${apiUrl}/posts?${searchParams.toString()}`;
 
       const response = await fetch(url, {
-        next: { revalidate: 60 }
+        next: { revalidate: 60 },
       });
 
       if (!response.ok) {
@@ -164,8 +166,10 @@ export class WordPressAPI {
       }
 
       const posts = await response.json();
-      const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1');
-      const total = parseInt(response.headers.get('X-WP-Total') || '0');
+      const totalPages = parseInt(
+        response.headers.get("X-WP-TotalPages") || "1"
+      );
+      const total = parseInt(response.headers.get("X-WP-Total") || "0");
 
       return {
         posts,
@@ -182,23 +186,29 @@ export class WordPressAPI {
   async getPostBySlug(slug: string): Promise<WordPressPost | null> {
     try {
       const apiUrl = getApiBaseUrl();
-      const url = `${apiUrl}/posts/${slug}`;
+      const searchParams = new URLSearchParams({
+        slug: slug,
+        _embed: 'true',
+      });
 
-      const response = await fetch(url, {
-        next: { revalidate: 60 }
+      const response = await fetch(`${apiUrl}/posts?${searchParams.toString()}`, {
+        next: { revalidate: 60 },
       });
 
       if (!response.ok) {
-        if (response.status === 404) {
-          return null;
-        }
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      return await response.json();
+      const posts = await response.json();
+      
+      if (!posts || posts.length === 0) {
+        return null;
+      }
+
+      return posts[0];
     } catch (error) {
-      console.error("Error fetching post:", error);
-      throw new Error("Failed to fetch post");
+      console.error("Error fetching post by slug:", error);
+      return null;
     }
   }
 
@@ -206,15 +216,15 @@ export class WordPressAPI {
   async getCategories(): Promise<WordPressCategory[]> {
     try {
       const searchParams = new URLSearchParams({
-        per_page: '100',
-        hide_empty: 'true',
+        per_page: "100",
+        hide_empty: "true",
       });
 
       const apiUrl = getApiBaseUrl();
       const url = `${apiUrl}/categories?${searchParams.toString()}`;
 
       const response = await fetch(url, {
-        next: { revalidate: 300 }
+        next: { revalidate: 300 },
       });
 
       if (!response.ok) {
@@ -236,8 +246,8 @@ export class WordPressAPI {
     try {
       const searchParams = new URLSearchParams({
         search: query,
-        _embed: 'true',
-        per_page: '12',
+        _embed: "true",
+        per_page: "12",
         page: page.toString(),
       });
 
@@ -245,7 +255,7 @@ export class WordPressAPI {
       const url = `${apiUrl}/posts?${searchParams.toString()}`;
 
       const response = await fetch(url, {
-        next: { revalidate: 60 }
+        next: { revalidate: 60 },
       });
 
       if (!response.ok) {
@@ -253,7 +263,9 @@ export class WordPressAPI {
       }
 
       const posts = await response.json();
-      const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1');
+      const totalPages = parseInt(
+        response.headers.get("X-WP-TotalPages") || "1"
+      );
 
       return {
         posts,
@@ -274,10 +286,13 @@ export class WordPressAPI {
       // First get the category ID
       const categoriesParams = new URLSearchParams({ slug: categorySlug });
       const apiUrl = getApiBaseUrl();
-      
-      const categoriesResponse = await fetch(`${apiUrl}/categories?${categoriesParams.toString()}`, {
-        next: { revalidate: 300 }
-      });
+
+      const categoriesResponse = await fetch(
+        `${apiUrl}/categories?${categoriesParams.toString()}`,
+        {
+          next: { revalidate: 300 },
+        }
+      );
 
       if (!categoriesResponse.ok) {
         throw new Error("Failed to fetch categories");
@@ -292,21 +307,26 @@ export class WordPressAPI {
 
       const postsParams = new URLSearchParams({
         categories: categoryId.toString(),
-        _embed: 'true',
-        per_page: '12',
+        _embed: "true",
+        per_page: "12",
         page: page.toString(),
       });
 
-      const response = await fetch(`${apiUrl}/posts?${postsParams.toString()}`, {
-        next: { revalidate: 60 }
-      });
+      const response = await fetch(
+        `${apiUrl}/posts?${postsParams.toString()}`,
+        {
+          next: { revalidate: 60 },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const posts = await response.json();
-      const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1');
+      const totalPages = parseInt(
+        response.headers.get("X-WP-TotalPages") || "1"
+      );
 
       return {
         posts,
@@ -335,9 +355,12 @@ export class WordPressAPI {
       for (const slug of excludeCategorySlugs) {
         try {
           const categoriesParams = new URLSearchParams({ slug: slug });
-          const categoriesResponse = await fetch(`${apiUrl}/categories?${categoriesParams.toString()}`, {
-            next: { revalidate: 300 }
-          });
+          const categoriesResponse = await fetch(
+            `${apiUrl}/categories?${categoriesParams.toString()}`,
+            {
+              next: { revalidate: 300 },
+            }
+          );
 
           if (categoriesResponse.ok) {
             const categories = await categoriesResponse.json();
@@ -351,24 +374,29 @@ export class WordPressAPI {
       }
 
       const searchParams = new URLSearchParams({
-        _embed: 'true',
+        _embed: "true",
         per_page: (params.per_page || 12).toString(),
         page: (params.page || 1).toString(),
         categories_exclude: excludeCategoryIds.join(","),
         ...(params.search && { search: params.search }),
       });
 
-      const response = await fetch(`${apiUrl}/posts?${searchParams.toString()}`, {
-        next: { revalidate: 60 }
-      });
+      const response = await fetch(
+        `${apiUrl}/posts?${searchParams.toString()}`,
+        {
+          next: { revalidate: 60 },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const posts = await response.json();
-      const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1');
-      const total = parseInt(response.headers.get('X-WP-Total') || '0');
+      const totalPages = parseInt(
+        response.headers.get("X-WP-TotalPages") || "1"
+      );
+      const total = parseInt(response.headers.get("X-WP-Total") || "0");
 
       return {
         posts,
@@ -392,15 +420,15 @@ export class WordPressAPI {
       const searchParams = new URLSearchParams({
         per_page: (params.perPage || 12).toString(),
         page: (params.page || 1).toString(),
-        _embed: 'true',
-        status: 'publish',
+        _embed: "true",
+        status: "publish",
       });
 
       const apiUrl = getApiBaseUrl();
       const url = `${apiUrl}/projects?${searchParams.toString()}`;
 
       const response = await fetch(url, {
-        next: { revalidate: 60 }
+        next: { revalidate: 60 },
       });
 
       if (!response.ok) {
@@ -408,7 +436,9 @@ export class WordPressAPI {
       }
 
       const projects = await response.json();
-      const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1');
+      const totalPages = parseInt(
+        response.headers.get("X-WP-TotalPages") || "1"
+      );
 
       return {
         projects,
@@ -424,20 +454,26 @@ export class WordPressAPI {
   async getProjectBySlug(slug: string): Promise<WordPressProject | null> {
     try {
       const apiUrl = getApiBaseUrl();
-      const url = `${apiUrl}/projects/${slug}`;
+      const searchParams = new URLSearchParams({
+        slug: slug,
+        _embed: 'true',
+      });
 
-      const response = await fetch(url, {
-        next: { revalidate: 60 }
+      const response = await fetch(`${apiUrl}/projects?${searchParams.toString()}`, {
+        next: { revalidate: 60 },
       });
 
       if (!response.ok) {
-        if (response.status === 404) {
-          return null;
-        }
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      return await response.json();
+      const projects = await response.json();
+      
+      if (!projects || projects.length === 0) {
+        return null;
+      }
+
+      return projects[0];
     } catch (error) {
       console.error("Error fetching project by slug:", error);
       return null;

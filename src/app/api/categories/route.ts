@@ -1,20 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
-const WORDPRESS_API_URL = 'https://prachatham.com/wp-json/wp/v2';
+const WORDPRESS_API_URL = "https://prachatham.com/wp-json/wp/v2";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  
+
   // Forward all query parameters
   const queryString = searchParams.toString();
-  const url = `${WORDPRESS_API_URL}/categories${queryString ? `?${queryString}` : ''}`;
+  const url = `${WORDPRESS_API_URL}/categories${
+    queryString ? `?${queryString}` : ""
+  }`;
 
   try {
     const response = await fetch(url, {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      next: { revalidate: 300 } // Cache for 5 minutes
+      next: { revalidate: 300 }, // Cache for 5 minutes
     });
 
     if (!response.ok) {
@@ -22,17 +24,17 @@ export async function GET(request: NextRequest) {
     }
 
     const data = await response.json();
-    
+
     return NextResponse.json(data, {
       status: 200,
       headers: {
-        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
       },
     });
   } catch (error) {
-    console.error('Error fetching categories:', error);
+    console.error("Error fetching categories:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch categories' },
+      { error: "Failed to fetch categories" },
       { status: 500 }
     );
   }
