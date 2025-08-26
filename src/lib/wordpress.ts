@@ -191,13 +191,10 @@ export class WordPressAPI {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const posts = await response.json();
+      const post = await response.json();
 
-      if (!posts || posts.length === 0) {
-        return null;
-      }
-
-      return posts[0];
+      // The API route returns a single post object or null
+      return post;
     } catch (error) {
       console.error("Error fetching post by slug:", error);
       return null;
