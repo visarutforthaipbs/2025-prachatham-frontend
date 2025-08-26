@@ -23,7 +23,7 @@ export default function Footer() {
           {/* Logo and Description */}
           <VStack align="start" spacing={4}>
             <Image
-              src="https://prachatham.com/wp-content/uploads/2022/03/cropped-cropped-logo-prachatham-green.png"
+              src="https://cms.prachatham.com/wp-content/uploads/2022/03/cropped-cropped-logo-prachatham-green.png"
               alt="ประชาธรรม"
               maxW="120px"
               filter="brightness(0) invert(1)"

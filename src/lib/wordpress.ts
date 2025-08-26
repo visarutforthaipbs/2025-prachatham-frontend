@@ -2,24 +2,13 @@
 
 // Helper function to get the base API URL based on environment
 function getApiBaseUrl() {
-  // Check if we're in a browser environment vs server-side (build time)
-  const isBrowser = typeof window !== "undefined";
-  const isProduction =
-    process.env.NODE_ENV === "production" ||
-    process.env.VERCEL_ENV === "production";
-
-  if (isProduction && isBrowser) {
-    // In production browser, use our proxy routes to avoid CORS issues
-    return "/api";
-  } else {
-    // In development or server-side (build time), use the direct WordPress API
-    return "https://prachatham.com/wp-json/wp/v2";
-  }
+  // Always use the direct WordPress API - it works without CORS issues
+  return "https://cms.prachatham.com/?rest_route=/wp/v2";
 }
-
 export interface WordPressPost {
   id: number;
   date: string;
+  modified: string;
   slug: string;
   status: string;
   title: {
@@ -38,6 +27,7 @@ export interface WordPressPost {
       id: number;
       source_url: string;
       alt_text: string;
+      mime_type: string;
       media_details: {
         width: number;
         height: number;
@@ -155,7 +145,7 @@ export class WordPressAPI {
       });
 
       const apiUrl = getApiBaseUrl();
-      const url = `${apiUrl}/posts?${searchParams.toString()}`;
+      const url = `${apiUrl}/posts&${searchParams.toString()}`;
 
       const response = await fetch(url, {
         next: { revalidate: 60 },
@@ -188,19 +178,22 @@ export class WordPressAPI {
       const apiUrl = getApiBaseUrl();
       const searchParams = new URLSearchParams({
         slug: slug,
-        _embed: 'true',
+        _embed: "true",
       });
 
-      const response = await fetch(`${apiUrl}/posts?${searchParams.toString()}`, {
-        next: { revalidate: 60 },
-      });
+      const response = await fetch(
+        `${apiUrl}/posts&${searchParams.toString()}`,
+        {
+          next: { revalidate: 60 },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const posts = await response.json();
-      
+
       if (!posts || posts.length === 0) {
         return null;
       }
@@ -221,7 +214,7 @@ export class WordPressAPI {
       });
 
       const apiUrl = getApiBaseUrl();
-      const url = `${apiUrl}/categories?${searchParams.toString()}`;
+      const url = `${apiUrl}/categories&${searchParams.toString()}`;
 
       const response = await fetch(url, {
         next: { revalidate: 300 },
@@ -252,7 +245,7 @@ export class WordPressAPI {
       });
 
       const apiUrl = getApiBaseUrl();
-      const url = `${apiUrl}/posts?${searchParams.toString()}`;
+      const url = `${apiUrl}/posts&${searchParams.toString()}`;
 
       const response = await fetch(url, {
         next: { revalidate: 60 },
@@ -288,7 +281,7 @@ export class WordPressAPI {
       const apiUrl = getApiBaseUrl();
 
       const categoriesResponse = await fetch(
-        `${apiUrl}/categories?${categoriesParams.toString()}`,
+        `${apiUrl}/categories&${categoriesParams.toString()}`,
         {
           next: { revalidate: 300 },
         }
@@ -313,7 +306,7 @@ export class WordPressAPI {
       });
 
       const response = await fetch(
-        `${apiUrl}/posts?${postsParams.toString()}`,
+        `${apiUrl}/posts&${postsParams.toString()}`,
         {
           next: { revalidate: 60 },
         }
@@ -356,7 +349,7 @@ export class WordPressAPI {
         try {
           const categoriesParams = new URLSearchParams({ slug: slug });
           const categoriesResponse = await fetch(
-            `${apiUrl}/categories?${categoriesParams.toString()}`,
+            `${apiUrl}/categories&${categoriesParams.toString()}`,
             {
               next: { revalidate: 300 },
             }
@@ -377,12 +370,14 @@ export class WordPressAPI {
         _embed: "true",
         per_page: (params.per_page || 12).toString(),
         page: (params.page || 1).toString(),
-        categories_exclude: excludeCategoryIds.join(","),
+        ...(excludeCategoryIds.length > 0 && {
+          categories_exclude: excludeCategoryIds.join(","),
+        }),
         ...(params.search && { search: params.search }),
       });
 
       const response = await fetch(
-        `${apiUrl}/posts?${searchParams.toString()}`,
+        `${apiUrl}/posts&${searchParams.toString()}`,
         {
           next: { revalidate: 60 },
         }
@@ -425,7 +420,7 @@ export class WordPressAPI {
       });
 
       const apiUrl = getApiBaseUrl();
-      const url = `${apiUrl}/projects?${searchParams.toString()}`;
+      const url = `${apiUrl}/projects&${searchParams.toString()}`;
 
       const response = await fetch(url, {
         next: { revalidate: 60 },
@@ -456,19 +451,22 @@ export class WordPressAPI {
       const apiUrl = getApiBaseUrl();
       const searchParams = new URLSearchParams({
         slug: slug,
-        _embed: 'true',
+        _embed: "true",
       });
 
-      const response = await fetch(`${apiUrl}/projects?${searchParams.toString()}`, {
-        next: { revalidate: 60 },
-      });
+      const response = await fetch(
+        `${apiUrl}/projects&${searchParams.toString()}`,
+        {
+          next: { revalidate: 60 },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const projects = await response.json();
-      
+
       if (!projects || projects.length === 0) {
         return null;
       }

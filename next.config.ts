@@ -9,6 +9,12 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/wp-content/uploads/**",
       },
+      {
+        protocol: "https",
+        hostname: "cms.prachatham.com",
+        port: "",
+        pathname: "/wp-content/uploads/**",
+      },
     ],
   },
   experimental: {

@@ -41,7 +41,7 @@ cp .env.example .env.local
 4. Update environment variables in `.env.local`:
 
 ```
-WORDPRESS_API_URL=https://your-wordpress-site.com/wp-json
+WORDPRESS_API_URL=https://cms.prachatham.com/?rest_route=
 ```
 
 5. Run development server:
@@ -66,7 +66,7 @@ npm start
 
 ### Environment Variables for Vercel:
 
-- `WORDPRESS_API_URL`: Your WordPress REST API URL
+- `WORDPRESS_API_URL`: Your WordPress REST API URL (https://cms.prachatham.com/?rest_route=)
 
 ## 📁 Project Structure
 
@@ -94,6 +94,21 @@ The site integrates with WordPress REST API to fetch:
 - Projects with Advanced Custom Fields (ACF)
 - Media attachments
 - Dynamic content management
+
+### Backend API Configuration
+
+```javascript
+const API_BASE = "https://cms.prachatham.com/?rest_route=";
+
+// Get posts
+const posts = await fetch(`${API_BASE}/wp/v2/posts`);
+
+// Get specific post
+const post = await fetch(`${API_BASE}/wp/v2/posts/5753`);
+
+// Get categories
+const categories = await fetch(`${API_BASE}/wp/v2/categories`);
+```
 
 ## 📱 Responsive Design
 

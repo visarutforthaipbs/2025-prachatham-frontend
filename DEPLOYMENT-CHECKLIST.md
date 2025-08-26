@@ -84,7 +84,7 @@
 Add in Vercel dashboard:
 
 ```
-WORDPRESS_API_URL=https://prachatham.com/wp-json
+WORDPRESS_API_URL=https://cms.prachatham.com/?rest_route=
 NODE_ENV=production
 ```
 
@@ -121,6 +121,22 @@ Total First Load JS: 99.6 kB (Excellent!)
 - Ensure WordPress REST API is enabled
 - Check CORS settings if needed
 - Verify ACF plugin is active for project fields
+- Backend URL: https://cms.prachatham.com/?rest_route=
+
+### Backend API Examples
+
+```javascript
+const API_BASE = "https://cms.prachatham.com/?rest_route=";
+
+// Get posts
+const posts = await fetch(`${API_BASE}/wp/v2/posts`);
+
+// Get specific post
+const post = await fetch(`${API_BASE}/wp/v2/posts/5753`);
+
+// Get categories
+const categories = await fetch(`${API_BASE}/wp/v2/categories`);
+```
 
 ### Performance
 

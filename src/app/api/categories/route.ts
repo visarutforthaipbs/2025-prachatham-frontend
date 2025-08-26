@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const WORDPRESS_API_URL = "https://prachatham.com/wp-json/wp/v2";
+const WORDPRESS_API_URL =
+  "https://cms.prachatham.com/?rest_route=/wp/v2/categories";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
 
   // Forward all query parameters
   const queryString = searchParams.toString();
-  const url = `${WORDPRESS_API_URL}/categories${
-    queryString ? `?${queryString}` : ""
-  }`;
+  const url = `${WORDPRESS_API_URL}${queryString ? `&${queryString}` : ""}`;
 
   try {
     const response = await fetch(url, {
