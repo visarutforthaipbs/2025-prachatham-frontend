@@ -1,31 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Try projects endpoint first, fallback to posts with project category
+// WordPress API base URL
 const WORDPRESS_API_URL = "https://cms.prachatham.com/?rest_route=/wp/v2";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
 
   try {
-    // Projects are posts in the "CALM Project" category (ID: 160)
-    // Create new search params and ensure we always use the project category
+    // Use the custom post type "projects" instead of posts with category filter
     const projectSearchParams = new URLSearchParams();
 
-    // Always set the project category
-    projectSearchParams.set("categories", "160"); // CALM Project category
-
-    // Copy other parameters from the request
+    // Copy all parameters from the request
     for (const [key, value] of searchParams.entries()) {
-      if (key !== "categories") {
-        // Don't override our project category
-        projectSearchParams.set(key, value);
-      }
+      projectSearchParams.set(key, value);
     }
 
-    // Build the correct URL - parameters should go after the rest_route
-    const url = `${WORDPRESS_API_URL}/posts&${projectSearchParams.toString()}`;
+    // Build the correct URL for the custom post type
+    const url = `${WORDPRESS_API_URL}/projects&${projectSearchParams.toString()}`;
 
-    console.log("Fetching projects from:", url);
+    console.log("Fetching projects from custom post type:", url);
 
     const response = await fetch(url, {
       headers: {
