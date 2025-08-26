@@ -1,9 +1,9 @@
 export async function GET(
   request: Request,
-  context: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { slug } = await context.params;
+    const { slug } = await params;
 
     // Build the WordPress API URL with slug parameter
     const url = new URL(

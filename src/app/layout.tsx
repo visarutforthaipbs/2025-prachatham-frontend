@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Providers } from "./providers";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -6,6 +6,12 @@ import { Box } from "@chakra-ui/react";
 import "./globals.css";
 import "@/styles/fonts.css";
 import "@/styles/print.css";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
 
 export const metadata: Metadata = {
   title: "ประชาธรรม -  การเปลี่ยนแปลงผ่านสื่อชุมชน",
@@ -20,11 +26,6 @@ export const metadata: Metadata = {
   ),
   alternates: {
     canonical: "/",
-  },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
   },
   icons: {
     icon: "/images/ps-favicon.svg",
