@@ -29,6 +29,10 @@ export interface WordPressPost {
   };
   categories: number[];
   featured_media: number;
+  acf?: {
+    authornamepost?: string;
+    [key: string]: string | number | boolean | null | undefined;
+  };
   _embedded?: {
     "wp:featuredmedia"?: Array<{
       id: number;

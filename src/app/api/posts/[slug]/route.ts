@@ -9,6 +9,7 @@ export async function GET(
     const url = new URL("https://cms.prachatham.com/?rest_route=/wp/v2/posts");
     url.searchParams.set("slug", slug);
     url.searchParams.set("_embed", "true");
+    url.searchParams.set("acf", "true"); // Include ACF fields
 
     console.log("Fetching from WordPress API:", url.toString());
 

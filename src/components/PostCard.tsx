@@ -9,6 +9,7 @@ import {
   Link as ChakraLink,
   HStack,
 } from "@chakra-ui/react";
+import { FaUser } from "react-icons/fa";
 import Link from "next/link";
 import NextImage from "next/image";
 import { WordPressPost, formatThaiDate, getExcerpt } from "@/lib/wordpress";
@@ -132,11 +133,23 @@ export default function PostCard({ post }: PostCardProps) {
           {getExcerpt(post.excerpt.rendered, 120)}
         </Text>
 
-        {/* Date */}
-        <Flex justify="space-between" align="center" mt="auto">
-          <Text fontSize="xs" color="gray.500">
-            {formatThaiDate(post.date)}
-          </Text>
+        {/* Date and Author */}
+        <Flex
+          justify="space-between"
+          align="center"
+          mt="auto"
+          flexWrap="wrap"
+          gap={2}
+        >
+          <Flex direction="column" fontSize="xs" color="gray.500" gap={1}>
+            <Text>{formatThaiDate(post.date)}</Text>
+            {post.acf?.authornamepost && (
+              <HStack spacing={1}>
+                <FaUser size={10} />
+                <Text>{post.acf.authornamepost}</Text>
+              </HStack>
+            )}
+          </Flex>
           <ChakraLink
             as={Link}
             href={`/posts/${post.slug}`}

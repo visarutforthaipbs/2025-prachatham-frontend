@@ -5,6 +5,11 @@ const WORDPRESS_API_URL = "https://cms.prachatham.com/?rest_route=/wp/v2/posts";
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
 
+  // Add ACF fields to the request by default
+  if (!searchParams.has("acf")) {
+    searchParams.set("acf", "true");
+  }
+
   // Forward all query parameters
   const queryString = searchParams.toString();
   const url = `${WORDPRESS_API_URL}${queryString ? `&${queryString}` : ""}`;

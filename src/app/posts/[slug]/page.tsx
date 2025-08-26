@@ -11,7 +11,7 @@ import {
   Card,
   CardBody,
 } from "@chakra-ui/react";
-import { FaClock, FaCalendarAlt, FaTags } from "react-icons/fa";
+import { FaClock, FaCalendarAlt, FaTags, FaUser } from "react-icons/fa";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { wordpressApi, formatThaiDate, stripHtml } from "@/lib/wordpress";
@@ -56,11 +56,13 @@ export async function generateMetadata({
       stripHtml(post.excerpt.rendered).substring(0, 160) ||
       stripHtml(post.content.rendered).substring(0, 160);
 
+    const authorName = post.acf?.authornamepost || "Prachatham";
+
     return {
       title: `${post.title.rendered} | ประชาธรรม`,
       description,
       keywords: `${post.title.rendered}, ประชาธรรม, สิ่งแวดล้อม, สื่อชุมชน`,
-      authors: [{ name: "Prachatham" }],
+      authors: [{ name: authorName }],
       alternates: {
         canonical: `/posts/${slug}`,
       },
@@ -70,7 +72,7 @@ export async function generateMetadata({
         type: "article",
         publishedTime: post.date,
         modifiedTime: post.modified,
-        authors: ["Prachatham"],
+        authors: [authorName],
         section: "สิ่งแวดล้อม",
         tags:
           post._embedded?.["wp:term"]?.[0]?.map(
@@ -139,10 +141,15 @@ export default async function PostPage({ params }: PostPageProps) {
       image:
         post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
         "/images/hero-1-page-1.jpg",
-      author: {
-        "@type": "Organization",
-        name: "Prachatham Foundation",
-      },
+      author: post.acf?.authornamepost
+        ? {
+            "@type": "Person",
+            name: post.acf.authornamepost,
+          }
+        : {
+            "@type": "Organization",
+            name: "Prachatham Foundation",
+          },
       publisher: {
         "@type": "Organization",
         name: "Prachatham Foundation",
@@ -245,6 +252,15 @@ export default async function PostPage({ params }: PostPageProps) {
                 <CardBody>
                   <HStack justify="space-between" flexWrap="wrap" spacing={4}>
                     <HStack spacing={6} flexWrap="wrap">
+                      {/* Author */}
+                      {post.acf?.authornamepost && (
+                        <HStack color="gray.600" fontSize="sm">
+                          <FaUser size={14} />
+                          <Text fontWeight="medium">
+                            {post.acf.authornamepost}
+                          </Text>
+                        </HStack>
+                      )}
                       <HStack color="gray.600" fontSize="sm">
                         <FaCalendarAlt size={14} />
                         <Text>{formatThaiDate(post.date)}</Text>
