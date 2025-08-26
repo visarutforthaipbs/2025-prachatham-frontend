@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
 
   // Forward all query parameters
   const queryString = searchParams.toString();
-  const url = `${WORDPRESS_API_URL}${queryString ? `&${queryString}` : ""}`;
+  const url = `${WORDPRESS_API_URL}${queryString ? `?${queryString}` : ""}`;
 
   try {
     const response = await fetch(url, {

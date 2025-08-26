@@ -2,8 +2,15 @@
 
 // Helper function to get the base API URL based on environment
 function getApiBaseUrl() {
-  // Always use the direct WordPress API - it works without CORS issues
-  return "https://cms.prachatham.com/?rest_route=/wp/v2";
+  if (typeof window !== "undefined") {
+    // Client-side: use relative URLs
+    return "/api";
+  } else {
+    // Server-side: use absolute URLs
+    const baseUrl =
+      process.env.NEXT_PUBLIC_SITE_URL || "https://www.prachatham.com";
+    return `${baseUrl}/api`;
+  }
 }
 export interface WordPressPost {
   id: number;
@@ -176,17 +183,9 @@ export class WordPressAPI {
   async getPostBySlug(slug: string): Promise<WordPressPost | null> {
     try {
       const apiUrl = getApiBaseUrl();
-      const searchParams = new URLSearchParams({
-        slug: slug,
-        _embed: "true",
+      const response = await fetch(`${apiUrl}/posts/${slug}`, {
+        next: { revalidate: 60 },
       });
-
-      const response = await fetch(
-        `${apiUrl}/posts&${searchParams.toString()}`,
-        {
-          next: { revalidate: 60 },
-        }
-      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -214,7 +213,7 @@ export class WordPressAPI {
       });
 
       const apiUrl = getApiBaseUrl();
-      const url = `${apiUrl}/categories&${searchParams.toString()}`;
+      const url = `${apiUrl}/categories?${searchParams.toString()}`;
 
       const response = await fetch(url, {
         next: { revalidate: 300 },
@@ -245,7 +244,7 @@ export class WordPressAPI {
       });
 
       const apiUrl = getApiBaseUrl();
-      const url = `${apiUrl}/posts&${searchParams.toString()}`;
+      const url = `${apiUrl}/posts?${searchParams.toString()}`;
 
       const response = await fetch(url, {
         next: { revalidate: 60 },
