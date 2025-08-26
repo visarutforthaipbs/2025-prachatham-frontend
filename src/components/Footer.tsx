@@ -29,7 +29,7 @@ export default function Footer() {
               filter="brightness(0) invert(1)"
             />
             <Text fontSize="lg" fontWeight="semibold">
-              สื่อ สิ่งแวดล้อม ประชาทำ
+              สื่อ ประชาธรรม ประชาทำ
             </Text>
             <Text fontSize="sm" color="gray.300" lineHeight="tall">
               77/1 หมู่ 5 ต.สุเทพ อ.เมืองจ.เชียงใหม่ 50200
@@ -107,9 +107,6 @@ export default function Footer() {
                 สิ่งพิมพ์
               </ChakraLink>
             </Stack>
-            <Text fontSize="sm" color="gray.400" lineHeight="tall">
-              เราสนับสนุนให้ผู้คนบอกเล่า เรื่องสิ่งแวดล้อมด้วยตัวเอง
-            </Text>
           </VStack>
 
           {/* Categories */}

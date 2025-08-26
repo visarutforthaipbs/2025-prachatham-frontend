@@ -451,11 +451,11 @@ export default function ContactPageClient() {
                   borderColor="prachatham.200"
                 >
                   <Heading as="h3" size="lg" mb={4} color="prachatham.700">
-                    เราสนับสนุนให้ผู้คนบอกเล่าเรื่องสิ่งแวดล้อมด้วยตัวเอง
+                    เราสนับสนุนให้ผู้คนบอกเล่าเรื่องด้วยตัวเอง
                   </Heading>
                   <Text color="gray.600" maxW="2xl" mx="auto" lineHeight="tall">
                     หากคุณมีเรื่องราว ปัญหา
-                    หรือแนวทางแก้ไขด้านสิ่งแวดล้อมที่ต้องการเผยแพร่
+                    หรือแนวทางแก้ไขปัญหาท้องถิ่นที่ต้องการเผยแพร่ <br />
                     เราพร้อมรับฟังและช่วยเหลือในการสื่อสาร
                   </Text>
                 </Box>
