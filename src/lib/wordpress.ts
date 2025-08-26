@@ -152,7 +152,7 @@ export class WordPressAPI {
       });
 
       const apiUrl = getApiBaseUrl();
-      const url = `${apiUrl}/posts&${searchParams.toString()}`;
+      const url = `${apiUrl}/posts?${searchParams.toString()}`;
 
       const response = await fetch(url, {
         next: { revalidate: 60 },
@@ -280,7 +280,7 @@ export class WordPressAPI {
       const apiUrl = getApiBaseUrl();
 
       const categoriesResponse = await fetch(
-        `${apiUrl}/categories&${categoriesParams.toString()}`,
+        `${apiUrl}/categories?${categoriesParams.toString()}`,
         {
           next: { revalidate: 300 },
         }
@@ -305,7 +305,7 @@ export class WordPressAPI {
       });
 
       const response = await fetch(
-        `${apiUrl}/posts&${postsParams.toString()}`,
+        `${apiUrl}/posts?${postsParams.toString()}`,
         {
           next: { revalidate: 60 },
         }
@@ -348,7 +348,7 @@ export class WordPressAPI {
         try {
           const categoriesParams = new URLSearchParams({ slug: slug });
           const categoriesResponse = await fetch(
-            `${apiUrl}/categories&${categoriesParams.toString()}`,
+            `${apiUrl}/categories?${categoriesParams.toString()}`,
             {
               next: { revalidate: 300 },
             }
@@ -376,7 +376,7 @@ export class WordPressAPI {
       });
 
       const response = await fetch(
-        `${apiUrl}/posts&${searchParams.toString()}`,
+        `${apiUrl}/posts?${searchParams.toString()}`,
         {
           next: { revalidate: 60 },
         }
@@ -419,7 +419,7 @@ export class WordPressAPI {
       });
 
       const apiUrl = getApiBaseUrl();
-      const url = `${apiUrl}/projects&${searchParams.toString()}`;
+      const url = `${apiUrl}/projects?${searchParams.toString()}`;
 
       const response = await fetch(url, {
         next: { revalidate: 60 },
@@ -448,29 +448,18 @@ export class WordPressAPI {
   async getProjectBySlug(slug: string): Promise<WordPressProject | null> {
     try {
       const apiUrl = getApiBaseUrl();
-      const searchParams = new URLSearchParams({
-        slug: slug,
-        _embed: "true",
+      const response = await fetch(`${apiUrl}/projects/${slug}`, {
+        next: { revalidate: 60 },
       });
-
-      const response = await fetch(
-        `${apiUrl}/projects&${searchParams.toString()}`,
-        {
-          next: { revalidate: 60 },
-        }
-      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const projects = await response.json();
+      const project = await response.json();
 
-      if (!projects || projects.length === 0) {
-        return null;
-      }
-
-      return projects[0];
+      // API route returns a single project or null, not an array
+      return project;
     } catch (error) {
       console.error("Error fetching project by slug:", error);
       return null;
