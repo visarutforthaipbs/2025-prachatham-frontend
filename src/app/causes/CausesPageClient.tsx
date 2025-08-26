@@ -54,7 +54,7 @@ export default function CausesPageClient({ projects }: CausesPageClientProps) {
               โครงการและผลงาน
             </Badge>
             <Heading as="h1" size="2xl" color="prachatham.700" mb={4}>
-              โครงการของมูลนิธิประชาธรรม
+              โครงการของมูลนิธิสื่อประชาธรรม
             </Heading>
             <Text
               fontSize="xl"

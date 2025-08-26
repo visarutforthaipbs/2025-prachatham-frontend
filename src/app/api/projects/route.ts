@@ -1,16 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const WORDPRESS_API_URL =
-  "https://cms.prachatham.com/?rest_route=/wp/v2/projects";
+// Try projects endpoint first, fallback to posts with project category
+const WORDPRESS_API_URL = "https://cms.prachatham.com/?rest_route=/wp/v2";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
 
-  // Forward all query parameters
-  const queryString = searchParams.toString();
-  const url = `${WORDPRESS_API_URL}${queryString ? `?${queryString}` : ""}`;
-
   try {
+    // Projects are posts in the "CALM Project" category (ID: 160)
+    // Create new search params and ensure we always use the project category
+    const projectSearchParams = new URLSearchParams();
+
+    // Always set the project category
+    projectSearchParams.set("categories", "160"); // CALM Project category
+
+    // Copy other parameters from the request
+    for (const [key, value] of searchParams.entries()) {
+      if (key !== "categories") {
+        // Don't override our project category
+        projectSearchParams.set(key, value);
+      }
+    }
+
+    // Build the correct URL - parameters should go after the rest_route
+    const url = `${WORDPRESS_API_URL}/posts&${projectSearchParams.toString()}`;
+
+    console.log("Fetching projects from:", url);
+
     const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
@@ -19,6 +35,9 @@ export async function GET(request: NextRequest) {
     });
 
     if (!response.ok) {
+      console.error(
+        `WordPress API error: ${response.status} - ${response.statusText}`
+      );
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
