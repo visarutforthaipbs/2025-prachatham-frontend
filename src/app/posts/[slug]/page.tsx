@@ -17,6 +17,8 @@ import { notFound } from "next/navigation";
 import { wordpressApi, formatThaiDate, stripHtml } from "@/lib/wordpress";
 import { Metadata } from "next";
 import { SocialShare } from "@/components/SocialShare";
+import ReaderThaiFree from "@/components/ReaderThaiFree";
+import ReaderFloatButton from "@/components/ReaderFloatButton";
 
 interface PostPageProps {
   params: Promise<{
@@ -247,30 +249,40 @@ export default async function PostPage({ params }: PostPageProps) {
                 {post.title.rendered}
               </Heading>
 
-              {/* Meta Information */}
+              {/* Meta Information with TTS */}
               <Card bg="gray.50" border="1px solid" borderColor="gray.200">
                 <CardBody>
-                  <HStack justify="space-between" flexWrap="wrap" spacing={4}>
-                    <HStack spacing={6} flexWrap="wrap">
-                      {/* Author */}
-                      {post.acf?.authornamepost && (
+                  <VStack spacing={4} align="stretch">
+                    {/* Meta Info Row */}
+                    <HStack justify="space-between" flexWrap="wrap" spacing={4}>
+                      <HStack spacing={6} flexWrap="wrap">
+                        {/* Author */}
+                        {post.acf?.authornamepost && (
+                          <HStack color="gray.600" fontSize="sm">
+                            <FaUser size={14} />
+                            <Text fontWeight="medium">
+                              {post.acf.authornamepost}
+                            </Text>
+                          </HStack>
+                        )}
                         <HStack color="gray.600" fontSize="sm">
-                          <FaUser size={14} />
-                          <Text fontWeight="medium">
-                            {post.acf.authornamepost}
-                          </Text>
+                          <FaCalendarAlt size={14} />
+                          <Text>{formatThaiDate(post.date)}</Text>
                         </HStack>
-                      )}
-                      <HStack color="gray.600" fontSize="sm">
-                        <FaCalendarAlt size={14} />
-                        <Text>{formatThaiDate(post.date)}</Text>
-                      </HStack>
-                      <HStack color="gray.600" fontSize="sm">
-                        <FaClock size={14} />
-                        <Text>อ่าน {readingTime} นาที</Text>
+                        <HStack color="gray.600" fontSize="sm">
+                          <FaClock size={14} />
+                          <Text>อ่าน {readingTime} นาที</Text>
+                        </HStack>
                       </HStack>
                     </HStack>
-                  </HStack>
+
+                    {/* TTS Reader */}
+                    <Divider />
+                    <ReaderThaiFree
+                      postKey={post.slug || String(post.id)}
+                      articleSelector=".wordpress-content"
+                    />
+                  </VStack>
                 </CardBody>
               </Card>
             </Box>
@@ -392,6 +404,9 @@ export default async function PostPage({ params }: PostPageProps) {
             {/* Social Share */}
             <SocialShare url={currentUrl} title={post.title.rendered} />
           </VStack>
+
+          {/* Floating Reader Button */}
+          <ReaderFloatButton postKey={post.slug || String(post.id)} />
         </Container>
       </>
     );
