@@ -5,6 +5,18 @@ import Link from "next/link";
 import PostCard from "@/components/PostCard";
 import ProjectCard from "@/components/ProjectCard";
 import type { WordPressPost, WordPressProject } from "@/lib/wordpress";
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  Grid,
+  Heading,
+  HStack,
+  SimpleGrid,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 
 interface HomePageClientProps {
   featuredPosts: WordPressPost[];
@@ -16,488 +28,249 @@ export default function HomePageClient({
   latestProjects,
 }: HomePageClientProps) {
   return (
-    <div>
+    <Box>
       {/* Hero Section */}
-      <div
-        style={{
-          minHeight: "100vh",
-          backgroundImage: "url('/images/hero-1-page-1.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "relative",
-        }}
+      <Flex
+        minH="100vh"
+        bgImage="url('/images/hero-1-page-1.jpg')"
+        bgSize="cover"
+        bgPosition="center"
+        bgRepeat="no-repeat"
+        align="center"
+        justify="center"
+        position="relative"
+        color="white"
       >
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(5, 150, 105, 0.75)",
-            zIndex: 1,
-          }}
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          right="0"
+          bottom="0"
+          backgroundColor="rgba(5, 150, 105, 0.75)"
+          zIndex={1}
         />
-        <div
-          style={{
-            maxWidth: "1280px",
-            margin: "0 auto",
-            padding: "0 1rem",
-            position: "relative",
-            zIndex: 2,
-            textAlign: "center",
-          }}
-        >
-          <div style={{ maxWidth: "896px", margin: "0 auto", color: "white" }}>
-            <h1
-              style={{
-                fontSize: "3rem",
-                fontWeight: "bold",
-                lineHeight: "1.2",
-                color: "white",
-                textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
-                marginBottom: "1.5rem",
-              }}
+        <Container maxW="container.xl" position="relative" zIndex={2}>
+          <VStack spacing={6} textAlign="center" maxW="3xl" mx="auto">
+            <Heading
+              as="h1"
+              fontSize={{ base: "3xl", md: "5xl" }}
+              fontWeight="bold"
+              lineHeight="1.2"
+              textShadow="2px 2px 4px rgba(0,0,0,0.3)"
             >
               เราสนับสนุนการเปลี่ยนแปลงผ่านสื่อชุมชน
-            </h1>
-            <p
-              style={{
-                fontSize: "1.25rem",
-                lineHeight: "1.6",
-                maxWidth: "768px",
-                margin: "0 auto 2rem auto",
-                color: "white",
-                textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
-              }}
+            </Heading>
+            <Text
+              fontSize={{ base: "lg", md: "xl" }}
+              lineHeight="1.6"
+              maxW="2xl"
+              mx="auto"
+              textShadow="1px 1px 2px rgba(0,0,0,0.3)"
             >
               มูลนิธิประชาธรรม เป็นองค์กรที่มุ่งหวังสร้างการเปลี่ยนแปลงเชิงบวก
               ผ่านการเสริมสร้างพลังของชุมชนในการสื่อสารและเล่าเรื่องราวของตัวเอง
-            </p>
-            <Link
+            </Text>
+            <Button
+              as={Link}
               href="/about"
-              style={{
-                display: "inline-block",
-                padding: "1rem 2rem",
-                fontSize: "1.125rem",
-                backgroundColor: "white",
-                color: "#047857",
-                textDecoration: "none",
-                borderRadius: "0.5rem",
-                fontWeight: "600",
-                transition: "all 0.2s ease-in-out",
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = "translateY(-2px)";
-                e.currentTarget.style.boxShadow = "0 10px 25px rgba(0,0,0,0.2)";
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "none";
+              size="lg"
+              colorScheme="white"
+              variant="solid"
+              bg="white"
+              color="green.700"
+              _hover={{
+                transform: "translateY(-2px)",
+                boxShadow: "lg",
               }}
             >
               เรียนรู้เพิ่มเติม
-            </Link>
-          </div>
-        </div>
-      </div>
+            </Button>
+          </VStack>
+        </Container>
+      </Flex>
 
       {/* Featured News Section */}
-      <div style={{ backgroundColor: "white", padding: "4rem 0" }}>
-        <div
-          style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 1rem" }}
-        >
-          <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-            <h2
-              style={{
-                fontSize: "2.25rem",
-                color: "#047857",
-                marginBottom: "1rem",
-                fontWeight: "bold",
-              }}
-            >
+      <Box bg="white" py={{ base: 16, md: 20 }}>
+        <Container maxW="container.xl">
+          <VStack spacing={4} textAlign="center" mb={12}>
+            <Heading as="h2" size="xl" color="green.700">
               ข่าวเด่นประจำสัปดาห์
-            </h2>
-            <p
-              style={{
-                fontSize: "1.125rem",
-                color: "#6b7280",
-                maxWidth: "512px",
-                margin: "0 auto",
-              }}
-            >
+            </Heading>
+            <Text fontSize="lg" color="gray.600" maxW="md" mx="auto">
               ติดตามข่าวสารและเรื่องราวล่าสุดจากชุมชนทั่วประเทศ
-            </p>
-          </div>
+            </Text>
+          </VStack>
 
           {featuredPosts && featuredPosts.length > 0 ? (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-                gap: "2rem",
-                marginBottom: "3rem",
-              }}
+            <SimpleGrid
+              columns={{ base: 1, md: 2, lg: 3 }}
+              spacing={8}
+              mb={12}
             >
               {featuredPosts.map((post) => (
                 <PostCard key={post.id} post={post} />
               ))}
-            </div>
+            </SimpleGrid>
           ) : (
-            <div style={{ textAlign: "center", padding: "2rem 0" }}>
-              <p style={{ color: "#6b7280" }}>ไม่พบข่าวเด่นในขณะนี้</p>
-            </div>
+            <Text textAlign="center" color="gray.500" py={8}>
+              ไม่พบข่าวเด่นในขณะนี้
+            </Text>
           )}
 
-          <div style={{ textAlign: "center" }}>
-            <Link
+          <Flex justify="center">
+            <Button
+              as={Link}
               href="/posts"
-              style={{
-                display: "inline-block",
-                padding: "0.75rem 2rem",
-                fontSize: "1.125rem",
-                border: "2px solid #059669",
-                color: "#059669",
-                textDecoration: "none",
-                borderRadius: "0.5rem",
-                fontWeight: "600",
-                transition: "all 0.2s ease-in-out",
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.backgroundColor = "#059669";
-                e.currentTarget.style.color = "white";
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.backgroundColor = "transparent";
-                e.currentTarget.style.color = "#059669";
-              }}
+              size="lg"
+              variant="outline"
+              colorScheme="green"
             >
               ดูข่าวทั้งหมด
-            </Link>
-          </div>
-        </div>
-      </div>
+            </Button>
+          </Flex>
+        </Container>
+      </Box>
 
       {/* Mission Section */}
-      <div style={{ backgroundColor: "#f0fdf4", padding: "4rem 0" }}>
-        <div
-          style={{ maxWidth: "1152px", margin: "0 auto", padding: "0 1rem" }}
-        >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
-              gap: "3rem",
-              alignItems: "center",
-            }}
+      <Box bg="green.50" py={{ base: 16, md: 20 }}>
+        <Container maxW="container.lg">
+          <Grid
+            templateColumns={{ base: "1fr", md: "1fr 1fr" }}
+            gap={12}
+            alignItems="center"
           >
-            <div>
-              <h2
-                style={{
-                  fontSize: "2.25rem",
-                  color: "#047857",
-                  marginBottom: "1.5rem",
-                }}
-              >
+            <VStack align="start" spacing={6}>
+              <Heading as="h2" size="xl" color="green.700">
                 ภารกิจของเรา
-              </h2>
-              <p
-                style={{
-                  fontSize: "1.125rem",
-                  color: "#374151",
-                  lineHeight: "1.6",
-                  marginBottom: "1.5rem",
-                }}
-              >
+              </Heading>
+              <Text fontSize="lg" color="gray.700" lineHeight="1.7">
                 เราเชื่อว่าการเปลี่ยนแปลงที่ยั่งยืนเกิดขึ้นได้เมื่อชุมชนมีเสียง
                 มีพื้นที่ในการเล่าเรื่องราวของตัวเอง
                 และมีเครื่องมือในการสื่อสารกับสังคมที่กว้างขึ้น
-              </p>
-              <Link
+              </Text>
+              <Button
+                as={Link}
                 href="/about"
-                style={{
-                  display: "inline-block",
-                  padding: "0.75rem 2rem",
-                  fontSize: "1.125rem",
-                  backgroundColor: "#059669",
-                  color: "white",
-                  textDecoration: "none",
-                  borderRadius: "0.5rem",
-                  fontWeight: "600",
-                  transition: "all 0.2s ease-in-out",
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.backgroundColor = "#047857";
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.backgroundColor = "#059669";
-                }}
+                size="lg"
+                colorScheme="green"
+                variant="solid"
               >
                 เรียนรู้เพิ่มเติม
-              </Link>
-            </div>
-
-            <div
-              style={{
-                position: "relative",
-                borderRadius: "0.5rem",
-                overflow: "hidden",
-              }}
-            >
+              </Button>
+            </VStack>
+            <Box borderRadius="md" overflow="hidden" boxShadow="lg">
               <Image
                 src="/images/about-1.jpg"
                 alt="ภารกิจของมูลนิธิประชาธรรม"
                 width={600}
                 height={400}
-                style={{
-                  width: "100%",
-                  height: "auto",
-                  borderRadius: "0.5rem",
-                }}
+                style={{ width: "100%", height: "auto" }}
               />
-            </div>
-          </div>
-        </div>
-      </div>
+            </Box>
+          </Grid>
+        </Container>
+      </Box>
 
-      {/* Latest News Section */}
-      <div style={{ backgroundColor: "white", padding: "4rem 0" }}>
-        <div
-          style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 1rem" }}
-        >
-          <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-            <h2
-              style={{
-                fontSize: "2.25rem",
-                color: "#047857",
-                marginBottom: "1rem",
-                fontWeight: "bold",
-              }}
-            >
+      {/* Latest Projects Section */}
+      <Box bg="white" py={{ base: 16, md: 20 }}>
+        <Container maxW="container.xl">
+          <VStack spacing={4} textAlign="center" mb={12}>
+            <Heading as="h2" size="xl" color="green.700">
               โครงการล่าสุด
-            </h2>
-            <p
-              style={{
-                fontSize: "1.125rem",
-                color: "#6b7280",
-                maxWidth: "512px",
-                margin: "0 auto",
-              }}
-            >
+            </Heading>
+            <Text fontSize="lg" color="gray.600" maxW="md" mx="auto">
               ดูโครงการและกิจกรรมล่าสุดที่เราได้ดำเนินการอยู่
-            </p>
-          </div>
+            </Text>
+          </VStack>
 
           {latestProjects && latestProjects.length > 0 ? (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-                gap: "2rem",
-                marginBottom: "3rem",
-              }}
+            <SimpleGrid
+              columns={{ base: 1, md: 2, lg: 3 }}
+              spacing={8}
+              mb={12}
             >
               {latestProjects.slice(0, 3).map((project) => (
                 <ProjectCard key={project.id} project={project} />
               ))}
-            </div>
+            </SimpleGrid>
           ) : (
-            <div style={{ textAlign: "center", padding: "2rem 0" }}>
-              <p style={{ color: "#6b7280" }}>ไม่พบโครงการในขณะนี้</p>
-            </div>
+            <Text textAlign="center" color="gray.500" py={8}>
+              ไม่พบโครงการในขณะนี้
+            </Text>
           )}
 
-          <div style={{ textAlign: "center" }}>
-            <Link
+          <Flex justify="center">
+            <Button
+              as={Link}
               href="/causes"
-              style={{
-                display: "inline-block",
-                padding: "0.75rem 2rem",
-                fontSize: "1.125rem",
-                border: "2px solid #059669",
-                color: "#059669",
-                textDecoration: "none",
-                borderRadius: "0.5rem",
-                fontWeight: "600",
-                transition: "all 0.2s ease-in-out",
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.backgroundColor = "#059669";
-                e.currentTarget.style.color = "white";
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.backgroundColor = "transparent";
-                e.currentTarget.style.color = "#059669";
-              }}
+              size="lg"
+              variant="outline"
+              colorScheme="green"
             >
               ดูโครงการทั้งหมด
-            </Link>
-          </div>
-        </div>
-      </div>
+            </Button>
+          </Flex>
+        </Container>
+      </Box>
 
       {/* Statistics Section */}
-      <div
-        style={{
-          backgroundColor: "#047857",
-          padding: "4rem 0",
-          color: "white",
-        }}
-      >
-        <div
-          style={{ maxWidth: "1152px", margin: "0 auto", padding: "0 1rem" }}
-        >
-          <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-            <h2
-              style={{
-                fontSize: "2.25rem",
-                marginBottom: "1rem",
-                color: "white",
-              }}
-            >
+      <Box bg="green.700" color="white" py={{ base: 16, md: 20 }}>
+        <Container maxW="container.lg">
+          <VStack spacing={4} textAlign="center" mb={12}>
+            <Heading as="h2" size="xl">
               ผลงานของเรา
-            </h2>
-            <p
-              style={{
-                fontSize: "1.125rem",
-                color: "rgba(255,255,255,0.9)",
-                maxWidth: "512px",
-                margin: "0 auto",
-              }}
-            >
+            </Heading>
+            <Text fontSize="lg" color="green.100" maxW="md" mx="auto">
               ตัวเลขที่สะท้อนถึงผลกระทบเชิงบวกที่เราสร้างให้กับชุมชน
-            </p>
-          </div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-              gap: "2rem",
-            }}
-          >
+            </Text>
+          </VStack>
+          <SimpleGrid columns={{ base: 2, md: 4 }} spacing={8}>
             {[
               { label: "โครงการที่ดำเนินการ", value: "30+" },
               { label: "ชุมชนที่ร่วมงาน", value: "20+" },
               { label: "บทความที่เผยแพร่", value: "300+" },
               { label: "ปีที่ดำเนินงาน", value: "15+" },
             ].map((stat) => (
-              <div key={stat.label} style={{ textAlign: "center" }}>
-                <div
-                  style={{
-                    fontSize: "3rem",
-                    fontWeight: "bold",
-                    color: "white",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  {stat.value}
-                </div>
-                <div
-                  style={{
-                    fontSize: "1.125rem",
-                    color: "rgba(255,255,255,0.9)",
-                  }}
-                >
+              <VStack key={stat.label}>
+                <Heading size="2xl">{stat.value}</Heading>
+                <Text fontSize="lg" color="green.100">
                   {stat.label}
-                </div>
-              </div>
+                </Text>
+              </VStack>
             ))}
-          </div>
-        </div>
-      </div>
+          </SimpleGrid>
+        </Container>
+      </Box>
 
       {/* Call to Action Section */}
-      <div style={{ backgroundColor: "#f9fafb", padding: "4rem 0" }}>
-        <div
-          style={{
-            maxWidth: "896px",
-            margin: "0 auto",
-            padding: "0 1rem",
-            textAlign: "center",
-          }}
-        >
-          <h2
-            style={{
-              fontSize: "2.25rem",
-              color: "#047857",
-              marginBottom: "1rem",
-            }}
-          >
-            ร่วมเป็นส่วนหนึ่งกับเรา
-          </h2>
-          <p
-            style={{
-              fontSize: "1.125rem",
-              color: "#6b7280",
-              maxWidth: "512px",
-              margin: "0 auto 2rem auto",
-            }}
-          >
-            หากคุณมีเรื่องราวที่ต้องการเล่า หรือต้องการสนับสนุนงานของเรา
-            เรายินดีต้อนรับทุกคน
-          </p>
-          <div
-            style={{
-              display: "flex",
-              gap: "1rem",
-              flexWrap: "wrap",
-              justifyContent: "center",
-            }}
-          >
-            <Link
-              href="/contact"
-              style={{
-                display: "inline-block",
-                padding: "0.75rem 2rem",
-                fontSize: "1.125rem",
-                backgroundColor: "#059669",
-                color: "white",
-                textDecoration: "none",
-                borderRadius: "0.5rem",
-                fontWeight: "600",
-                transition: "all 0.2s ease-in-out",
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.backgroundColor = "#047857";
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.backgroundColor = "#059669";
-              }}
-            >
-              ติดต่อเรา
-            </Link>
-            <Link
-              href="/donate"
-              style={{
-                display: "inline-block",
-                padding: "0.75rem 2rem",
-                fontSize: "1.125rem",
-                border: "2px solid #059669",
-                color: "#059669",
-                textDecoration: "none",
-                borderRadius: "0.5rem",
-                fontWeight: "600",
-                transition: "all 0.2s ease-in-out",
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.backgroundColor = "#059669";
-                e.currentTarget.style.color = "white";
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.backgroundColor = "transparent";
-                e.currentTarget.style.color = "#059669";
-              }}
-            >
-              สนับสนุนเรา
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
+      <Box bg="gray.50" py={{ base: 16, md: 20 }}>
+        <Container maxW="3xl" textAlign="center">
+          <VStack spacing={6}>
+            <Heading as="h2" size="xl" color="green.700">
+              ร่วมเป็นส่วนหนึ่งกับเรา
+            </Heading>
+            <Text fontSize="lg" color="gray.600">
+              หากคุณมีเรื่องราวที่ต้องการเล่า หรือต้องการสนับสนุนงานของเรา
+              เรายินดีต้อนรับทุกคน
+            </Text>
+            <HStack spacing={4} justify="center">
+              <Button as={Link} href="/contact" size="lg" colorScheme="green">
+                ติดต่อเรา
+              </Button>
+              <Button
+                as={Link}
+                href="/donate"
+                size="lg"
+                variant="outline"
+                colorScheme="green"
+              >
+                สนับสนุนเรา
+              </Button>
+            </HStack>
+          </VStack>
+        </Container>
+      </Box>
+    </Box>
   );
 }
