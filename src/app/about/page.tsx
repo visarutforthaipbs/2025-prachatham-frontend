@@ -373,7 +373,7 @@ export default function AboutPage() {
         <Card>
           <CardBody>
             <Heading as="h2" size="lg" color="prachatham.700" mb={6}>
-              ผลวัตของประชาธรรม
+              พลวัตของประชาธรรม
             </Heading>
             <Badge colorScheme="orange" fontSize="sm" px={3} py={1} mb={6}>
               OUR HISTORY
@@ -513,7 +513,7 @@ export default function AboutPage() {
                   และนักสื่อสารทั้งในแนวดิ่งและแนวราบ
                 </Heading>
                 <Text fontSize="sm" color="gray.500" mb={4}>
-                  ปี 2556-2566
+                  ปี 2556-2564
                 </Text>
                 <VStack
                   align="stretch"
@@ -545,12 +545,6 @@ export default function AboutPage() {
                       ภายใต้โครงการ MIDL for Inclusive Cities 2020
                       ได้รับทุนจากสถาบันสื่อเด็กและเยาวชน
                     </ListItem>
-                    <ListItem>
-                      ปี 2564-2566
-                      โครงการสร้างนักสื่อสารสิ่งแวดล้อมเพื่อเฝ้าระวังและฟื้นฟูสิ่งแวดล้อมอย่างยั่งยืน
-                      (เชียงใหม่) ได้รับทุนสนับสนุนจาก กองทุนสิ่งแวดล้อม
-                      สำนักงานนโยบายและแผนทรัพยากรธรรมชาติและสิ่งแวดล้อม
-                    </ListItem>
                   </UnorderedList>
                 </VStack>
               </Box>
@@ -563,7 +557,7 @@ export default function AboutPage() {
                   จัดตั้งเป็นมูลนิธิสื่อประชาธรรม
                 </Heading>
                 <Text fontSize="sm" color="gray.500" mb={4}>
-                  ปี 2566 - ปัจจุบัน
+                  ปี 2564 - ปัจจุบัน
                 </Text>
                 <VStack
                   align="stretch"
@@ -574,14 +568,24 @@ export default function AboutPage() {
                 >
                   <UnorderedList spacing={2} pl={6}>
                     <ListItem>
-                      ปี 2566-2570 ได้รับทุนสนับสนุนจาก United States Agency for
-                      International Development (Usaid) และกองทุนสิ่งแวดล้อม
+                      ปี 2564-2566
+                      โครงการสร้างนักสื่อสารสิ่งแวดล้อมเพื่อเฝ้าระวังและฟื้นฟูสิ่งแวดล้อมอย่างยั่งยืน
+                      (เชียงใหม่) ได้รับทุนสนับสนุนจาก กองทุนสิ่งแวดล้อม
                       สำนักงานนโยบายและแผนทรัพยากรธรรมชาติและสิ่งแวดล้อม
-                      กองทุนสื่อสร้างสรรค์ สถาบันสื่อเด็กและเยาวชน (สสย.)
+                    </ListItem>
+                    <ListItem>
+                      ปี 2566-2567 ได้รับทุนสนับสนุนจาก กองทุนสื่อสร้างสรรค์
+                      สถาบันสื่อเด็กและเยาวชน (สสย.)
                     </ListItem>
                     <ListItem>
                       ปี 2566-2567 โครงการ Citizen Accountability for Local
                       governance Media (CALM) ได้รับทุนจาก Internews
+                    </ListItem>
+                    <ListItem>
+                      ปี 2567-2568 โครงการ Strengthening Transparency in
+                      Infrastructure Development Through Environmental Reporting
+                      in Southeast Asia (STRIDES) ได้รับทุนจาก Earth Journalism
+                      Network (EJN)
                     </ListItem>
                   </UnorderedList>
                 </VStack>
