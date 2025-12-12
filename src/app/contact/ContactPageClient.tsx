@@ -16,10 +16,21 @@ import {
   Textarea,
   FormControl,
   FormLabel,
+  Icon,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import Script from "next/script";
 import { motion } from "framer-motion";
+import {
+  FaMapMarkerAlt,
+  FaEnvelope,
+  FaGlobe,
+  FaFacebook,
+  FaTwitter,
+  FaInstagram,
+  FaTiktok,
+  FaYoutube,
+} from "react-icons/fa";
 
 export default function ContactPageClient() {
   const organizationStructuredData = {
@@ -157,18 +168,24 @@ export default function ContactPageClient() {
 
                       <VStack align="stretch" gap={6}>
                         <Box>
-                          <Text fontWeight="semibold" color="gray.700" mb={2}>
-                            📍 ที่อยู่
-                          </Text>
+                          <HStack mb={2}>
+                            <Icon as={FaMapMarkerAlt} color="prachatham.600" />
+                            <Text fontWeight="semibold" color="gray.700">
+                              ที่อยู่
+                            </Text>
+                          </HStack>
                           <Text color="gray.600" lineHeight="tall">
                             77/1 หมู่ 5 ต.สุเทพ อ.เมืองจ.เชียงใหม่ 50200
                           </Text>
                         </Box>
 
                         <Box>
-                          <Text fontWeight="semibold" color="gray.700" mb={2}>
-                            📧 อีเมล
-                          </Text>
+                          <HStack mb={2}>
+                            <Icon as={FaEnvelope} color="prachatham.600" />
+                            <Text fontWeight="semibold" color="gray.700">
+                              อีเมล
+                            </Text>
+                          </HStack>
                           <VStack align="start" gap={1}>
                             <motion.div whileHover={{ scale: 1.05 }}>
                               <ChakraLink
@@ -186,14 +203,20 @@ export default function ContactPageClient() {
                         </Box>
 
                         <Box>
-                          <Text fontWeight="semibold" color="gray.700" mb={3}>
-                            🌐 ติดตามเราได้ที่
-                          </Text>
+                          <HStack mb={3}>
+                            <Icon as={FaGlobe} color="prachatham.600" />
+                            <Text fontWeight="semibold" color="gray.700">
+                              ติดตามเราได้ที่
+                            </Text>
+                          </HStack>
                           <SimpleGrid columns={2} gap={3}>
                             <motion.div whileHover={{ scale: 1.1 }}>
                               <ChakraLink
                                 href="https://www.facebook.com/prachatham"
                                 isExternal
+                                display="flex"
+                                alignItems="center"
+                                gap={2}
                                 color="prachatham.600"
                                 fontWeight="medium"
                                 _hover={{
@@ -201,6 +224,7 @@ export default function ContactPageClient() {
                                   textDecoration: "underline",
                                 }}
                               >
+                                <Icon as={FaFacebook} />
                                 Facebook
                               </ChakraLink>
                             </motion.div>
@@ -208,6 +232,9 @@ export default function ContactPageClient() {
                               <ChakraLink
                                 href="https://twitter.com/PrachathamF"
                                 isExternal
+                                display="flex"
+                                alignItems="center"
+                                gap={2}
                                 color="prachatham.600"
                                 fontWeight="medium"
                                 _hover={{
@@ -215,6 +242,7 @@ export default function ContactPageClient() {
                                   textDecoration: "underline",
                                 }}
                               >
+                                <Icon as={FaTwitter} />
                                 Twitter
                               </ChakraLink>
                             </motion.div>
@@ -222,6 +250,9 @@ export default function ContactPageClient() {
                               <ChakraLink
                                 href="https://www.instagram.com/prachathammedia/"
                                 isExternal
+                                display="flex"
+                                alignItems="center"
+                                gap={2}
                                 color="prachatham.600"
                                 fontWeight="medium"
                                 _hover={{
@@ -229,6 +260,7 @@ export default function ContactPageClient() {
                                   textDecoration: "underline",
                                 }}
                               >
+                                <Icon as={FaInstagram} />
                                 Instagram
                               </ChakraLink>
                             </motion.div>
@@ -236,6 +268,9 @@ export default function ContactPageClient() {
                               <ChakraLink
                                 href="https://www.tiktok.com/@prachathammedia"
                                 isExternal
+                                display="flex"
+                                alignItems="center"
+                                gap={2}
                                 color="prachatham.600"
                                 fontWeight="medium"
                                 _hover={{
@@ -243,6 +278,7 @@ export default function ContactPageClient() {
                                   textDecoration: "underline",
                                 }}
                               >
+                                <Icon as={FaTiktok} />
                                 TikTok
                               </ChakraLink>
                             </motion.div>
@@ -250,6 +286,9 @@ export default function ContactPageClient() {
                               <ChakraLink
                                 href="https://www.youtube.com/@pnnontv"
                                 isExternal
+                                display="flex"
+                                alignItems="center"
+                                gap={2}
                                 color="prachatham.600"
                                 fontWeight="medium"
                                 _hover={{
@@ -257,6 +296,7 @@ export default function ContactPageClient() {
                                   textDecoration: "underline",
                                 }}
                               >
+                                <Icon as={FaYoutube} />
                                 YouTube
                               </ChakraLink>
                             </motion.div>

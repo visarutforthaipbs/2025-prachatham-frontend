@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Providers } from "./providers";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import BackToTop from "@/components/BackToTop";
+import SkipLink from "@/components/SkipLink";
 import { Box } from "@chakra-ui/react";
 import "./globals.css";
 import "@/styles/fonts.css";
@@ -80,13 +82,15 @@ export default function RootLayout({
     <html lang="th" suppressHydrationWarning>
       <body suppressHydrationWarning>
         <Providers>
+          <SkipLink />
           <Box minH="100vh" bg="gray.50" display="flex" flexDirection="column">
             <Navigation />
-            <Box as="main" flex="1">
+            <Box as="main" id="main-content" flex="1" tabIndex={-1}>
               {children}
             </Box>
             <Footer />
           </Box>
+          <BackToTop />
         </Providers>
       </body>
     </html>

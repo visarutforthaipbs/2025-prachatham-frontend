@@ -193,6 +193,7 @@ export default function Footer() {
               isExternal
               color="gray.300"
               _hover={{ color: "prachatham.300" }}
+              aria-label="ติดตามเราบน Facebook"
             >
               Facebook
             </ChakraLink>
@@ -201,6 +202,7 @@ export default function Footer() {
               isExternal
               color="gray.300"
               _hover={{ color: "prachatham.300" }}
+              aria-label="ติดตามเราบน Twitter"
             >
               Twitter
             </ChakraLink>
@@ -209,6 +211,7 @@ export default function Footer() {
               isExternal
               color="gray.300"
               _hover={{ color: "prachatham.300" }}
+              aria-label="ติดตามเราบน Instagram"
             >
               Instagram
             </ChakraLink>
@@ -217,6 +220,7 @@ export default function Footer() {
               isExternal
               color="gray.300"
               _hover={{ color: "prachatham.300" }}
+              aria-label="ติดตามเราบน TikTok"
             >
               TikTok
             </ChakraLink>
@@ -225,6 +229,7 @@ export default function Footer() {
               isExternal
               color="gray.300"
               _hover={{ color: "prachatham.300" }}
+              aria-label="ติดตามเราบน YouTube"
             >
               YouTube
             </ChakraLink>

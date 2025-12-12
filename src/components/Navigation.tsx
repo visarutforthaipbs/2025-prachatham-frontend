@@ -13,6 +13,7 @@ import {
   Button,
   VStack,
   Link as ChakraLink,
+  Collapse,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
 import Link from "next/link";
@@ -182,7 +183,7 @@ export default function Navigation() {
       </Flex>
 
       {/* Mobile Navigation */}
-      {isOpen && (
+      <Collapse in={isOpen} animateOpacity>
         <Box bg="white" display={{ md: "none" }} p={4} borderBottomWidth="1px">
           <VStack align="start" gap={2}>
             {NAV_ITEMS.map((navItem) => (
@@ -223,7 +224,7 @@ export default function Navigation() {
             </Button>
           </VStack>
         </Box>
-      )}
+      </Collapse>
 
       {/* Search Box */}
       {isSearchOpen && (

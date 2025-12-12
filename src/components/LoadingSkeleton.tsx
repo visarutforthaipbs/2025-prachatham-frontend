@@ -1,18 +1,38 @@
 "use client";
 
-import { Box, Skeleton, SkeletonText, VStack, HStack } from "@chakra-ui/react";
+import {
+  Box,
+  Skeleton,
+  SkeletonText,
+  VStack,
+  HStack,
+  SimpleGrid,
+  Container,
+} from "@chakra-ui/react";
 
 interface LoadingSkeletonProps {
   count?: number;
+  type?: "post" | "project" | "page";
 }
 
-export default function LoadingSkeleton({ count = 6 }: LoadingSkeletonProps) {
+export default function LoadingSkeleton({
+  count = 6,
+  type = "post",
+}: LoadingSkeletonProps) {
+  if (type === "page") {
+    return <PageSkeleton />;
+  }
+
   return (
-    <>
-      {Array.from({ length: count }).map((_, index) => (
-        <PostCardSkeleton key={index} />
-      ))}
-    </>
+    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
+      {Array.from({ length: count }).map((_, index) =>
+        type === "project" ? (
+          <ProjectCardSkeleton key={index} />
+        ) : (
+          <PostCardSkeleton key={index} />
+        )
+      )}
+    </SimpleGrid>
   );
 }
 
@@ -59,3 +79,53 @@ function PostCardSkeleton() {
     </Box>
   );
 }
+
+function ProjectCardSkeleton() {
+  return (
+    <Box
+      overflow="hidden"
+      borderRadius="lg"
+      boxShadow="sm"
+      bg="white"
+      h="full"
+      display="flex"
+      flexDirection="column"
+    >
+      <Skeleton height="200px" />
+      <Box p={6}>
+        <Skeleton height="24px" width="80%" mb={3} />
+        <VStack align="start" gap={2}>
+          <HStack w="full">
+            <Skeleton height="14px" width="60px" />
+            <Skeleton height="14px" width="100px" />
+          </HStack>
+          <HStack w="full">
+            <Skeleton height="14px" width="50px" />
+            <Skeleton height="14px" width="120px" />
+          </HStack>
+        </VStack>
+        <Skeleton height="36px" width="100%" mt={4} borderRadius="md" />
+      </Box>
+    </Box>
+  );
+}
+
+function PageSkeleton() {
+  return (
+    <Container maxW="4xl" py={8}>
+      <VStack spacing={6} align="stretch">
+        <Skeleton height="40px" width="60%" />
+        <HStack>
+          <Skeleton height="16px" width="100px" />
+          <Skeleton height="16px" width="80px" />
+        </HStack>
+        <Skeleton height="400px" borderRadius="lg" />
+        <SkeletonText noOfLines={8} spacing={4} />
+        <SkeletonText noOfLines={6} spacing={4} />
+        <SkeletonText noOfLines={4} spacing={4} />
+      </VStack>
+    </Container>
+  );
+}
+
+export { PostCardSkeleton, ProjectCardSkeleton, PageSkeleton };
