@@ -77,8 +77,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="th">
-      <body suppressHydrationWarning={true}>
+    <html lang="th" suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <Providers>
           <Box minH="100vh" bg="gray.50" display="flex" flexDirection="column">
             <Navigation />

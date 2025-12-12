@@ -16,6 +16,8 @@ function htmlToChunks(html: string, maxLen = 180) {
   const text = html
     .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
     .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+    // Replace block-level closing tags with a period to ensure pause
+    .replace(/<\/(h[1-6]|p|div|li|br|tr)>/gi, ". ")
     .replace(/<[^>]+>/g, " ")
     .replace(/\s+/g, " ")
     .trim();

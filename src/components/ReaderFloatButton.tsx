@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { Box, Flex, Text, Link } from "@chakra-ui/react";
 
 export default function ReaderFloatButton({ postKey }: { postKey: string }) {
   const [canResume, setCanResume] = useState(false);
@@ -16,20 +17,49 @@ export default function ReaderFloatButton({ postKey }: { postKey: string }) {
   }, [postKey]);
 
   return (
-    <a
+    <Link
       href="#top-player"
-      className="fixed bottom-6 right-6 z-50 group hover:scale-105 transition-all duration-200"
+      position="fixed"
+      bottom={6}
+      right={6}
+      zIndex={50}
+      _hover={{ transform: "scale(1.05)", textDecoration: "none" }}
+      transition="all 0.2s"
       title={canResume ? "เล่นต่อจากตำแหน่งเดิม" : "เริ่มฟังบทความ"}
+      aria-label={canResume ? "เล่นต่อจากตำแหน่งเดิม" : "เริ่มฟังบทความ"}
     >
-      <div className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-3 rounded-full shadow-lg hover:shadow-xl">
-        <span className="text-lg">{canResume ? "⏯️" : "🔊"}</span>
-        <span className="font-medium text-sm">
+      <Flex
+        align="center"
+        gap={2}
+        bgGradient="linear(to-r, blue.600, blue.700)"
+        color="white"
+        px={4}
+        py={3}
+        borderRadius="full"
+        boxShadow="lg"
+        _hover={{ boxShadow: "xl" }}
+      >
+        <Text fontSize="lg">{canResume ? "⏯️" : "🔊"}</Text>
+        <Text fontWeight="medium" fontSize="sm">
           {canResume ? "อ่านต่อ" : "อ่านให้ฟัง"}
-        </span>
+        </Text>
         {canResume && (
-          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+          <Box
+            w={2}
+            h={2}
+            bg="green.400"
+            borderRadius="full"
+            animation="pulse 2s infinite"
+            sx={{
+              "@keyframes pulse": {
+                "0%": { opacity: 1 },
+                "50%": { opacity: 0.5 },
+                "100%": { opacity: 1 },
+              },
+            }}
+          />
         )}
-      </div>
-    </a>
+      </Flex>
+    </Link>
   );
 }
