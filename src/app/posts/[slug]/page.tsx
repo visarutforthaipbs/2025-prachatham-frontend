@@ -17,8 +17,6 @@ import { notFound } from "next/navigation";
 import { wordpressApi, formatThaiDate, stripHtml } from "@/lib/wordpress";
 import { Metadata } from "next";
 import { SocialShare } from "@/components/SocialShare";
-import ReaderThaiFree from "@/components/ReaderThaiFree";
-import ReaderFloatButton from "@/components/ReaderFloatButton";
 
 interface PostPageProps {
   params: Promise<{
@@ -275,13 +273,6 @@ export default async function PostPage({ params }: PostPageProps) {
                         </HStack>
                       </HStack>
                     </HStack>
-
-                    {/* TTS Reader */}
-                    <Divider />
-                    <ReaderThaiFree
-                      postKey={post.slug || String(post.id)}
-                      articleSelector=".wordpress-content"
-                    />
                   </VStack>
                 </CardBody>
               </Card>
@@ -377,23 +368,99 @@ export default async function PostPage({ params }: PostPageProps) {
                   fontSize: "0.9rem",
                   lineHeight: "1.5",
                 },
+                /* Table wrapper for horizontal scroll on mobile */
+                "& figure.wp-block-table, & .wp-block-table": {
+                  margin: "2rem 0",
+                  overflowX: "auto",
+                  WebkitOverflowScrolling: "touch",
+                  borderRadius: "0.75rem",
+                  border: "1px solid var(--chakra-colors-gray-200)",
+                  boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.06)",
+                },
                 "& table": {
                   width: "100%",
                   borderCollapse: "collapse",
-                  margin: "1.5rem 0",
+                  margin: "0",
+                  fontSize: "0.82rem",
+                  lineHeight: "1.55",
+                  minWidth: "480px",
+                },
+                /* Tables not wrapped in figure */
+                "& > table": {
+                  margin: "2rem 0",
+                  borderRadius: "0.75rem",
                   border: "1px solid var(--chakra-colors-gray-200)",
-                  borderRadius: "0.5rem",
                   overflow: "hidden",
+                  boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.06)",
                 },
                 "& th, & td": {
-                  padding: "0.75rem",
+                  padding: "0.625rem 0.75rem",
                   textAlign: "left",
-                  borderBottom: "1px solid var(--chakra-colors-gray-200)",
+                  borderBottom: "1px solid var(--chakra-colors-gray-100)",
+                  borderRight: "1px solid var(--chakra-colors-gray-100)",
+                  verticalAlign: "top",
+                  wordBreak: "break-word",
+                  color: "var(--chakra-colors-gray-700)",
+                },
+                /* Style lines starting with – or - or • as bullet items */
+                "& td": {
+                  whiteSpace: "pre-line",
+                },
+                "& th:last-child, & td:last-child": {
+                  borderRight: "none",
+                },
+                "& thead": {
+                  position: "sticky",
+                  top: 0,
+                  zIndex: 1,
                 },
                 "& th": {
-                  backgroundColor: "var(--chakra-colors-gray-50)",
-                  fontWeight: "semibold",
+                  backgroundColor: "var(--chakra-colors-prachatham-50)",
+                  fontWeight: "600",
                   color: "var(--chakra-colors-gray-800)",
+                  fontSize: "0.82rem",
+                  letterSpacing: "0.01em",
+                  borderBottomWidth: "2px",
+                  borderBottomColor: "var(--chakra-colors-prachatham-200)",
+                  whiteSpace: "nowrap",
+                },
+                "& tbody tr": {
+                  transition: "background-color 0.15s ease",
+                },
+                "& tbody tr:hover": {
+                  backgroundColor: "var(--chakra-colors-gray-50)",
+                },
+                "& tbody tr:nth-of-type(even)": {
+                  backgroundColor: "rgba(0, 0, 0, 0.015)",
+                },
+                "& tbody tr:nth-of-type(even):hover": {
+                  backgroundColor: "var(--chakra-colors-gray-50)",
+                },
+                "& tbody tr:last-child td": {
+                  borderBottom: "none",
+                },
+                /* Bullet-like symbols inside table cells */
+                "& td ul, & td ol": {
+                  paddingLeft: "1.25rem",
+                  margin: "0.25rem 0",
+                  fontSize: "0.82rem",
+                },
+                "& td li": {
+                  fontSize: "0.82rem",
+                  marginBottom: "0.25rem",
+                  lineHeight: "1.5",
+                },
+                "& td p": {
+                  fontSize: "0.82rem",
+                  marginBottom: "0.35rem",
+                  lineHeight: "1.55",
+                },
+                "& caption, & figcaption": {
+                  padding: "0.75rem 1rem",
+                  fontSize: "0.8rem",
+                  color: "var(--chakra-colors-gray-500)",
+                  textAlign: "center",
+                  fontStyle: "italic",
                 },
               }}
               dangerouslySetInnerHTML={{ __html: post.content.rendered }}
@@ -405,8 +472,6 @@ export default async function PostPage({ params }: PostPageProps) {
             <SocialShare url={currentUrl} title={post.title.rendered} />
           </VStack>
 
-          {/* Floating Reader Button */}
-          <ReaderFloatButton postKey={post.slug || String(post.id)} />
         </Container>
       </>
     );

@@ -21,19 +21,20 @@ interface BreadcrumbProps {
 
 export default function Breadcrumb({ items }: BreadcrumbProps) {
   return (
-    <Box bg="gray.50" py={3} borderBottomWidth="1px" borderColor="gray.200">
+    <Box bg="white" py={3} borderBottomWidth="1px" borderColor="gray.100">
       <Container maxW="7xl">
         <ChakraBreadcrumb
           spacing="8px"
-          separator={<ChevronRightIcon color="gray.400" />}
+          separator={<ChevronRightIcon color="gray.300" boxSize={3} />}
           fontSize="sm"
         >
           <BreadcrumbItem>
             <BreadcrumbLink
               as={Link}
               href="/"
-              color="gray.600"
+              color="gray.500"
               _hover={{ color: "prachatham.600", textDecoration: "none" }}
+              transition="color 0.15s ease"
             >
               หน้าแรก
             </BreadcrumbLink>
@@ -48,14 +49,15 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
                 <BreadcrumbLink
                   as={Link}
                   href={item.href}
-                  color="gray.600"
+                  color="gray.500"
                   _hover={{ color: "prachatham.600", textDecoration: "none" }}
+                  transition="color 0.15s ease"
                 >
                   {item.label}
                 </BreadcrumbLink>
               ) : (
                 <BreadcrumbLink
-                  color="prachatham.600"
+                  color="gray.800"
                   fontWeight="medium"
                   _hover={{ textDecoration: "none" }}
                   cursor="default"

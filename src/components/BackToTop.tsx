@@ -32,23 +32,28 @@ export default function BackToTop() {
   return (
     <Box
       position="fixed"
-      bottom={{ base: "20px", md: "40px" }}
-      right={{ base: "20px", md: "40px" }}
+      bottom={{ base: "20px", md: "32px" }}
+      right={{ base: "20px", md: "32px" }}
       zIndex={1000}
     >
       <IconButton
         aria-label="กลับขึ้นด้านบน"
-        icon={<ChevronUpIcon boxSize={6} />}
+        icon={<ChevronUpIcon boxSize={5} />}
         onClick={scrollToTop}
-        colorScheme="prachatham"
-        size="lg"
+        bg="white"
+        color="prachatham.600"
+        size="md"
         borderRadius="full"
-        boxShadow="lg"
+        border="1px solid"
+        borderColor="gray.200"
+        boxShadow="0 4px 14px rgba(0,0,0,0.1)"
         _hover={{
           transform: "translateY(-2px)",
-          boxShadow: "xl",
+          boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
+          bg: "prachatham.50",
+          borderColor: "prachatham.200",
         }}
-        transition="all 0.2s"
+        transition="all 0.2s ease"
       />
     </Box>
   );

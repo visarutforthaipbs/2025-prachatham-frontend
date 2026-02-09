@@ -97,27 +97,28 @@ export default function PostsPage() {
   }
 
   return (
-    <Container maxW="7xl" py={8}>
+    <Container maxW="7xl" py={{ base: 8, md: 12 }}>
       <VStack align="stretch" gap={8}>
         {/* Breadcrumb */}
-        <HStack fontSize="sm" color="gray.500">
-          <ChakraLink as={Link} href="/" _hover={{ color: "prachatham.600" }}>
+        <HStack fontSize="sm" color="gray.400">
+          <ChakraLink as={Link} href="/" _hover={{ color: "prachatham.600" }} transition="color 0.15s ease">
             หน้าแรก
           </ChakraLink>
-          <Text>/</Text>
+          <Text color="gray.300">/</Text>
           <Text color="gray.700" fontWeight="medium">
             บทความ
           </Text>
         </HStack>
 
         {/* Header */}
-        <Box textAlign="center">
-          <Heading as="h1" size="xl" color="prachatham.700" mb={4}>
+        <Box textAlign="center" mb={4}>
+          <Heading as="h1" fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }} color="prachatham.700" mb={3} letterSpacing="-0.02em">
             บทความทั้งหมด
           </Heading>
-          <Text fontSize="lg" color="gray.600" maxW="2xl" mx="auto">
+          <Text fontSize={{ base: "md", md: "lg" }} color="gray.500" maxW="2xl" mx="auto">
             ข่าวสารและบทความด้านสิ่งแวดล้อมและการอนุรักษ์ธรรมชาติ
           </Text>
+          <Box w="60px" h="3px" bg="prachatham.500" borderRadius="full" mx="auto" mt={4} />
         </Box>
 
         {/* Category Filter */}
@@ -138,12 +139,17 @@ export default function PostsPage() {
                 <Button
                   onClick={handleLoadMore}
                   isLoading={loadingMore}
-                  colorScheme="green"
+                  colorScheme="prachatham"
                   size="md"
                   variant="outline"
+                  borderRadius="full"
+                  px={8}
+                  border="2px solid"
                   _hover={{
                     bg: "prachatham.50",
+                    transform: "translateY(-1px)",
                   }}
+                  transition="all 0.2s ease"
                   disabled={loadingMore}
                 >
                   {loadingMore ? "กำลังโหลด..." : "โหลดเพิ่มเติม"}

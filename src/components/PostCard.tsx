@@ -8,8 +8,9 @@ import {
   Flex,
   Link as ChakraLink,
   HStack,
+  Icon,
 } from "@chakra-ui/react";
-import { FaUser } from "react-icons/fa";
+import { FaUser, FaArrowRight } from "react-icons/fa";
 import Link from "next/link";
 import NextImage from "next/image";
 import { WordPressPost, formatThaiDate, getExcerpt } from "@/lib/wordpress";
@@ -31,39 +32,57 @@ export default function PostCard({ post }: PostCardProps) {
 
   return (
     <Box
-      maxW="sm"
       overflow="hidden"
-      borderRadius="lg"
-      boxShadow="sm"
+      borderRadius="xl"
       bg="white"
+      border="1px solid"
+      borderColor="gray.100"
+      boxShadow="0 1px 3px rgba(0,0,0,0.06)"
       _hover={{
-        boxShadow: "md",
-        transform: "translateY(-2px)",
-        transition: "all 0.2s ease-in-out",
+        boxShadow: "0 20px 40px -8px rgba(0,0,0,0.12)",
+        transform: "translateY(-4px)",
+        borderColor: "prachatham.100",
       }}
+      transition="all 0.3s ease"
       h="full"
       display="flex"
       flexDirection="column"
     >
       {/* Featured Image */}
       {featuredImage && (
-        <Box position="relative" height="200px" overflow="hidden">
-          <NextImage
-            src={featuredImage.source_url}
-            alt={featuredImage.alt_text || post.title.rendered}
-            fill
-            style={{
-              objectFit: "cover",
-            }}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-        </Box>
+        <ChakraLink
+          as={Link}
+          href={`/posts/${post.slug}`}
+          _hover={{ textDecoration: "none" }}
+        >
+          <Box position="relative" height="220px" overflow="hidden">
+            <NextImage
+              src={featuredImage.source_url}
+              alt={featuredImage.alt_text || post.title.rendered}
+              fill
+              style={{
+                objectFit: "cover",
+                transition: "transform 0.4s ease",
+              }}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+            {/* Subtle gradient for readability */}
+            <Box
+              position="absolute"
+              bottom={0}
+              left={0}
+              right={0}
+              h="60px"
+              bgGradient="linear(to-t, blackAlpha.200, transparent)"
+            />
+          </Box>
+        </ChakraLink>
       )}
 
-      <Box flex={1} display="flex" flexDirection="column" p={6}>
+      <Box flex={1} display="flex" flexDirection="column" p={5}>
         {/* Categories */}
         {categories.length > 0 && (
-          <HStack mb={2} flexWrap="wrap" gap={1}>
+          <HStack mb={3} flexWrap="wrap" gap={1.5}>
             {categories.slice(0, 2).map((category) => (
               <ChakraLink
                 key={category.id}
@@ -72,17 +91,12 @@ export default function PostCard({ post }: PostCardProps) {
                 _hover={{ textDecoration: "none" }}
               >
                 <Badge
-                  colorScheme="green"
-                  variant="subtle"
+                  variant="brand"
                   fontSize="xs"
-                  borderRadius="full"
-                  px={2}
-                  py={1}
                   _hover={{
-                    bg: "prachatham.200",
-                    transform: "scale(1.05)",
+                    bg: "prachatham.100",
                   }}
-                  transition="all 0.2s"
+                  transition="all 0.15s ease"
                 >
                   {category.name}
                 </Badge>
@@ -100,10 +114,10 @@ export default function PostCard({ post }: PostCardProps) {
         >
           <Heading
             size="md"
-            lineHeight="short"
+            lineHeight="snug"
             color="gray.800"
             _hover={{ color: "prachatham.600" }}
-            transition="color 0.2s"
+            transition="color 0.2s ease"
             mb={3}
             css={{
               display: "-webkit-box",
@@ -118,14 +132,14 @@ export default function PostCard({ post }: PostCardProps) {
 
         {/* Excerpt */}
         <Text
-          color="gray.600"
+          color="gray.500"
           fontSize="sm"
-          lineHeight="base"
+          lineHeight="relaxed"
           mb={4}
           flex={1}
           css={{
             display: "-webkit-box",
-            WebkitLineClamp: 3,
+            WebkitLineClamp: 2,
             WebkitBoxOrient: "vertical",
             overflow: "hidden",
           }}
@@ -133,19 +147,20 @@ export default function PostCard({ post }: PostCardProps) {
           {getExcerpt(post.excerpt.rendered, 120)}
         </Text>
 
-        {/* Date and Author */}
+        {/* Date, Author & Read More */}
         <Flex
           justify="space-between"
           align="center"
           mt="auto"
-          flexWrap="wrap"
-          gap={2}
+          pt={4}
+          borderTop="1px solid"
+          borderColor="gray.100"
         >
-          <Flex direction="column" fontSize="xs" color="gray.500" gap={1}>
+          <Flex direction="column" fontSize="xs" color="gray.400" gap={0.5}>
             <Text>{formatThaiDate(post.date)}</Text>
             {post.acf?.authornamepost && (
               <HStack spacing={1}>
-                <FaUser size={10} />
+                <FaUser size={9} />
                 <Text>{post.acf.authornamepost}</Text>
               </HStack>
             )}
@@ -156,12 +171,17 @@ export default function PostCard({ post }: PostCardProps) {
             color="prachatham.600"
             fontSize="sm"
             fontWeight="medium"
+            display="flex"
+            alignItems="center"
+            gap={1}
             _hover={{
               color: "prachatham.700",
-              textDecoration: "underline",
+              gap: 2,
             }}
+            transition="all 0.2s ease"
           >
             อ่านต่อ
+            <Icon as={FaArrowRight} boxSize={2.5} />
           </ChakraLink>
         </Flex>
       </Box>

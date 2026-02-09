@@ -17,7 +17,7 @@ export default function CategoryFilter({
 
   return (
     <Box mb={8}>
-      <Text fontSize="lg" fontWeight="semibold" mb={4} color="gray.700">
+      <Text fontSize="sm" fontWeight="600" mb={3} color="gray.500" letterSpacing="0.02em" textTransform="uppercase">
         หมวดหมู่
       </Text>
       <HStack flexWrap="wrap" gap={2}>
@@ -26,20 +26,21 @@ export default function CategoryFilter({
           <Box
             fontSize="sm"
             fontWeight="medium"
-            bg={allCategoriesActive ? "prachatham.500" : "gray.100"}
-            color={allCategoriesActive ? "white" : "gray.700"}
+            bg={allCategoriesActive ? "prachatham.600" : "white"}
+            color={allCategoriesActive ? "white" : "gray.600"}
             borderRadius="full"
             px={4}
             py={2}
             cursor="pointer"
             border="1px solid"
-            borderColor={allCategoriesActive ? "prachatham.500" : "gray.200"}
+            borderColor={allCategoriesActive ? "prachatham.600" : "gray.200"}
             _hover={{
-              transform: "scale(1.05)",
-              bg: allCategoriesActive ? "prachatham.600" : "prachatham.50",
-              borderColor: "prachatham.500",
+              transform: "translateY(-1px)",
+              bg: allCategoriesActive ? "prachatham.700" : "prachatham.50",
+              borderColor: "prachatham.300",
+              boxShadow: "sm",
             }}
-            transition="all 0.2s"
+            transition="all 0.2s ease"
           >
             ทั้งหมด
           </Box>
@@ -58,20 +59,21 @@ export default function CategoryFilter({
               <Box
                 fontSize="sm"
                 fontWeight="medium"
-                bg={isActive ? "prachatham.500" : "gray.100"}
-                color={isActive ? "white" : "gray.700"}
+                bg={isActive ? "prachatham.600" : "white"}
+                color={isActive ? "white" : "gray.600"}
                 borderRadius="full"
                 px={4}
                 py={2}
                 cursor="pointer"
                 border="1px solid"
-                borderColor={isActive ? "prachatham.500" : "gray.200"}
+                borderColor={isActive ? "prachatham.600" : "gray.200"}
                 _hover={{
-                  transform: "scale(1.05)",
-                  bg: isActive ? "prachatham.600" : "prachatham.50",
-                  borderColor: "prachatham.500",
+                  transform: "translateY(-1px)",
+                  bg: isActive ? "prachatham.700" : "prachatham.50",
+                  borderColor: "prachatham.300",
+                  boxShadow: "sm",
                 }}
-                transition="all 0.2s"
+                transition="all 0.2s ease"
               >
                 {category.name} ({category.count})
               </Box>

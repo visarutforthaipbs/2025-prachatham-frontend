@@ -1,5 +1,18 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import {
+  Box,
+  Heading,
+  Text,
+  Badge,
+  Flex,
+  HStack,
+  Icon,
+  Link as ChakraLink,
+} from "@chakra-ui/react";
+import { FaArrowRight, FaMapMarkerAlt, FaClock } from "react-icons/fa";
 import type { WordPressProject } from "@/lib/wordpress";
 
 interface ProjectCardProps {
@@ -7,7 +20,6 @@ interface ProjectCardProps {
 }
 
 export default function ProjectCard({ project }: ProjectCardProps) {
-  // Helper function to get image URL
   const getImageUrl = () => {
     if (project._embedded?.["wp:featuredmedia"]?.[0]) {
       return (
@@ -15,7 +27,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           ?.source_url || project._embedded["wp:featuredmedia"][0].source_url
       );
     }
-    return "/images/placeholder-project.jpg"; // Fallback image
+    return "/images/placeholder-project.jpg";
   };
 
   const getImageAlt = () => {
@@ -27,89 +39,74 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   };
 
   return (
-    <div
-      style={{
-        backgroundColor: "white",
-        borderRadius: "12px",
-        overflow: "hidden",
-        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-        transition: "all 0.3s ease",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
+    <Box
+      overflow="hidden"
+      borderRadius="xl"
+      bg="white"
+      border="1px solid"
+      borderColor="gray.100"
+      boxShadow="0 1px 3px rgba(0,0,0,0.06)"
+      _hover={{
+        boxShadow: "0 20px 40px -8px rgba(0,0,0,0.12)",
+        transform: "translateY(-4px)",
+        borderColor: "prachatham.100",
       }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "translateY(-4px)";
-        e.currentTarget.style.boxShadow = "0 20px 25px -5px rgba(0, 0, 0, 0.1)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "translateY(0)";
-        e.currentTarget.style.boxShadow = "0 4px 6px -1px rgba(0, 0, 0, 0.1)";
-      }}
+      transition="all 0.3s ease"
+      h="full"
+      display="flex"
+      flexDirection="column"
     >
-      <Link
+      <ChakraLink
+        as={Link}
         href={`/projects/${project.slug}`}
-        style={{
-          textDecoration: "none",
-          color: "inherit",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-        }}
+        _hover={{ textDecoration: "none" }}
+        h="full"
+        display="flex"
+        flexDirection="column"
       >
         {/* Project Image */}
-        <div
-          style={{ position: "relative", height: "200px", overflow: "hidden" }}
-        >
+        <Box position="relative" height="220px" overflow="hidden">
           <Image
             src={getImageUrl()}
             alt={getImageAlt()}
             fill
-            style={{ objectFit: "cover" }}
+            style={{
+              objectFit: "cover",
+              transition: "transform 0.4s ease",
+            }}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
 
           {/* Status Badge */}
           {project.acf?.projectStatus && (
-            <div
-              style={{
-                position: "absolute",
-                top: "12px",
-                right: "12px",
-                backgroundColor:
-                  project.acf.projectStatus === "active"
-                    ? "#10b981"
-                    : "#6b7280",
-                color: "white",
-                padding: "4px 8px",
-                borderRadius: "6px",
-                fontSize: "12px",
-                fontWeight: "500",
-              }}
+            <Badge
+              position="absolute"
+              top={3}
+              right={3}
+              variant={project.acf.projectStatus === "active" ? "brand" : "subtle"}
+              bg={project.acf.projectStatus === "active" ? "prachatham.500" : "gray.500"}
+              color="white"
+              fontSize="xs"
+              px={3}
+              py={1}
+              borderRadius="full"
+              fontWeight="500"
             >
-              {project.acf.projectStatus === "active"
-                ? "ดำเนินการ"
-                : "เสร็จสิ้น"}
-            </div>
+              {project.acf.projectStatus === "active" ? "ดำเนินการ" : "เสร็จสิ้น"}
+            </Badge>
           )}
-        </div>
+        </Box>
 
         {/* Project Content */}
-        <div
-          style={{
-            padding: "1.5rem",
-            flexGrow: 1,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <h3
-            style={{
-              fontSize: "1.25rem",
-              fontWeight: "600",
-              color: "#047857",
-              marginBottom: "0.75rem",
-              lineHeight: "1.4",
+        <Box p={5} flexGrow={1} display="flex" flexDirection="column">
+          <Heading
+            as="h3"
+            size="md"
+            color="prachatham.700"
+            mb={3}
+            lineHeight="snug"
+            _groupHover={{ color: "prachatham.600" }}
+            css={{
               display: "-webkit-box",
               WebkitLineClamp: 2,
               WebkitBoxOrient: "vertical",
@@ -117,81 +114,43 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             }}
           >
             {project.title.rendered}
-          </h3>
+          </Heading>
 
           {/* Project Details */}
-          <div style={{ marginBottom: "1rem", flexGrow: 1 }}>
+          <Flex direction="column" gap={2} mb={4} flexGrow={1}>
             {project.acf?.project_duration && (
-              <div
-                style={{
-                  fontSize: "14px",
-                  marginBottom: "8px",
-                  display: "flex",
-                }}
-              >
-                <span
-                  style={{
-                    color: "#374151",
-                    fontWeight: "500",
-                    minWidth: "fit-content",
-                    marginRight: "8px",
-                  }}
-                >
-                  ระยะเวลา:
-                </span>
-                <span style={{ color: "#6b7280", lineHeight: "1.4" }}>
-                  {project.acf.project_duration}
-                </span>
-              </div>
+              <HStack fontSize="sm" color="gray.500" spacing={2}>
+                <Icon as={FaClock} boxSize={3} color="gray.400" />
+                <Text>{project.acf.project_duration}</Text>
+              </HStack>
             )}
-
             {project.acf?.project_location && (
-              <div
-                style={{
-                  fontSize: "14px",
-                  marginBottom: "8px",
-                  display: "flex",
-                }}
-              >
-                <span
-                  style={{
-                    color: "#374151",
-                    fontWeight: "500",
-                    minWidth: "fit-content",
-                    marginRight: "8px",
-                  }}
-                >
-                  สถานที่:
-                </span>
-                <span style={{ color: "#6b7280", lineHeight: "1.4" }}>
-                  {project.acf.project_location}
-                </span>
-              </div>
+              <HStack fontSize="sm" color="gray.500" spacing={2}>
+                <Icon as={FaMapMarkerAlt} boxSize={3} color="gray.400" />
+                <Text>{project.acf.project_location}</Text>
+              </HStack>
             )}
-          </div>
+          </Flex>
 
-          <div
-            style={{
-              marginTop: "auto",
-              paddingTop: "1rem",
-              borderTop: "1px solid #f3f4f6",
-            }}
+          {/* Read More */}
+          <Flex
+            align="center"
+            gap={1}
+            mt="auto"
+            pt={4}
+            borderTop="1px solid"
+            borderColor="gray.100"
+            color="prachatham.600"
+            fontSize="sm"
+            fontWeight="500"
+            _hover={{ gap: 2 }}
+            transition="all 0.2s ease"
           >
-            <span
-              style={{
-                color: "#059669",
-                fontSize: "14px",
-                fontWeight: "500",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              อ่านเพิ่มเติม
-              <span style={{ marginLeft: "4px" }}>→</span>
-            </span>
-          </div>
-        </div>
-      </Link>
-    </div>
+            อ่านเพิ่มเติม
+            <Icon as={FaArrowRight} boxSize={2.5} />
+          </Flex>
+        </Box>
+      </ChakraLink>
+    </Box>
   );
 }

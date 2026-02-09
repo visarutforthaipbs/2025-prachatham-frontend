@@ -14,6 +14,7 @@ import {
   VStack,
   Link as ChakraLink,
   Collapse,
+  HStack,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
 import Link from "next/link";
@@ -56,20 +57,22 @@ export default function Navigation() {
   };
 
   return (
-    <Box>
+    <Box position="sticky" top={0} zIndex={1000}>
+      {/* Top accent bar */}
+      <Box h="3px" bgGradient="linear(to-r, prachatham.600, prachatham.400, envGreen.400)" />
+
       <Flex
         bg="white"
         color="gray.600"
-        minH="60px"
+        minH="64px"
         py={2}
         px={4}
         borderBottomWidth="1px"
-        borderBottomColor="gray.200"
+        borderBottomColor="gray.100"
         align="center"
-        position="sticky"
-        top={0}
-        zIndex={1000}
-        boxShadow="sm"
+        boxShadow="0 1px 3px 0 rgba(0, 0, 0, 0.05)"
+        backdropFilter="saturate(180%) blur(12px)"
+        backgroundColor="rgba(255, 255, 255, 0.92)"
       >
         <Container maxW="7xl">
           <Flex align="center" justify="space-between">
@@ -83,6 +86,8 @@ export default function Navigation() {
                 onClick={onToggle}
                 aria-label="Toggle Navigation"
                 variant="ghost"
+                size="sm"
+                borderRadius="lg"
               >
                 {isOpen ? (
                   <CloseIcon boxSize={3} />
@@ -93,17 +98,20 @@ export default function Navigation() {
             </Flex>
 
             {/* Logo */}
-            <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
+            <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }} align="center">
               <ChakraLink
                 as={Link}
                 href="/"
                 _hover={{ textDecoration: "none" }}
+                display="flex"
+                alignItems="center"
               >
                 <Text
                   fontFamily="heading"
                   fontWeight="bold"
                   fontSize="xl"
-                  color="prachatham.600"
+                  color="prachatham.700"
+                  letterSpacing="-0.02em"
                 >
                   ประชาธรรม
                 </Text>
@@ -111,28 +119,30 @@ export default function Navigation() {
 
               {/* Desktop Navigation */}
               <Flex display={{ base: "none", md: "flex" }} ml={10}>
-                <Stack direction="row" gap={4}>
+                <HStack spacing={1}>
                   {NAV_ITEMS.map((navItem) => (
                     <ChakraLink
                       key={navItem.label}
                       as={Link}
                       href={navItem.href || "#"}
-                      px={2}
-                      py={1}
+                      px={4}
+                      py={2}
                       fontSize="sm"
                       fontWeight={500}
                       color="gray.600"
-                      borderRadius="md"
+                      borderRadius="lg"
+                      position="relative"
                       _hover={{
                         textDecoration: "none",
-                        color: "prachatham.600",
+                        color: "prachatham.700",
                         bg: "prachatham.50",
                       }}
+                      transition="all 0.2s ease"
                     >
                       {navItem.label}
                     </ChakraLink>
                   ))}
-                </Stack>
+                </HStack>
               </Flex>
             </Flex>
 
@@ -141,9 +151,25 @@ export default function Navigation() {
               flex={{ base: 1, md: 0 }}
               justify="flex-end"
               direction="row"
-              spacing={3}
+              spacing={2}
               align="center"
             >
+              {/* Search button */}
+              <IconButton
+                aria-label="Search"
+                variant="ghost"
+                onClick={onSearchToggle}
+                color="gray.500"
+                size="sm"
+                borderRadius="lg"
+                _hover={{
+                  bg: "gray.100",
+                  color: "gray.700",
+                }}
+              >
+                <SearchIcon />
+              </IconButton>
+
               {/* Contact Us Button - Desktop */}
               <Button
                 as={Link}
@@ -151,32 +177,18 @@ export default function Navigation() {
                 colorScheme="prachatham"
                 variant="solid"
                 size="sm"
-                px={4}
-                py={2}
+                px={5}
                 fontWeight="medium"
                 borderRadius="full"
                 display={{ base: "none", md: "flex" }}
                 _hover={{
                   transform: "translateY(-1px)",
-                  boxShadow: "lg",
+                  boxShadow: "0 4px 14px -2px rgba(5, 150, 105, 0.4)",
                 }}
                 transition="all 0.2s"
               >
                 ติดต่อเรา
               </Button>
-
-              {/* Search button */}
-              <IconButton
-                aria-label="Search"
-                variant="ghost"
-                onClick={onSearchToggle}
-                color="gray.600"
-                _hover={{
-                  bg: "gray.100",
-                }}
-              >
-                <SearchIcon />
-              </IconButton>
             </Stack>
           </Flex>
         </Container>
@@ -184,24 +196,32 @@ export default function Navigation() {
 
       {/* Mobile Navigation */}
       <Collapse in={isOpen} animateOpacity>
-        <Box bg="white" display={{ md: "none" }} p={4} borderBottomWidth="1px">
-          <VStack align="start" gap={2}>
+        <Box
+          bg="white"
+          display={{ md: "none" }}
+          p={5}
+          borderBottomWidth="1px"
+          borderColor="gray.100"
+          boxShadow="lg"
+        >
+          <VStack align="stretch" gap={1}>
             {NAV_ITEMS.map((navItem) => (
               <ChakraLink
                 key={navItem.label}
                 as={Link}
                 href={navItem.href || "#"}
                 w="full"
-                py={2}
-                px={2}
-                fontWeight={600}
-                color="gray.600"
-                borderRadius="md"
+                py={3}
+                px={4}
+                fontWeight={500}
+                color="gray.700"
+                borderRadius="lg"
                 _hover={{
                   textDecoration: "none",
-                  color: "prachatham.600",
+                  color: "prachatham.700",
                   bg: "prachatham.50",
                 }}
+                transition="all 0.15s ease"
                 onClick={onToggle}
               >
                 {navItem.label}
@@ -215,8 +235,8 @@ export default function Navigation() {
               colorScheme="prachatham"
               variant="solid"
               w="full"
-              mt={2}
-              borderRadius="md"
+              mt={3}
+              borderRadius="lg"
               fontWeight="medium"
               onClick={onToggle}
             >
@@ -228,7 +248,13 @@ export default function Navigation() {
 
       {/* Search Box */}
       {isSearchOpen && (
-        <Box bg="white" p={4} borderBottomWidth="1px" boxShadow="sm">
+        <Box
+          bg="white"
+          p={5}
+          borderBottomWidth="1px"
+          borderColor="gray.100"
+          boxShadow="lg"
+        >
           <Container maxW="7xl">
             <form onSubmit={handleSearch}>
               <InputGroup>
@@ -237,14 +263,33 @@ export default function Navigation() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   size="lg"
+                  borderRadius="xl"
+                  bg="gray.50"
+                  border="2px solid"
+                  borderColor="gray.200"
+                  _focus={{
+                    borderColor: "prachatham.400",
+                    bg: "white",
+                    boxShadow: "0 0 0 3px rgba(5, 150, 105, 0.1)",
+                  }}
                 />
               </InputGroup>
-              <Flex justify="space-between" mt={4}>
-                <Button colorScheme="green" type="submit" size="md">
-                  ค้นหา
-                </Button>
-                <Button variant="ghost" onClick={onSearchToggle} size="md">
+              <Flex justify="flex-end" mt={3} gap={2}>
+                <Button
+                  variant="ghost"
+                  onClick={onSearchToggle}
+                  size="md"
+                  borderRadius="lg"
+                >
                   ยกเลิก
+                </Button>
+                <Button
+                  colorScheme="prachatham"
+                  type="submit"
+                  size="md"
+                  borderRadius="lg"
+                >
+                  ค้นหา
                 </Button>
               </Flex>
             </form>
