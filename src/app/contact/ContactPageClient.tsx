@@ -180,29 +180,6 @@ export default function ContactPageClient() {
                         </Box>
 
                         <Box>
-                          <HStack mb={2}>
-                            <Icon as={FaEnvelope} color="prachatham.600" />
-                            <Text fontWeight="semibold" color="gray.700">
-                              อีเมล
-                            </Text>
-                          </HStack>
-                          <VStack align="start" gap={1}>
-                            <motion.div whileHover={{ scale: 1.05 }}>
-                              <ChakraLink
-                                href="mailto:pnn.thailand@gmail.com"
-                                color="prachatham.600"
-                                _hover={{
-                                  color: "prachatham.700",
-                                  textDecoration: "underline",
-                                }}
-                              >
-                                pnn.thailand@gmail.com
-                              </ChakraLink>
-                            </motion.div>
-                          </VStack>
-                        </Box>
-
-                        <Box>
                           <HStack mb={3}>
                             <Icon as={FaGlobe} color="prachatham.600" />
                             <Text fontWeight="semibold" color="gray.700">
@@ -318,63 +295,32 @@ export default function ContactPageClient() {
                         ส่งข้อความถึงเรา
                       </Heading>
 
-                      <VStack as="form" gap={4}>
-                        <FormControl>
-                          <FormLabel color="gray.700">ชื่อ-นามสกุล</FormLabel>
-                          <Input
-                            placeholder="กรุณากรอกชื่อ-นามสกุล"
-                            focusBorderColor="prachatham.500"
+                      <VStack gap={6} py={8}>
+                        <Box textAlign="center">
+                          <Icon
+                            as={FaEnvelope}
+                            boxSize={12}
+                            color="prachatham.600"
+                            mb={4}
                           />
-                        </FormControl>
-
-                        <FormControl>
-                          <FormLabel color="gray.700">อีเมล</FormLabel>
-                          <Input
-                            type="email"
-                            placeholder="กรุณากรอกอีเมล"
-                            focusBorderColor="prachatham.500"
-                          />
-                        </FormControl>
-
-                        <FormControl>
-                          <FormLabel color="gray.700">หัวข้อ</FormLabel>
-                          <Input
-                            placeholder="กรุณากรอกหัวข้อ"
-                            focusBorderColor="prachatham.500"
-                          />
-                        </FormControl>
-
-                        <FormControl>
-                          <FormLabel color="gray.700">ข้อความ</FormLabel>
-                          <Textarea
-                            placeholder="กรุณากรอกข้อความที่ต้องการสื่อสาร"
-                            rows={6}
-                            focusBorderColor="prachatham.500"
-                          />
-                        </FormControl>
-
-                        <motion.div
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          style={{ width: "100%" }}
-                        >
-                          <Button
-                            colorScheme="green"
-                            size="lg"
-                            width="full"
-                            onClick={() =>
-                              alert(
-                                "ขณะนี้ฟอร์มยังไม่เชื่อมต่อกับระบบ กรุณาติดต่อผ่านอีเมลแทน"
-                              )
-                            }
-                          >
-                            ส่งข้อความ
-                          </Button>
-                        </motion.div>
-
-                        <Text fontSize="sm" color="gray.500" textAlign="center">
-                          หรือติดต่อเราผ่านอีเมล pnn.thailand@gmail.com
-                        </Text>
+                          <Text fontSize="lg" color="gray.700" fontWeight="semibold" mb={2}>
+                            ติดต่อเราผ่านอีเมล
+                          </Text>
+                          <motion.div whileHover={{ scale: 1.05 }}>
+                            <ChakraLink
+                              href="mailto:pnn.thailand@gmail.com"
+                              fontSize="xl"
+                              color="prachatham.600"
+                              fontWeight="bold"
+                              _hover={{
+                                color: "prachatham.700",
+                                textDecoration: "underline",
+                              }}
+                            >
+                              pnn.thailand@gmail.com
+                            </ChakraLink>
+                          </motion.div>
+                        </Box>
                       </VStack>
                     </CardBody>
                   </Card>
