@@ -80,7 +80,9 @@ export default function DonatePage() {
                 <VStack gap={3}>
                   <Button
                     as="a"
-                    href="mailto:info@prachatham.com"
+                    href="https://www.facebook.com/prachatham"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     colorScheme="green"
                     size="lg"
                     width="full"
@@ -104,38 +106,28 @@ export default function DonatePage() {
                   <Heading as="h2" size="lg" color="prachatham.700" mb={2}>
                     ร่วมทีมกับเรา
                   </Heading>
-                  <Badge colorScheme="blue" fontSize="sm" px={3} py={1}>
-                    เปิดรับสมัครตลอด
+                  <Badge colorScheme="gray" fontSize="sm" px={3} py={1}>
+                    ไม่เปิดรับสมัครในขณะนี้
                   </Badge>
                 </Box>
 
                 <Text color="gray.600" lineHeight="tall" textAlign="center">
-                  หากคุณมีความสนใจในด้านสิ่งแวดล้อมและการสื่อสาร
-                  มาร่วมทำงานกับเราเพื่อสร้างการเปลี่ยนแปลงที่ยั่งยืน
+                  ขณะนี้เรายังไม่เปิดรับสมัครตำแหน่งใดๆ
+                  แต่หากคุณมีความสนใจในด้านสิ่งแวดล้อมและการสื่อสาร
+                  สามารถติดตามข่าวสารการรับสมัครงานของเราได้ทางโซเชียลมีเดีย
                 </Text>
-
-                <VStack gap={2}>
-                  <Text fontWeight="medium" color="gray.700">
-                    ตำแหน่งที่เปิดรับ:
-                  </Text>
-                  <VStack gap={1} fontSize="sm" color="gray.600">
-                    <Text>• นักสื่อสารสิ่งแวดล้อม</Text>
-                    <Text>• ช่างภาพและวิดีโอ</Text>
-                    <Text>• นักเขียนบทความ</Text>
-                    <Text>• ผู้ประสานงานโครงการ</Text>
-                    <Text>• อาสาสมัคร</Text>
-                  </VStack>
-                </VStack>
 
                 <Button
                   as="a"
-                  href="mailto:jobs@prachatham.com"
+                  href="https://www.facebook.com/prachatham"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   variant="outline"
                   colorScheme="green"
                   size="lg"
                   width="full"
                 >
-                  ส่งใบสมัครงาน
+                  ติดตามข่าวสารบน Facebook
                 </Button>
               </VStack>
             </CardBody>
