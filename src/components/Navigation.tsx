@@ -70,7 +70,7 @@ export default function Navigation() {
         borderBottomWidth="1px"
         borderBottomColor="gray.100"
         align="center"
-        boxShadow="0 1px 3px 0 rgba(0, 0, 0, 0.05)"
+        boxShadow="sm"
         backdropFilter="saturate(180%) blur(12px)"
         backgroundColor="rgba(255, 255, 255, 0.92)"
       >
@@ -84,10 +84,12 @@ export default function Navigation() {
             >
               <IconButton
                 onClick={onToggle}
-                aria-label="Toggle Navigation"
+                aria-label={isOpen ? "ปิดเมนู" : "เปิดเมนู"}
+                aria-expanded={isOpen}
+                aria-controls="mobile-nav"
                 variant="ghost"
                 size="sm"
-                borderRadius="lg"
+                borderRadius="md"
               >
                 {isOpen ? (
                   <CloseIcon boxSize={3} />
@@ -130,7 +132,7 @@ export default function Navigation() {
                       fontSize="sm"
                       fontWeight={500}
                       color="gray.600"
-                      borderRadius="lg"
+                      borderRadius="md"
                       position="relative"
                       _hover={{
                         textDecoration: "none",
@@ -161,7 +163,7 @@ export default function Navigation() {
                 onClick={onSearchToggle}
                 color="gray.500"
                 size="sm"
-                borderRadius="lg"
+                borderRadius="md"
                 _hover={{
                   bg: "gray.100",
                   color: "gray.700",
@@ -174,18 +176,9 @@ export default function Navigation() {
               <Button
                 as={Link}
                 href="/contact"
-                colorScheme="prachatham"
-                variant="solid"
+                variant="primary"
                 size="sm"
-                px={5}
-                fontWeight="medium"
-                borderRadius="full"
                 display={{ base: "none", md: "flex" }}
-                _hover={{
-                  transform: "translateY(-1px)",
-                  boxShadow: "0 4px 14px -2px rgba(5, 150, 105, 0.4)",
-                }}
-                transition="all 0.2s"
               >
                 ติดต่อเรา
               </Button>
@@ -197,6 +190,7 @@ export default function Navigation() {
       {/* Mobile Navigation */}
       <Collapse in={isOpen} animateOpacity>
         <Box
+          id="mobile-nav"
           bg="white"
           display={{ md: "none" }}
           p={5}
@@ -256,22 +250,18 @@ export default function Navigation() {
           boxShadow="lg"
         >
           <Container maxW="7xl">
-            <form onSubmit={handleSearch}>
+          <form onSubmit={handleSearch}>
               <InputGroup>
                 <Input
                   placeholder="พิมพ์คำที่ต้องการค้นหา..."
+                  aria-label="ค้นหาบทความ"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   size="lg"
-                  borderRadius="xl"
+                  borderRadius="lg"
                   bg="gray.50"
-                  border="2px solid"
-                  borderColor="gray.200"
-                  _focus={{
-                    borderColor: "prachatham.400",
-                    bg: "white",
-                    boxShadow: "0 0 0 3px rgba(5, 150, 105, 0.1)",
-                  }}
+                  variant="outline"
+                  autoFocus
                 />
               </InputGroup>
               <Flex justify="flex-end" mt={3} gap={2}>
@@ -279,15 +269,13 @@ export default function Navigation() {
                   variant="ghost"
                   onClick={onSearchToggle}
                   size="md"
-                  borderRadius="lg"
                 >
                   ยกเลิก
                 </Button>
                 <Button
-                  colorScheme="prachatham"
+                  variant="primary"
                   type="submit"
                   size="md"
-                  borderRadius="lg"
                 >
                   ค้นหา
                 </Button>

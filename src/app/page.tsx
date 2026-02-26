@@ -78,10 +78,32 @@ export default async function HomePage() {
   // Fetch latest projects
   const { projects: latestProjects } = await getLatestProjects();
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "url": "https://www.prachatham.com/",
+    "name": "ประชาธรรม | มูลนิธิสนับสนุนสื่อภาคประชาชน",
+    "description": "เราคือกลุ่มคนที่ต้องการสนับสนุนให้เกิดการเปลี่ยนแปลงผ่านการสื่อสารจากคนในท้องถิ่นเอง สนับสนุนให้ผู้คนบอกเล่าเรื่องราวด้วยตัวเอง",
+    "publisher": {
+      "@type": "Organization",
+      "name": "มูลนิธิประชาธรรม (Prachatham Foundation)",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.prachatham.com/images/ps-favicon.svg"
+      }
+    }
+  };
+
   return (
-    <HomePageClient
-      featuredPosts={featuredPosts}
-      latestProjects={latestProjects}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <HomePageClient
+        featuredPosts={featuredPosts}
+        latestProjects={latestProjects}
+      />
+    </>
   );
 }

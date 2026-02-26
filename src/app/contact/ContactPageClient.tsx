@@ -12,10 +12,6 @@ import {
   Card,
   CardBody,
   SimpleGrid,
-  Input,
-  Textarea,
-  FormControl,
-  FormLabel,
   Icon,
 } from "@chakra-ui/react";
 import Link from "next/link";

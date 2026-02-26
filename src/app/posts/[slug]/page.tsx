@@ -17,6 +17,8 @@ import { notFound } from "next/navigation";
 import { wordpressApi, formatThaiDate, stripHtml } from "@/lib/wordpress";
 import { Metadata } from "next";
 import { SocialShare } from "@/components/SocialShare";
+import { PostViewTracker } from "@/components/PostViewTracker";
+import { PostViewCount } from "@/components/PostViewCount";
 
 interface PostPageProps {
   params: Promise<{
@@ -83,22 +85,22 @@ export async function generateMetadata({
         locale: "th_TH",
         images: featuredImage
           ? [
-              {
-                url: featuredImage.source_url,
-                width: featuredImage.media_details?.width || 1200,
-                height: featuredImage.media_details?.height || 630,
-                alt: featuredImage.alt_text || post.title.rendered,
-                type: featuredImage.mime_type || "image/jpeg",
-              },
-            ]
+            {
+              url: featuredImage.source_url,
+              width: featuredImage.media_details?.width || 1200,
+              height: featuredImage.media_details?.height || 630,
+              alt: featuredImage.alt_text || post.title.rendered,
+              type: featuredImage.mime_type || "image/jpeg",
+            },
+          ]
           : [
-              {
-                url: "/images/hero-1-page-1.jpg",
-                width: 1200,
-                height: 630,
-                alt: post.title.rendered,
-              },
-            ],
+            {
+              url: "/images/hero-1-page-1.jpg",
+              width: 1200,
+              height: 630,
+              alt: post.title.rendered,
+            },
+          ],
       },
       twitter: {
         card: "summary_large_image",
@@ -128,9 +130,8 @@ export default async function PostPage({ params }: PostPageProps) {
 
     const categories = (post._embedded?.["wp:term"]?.[0] || []) as Category[];
     const readingTime = calculateReadingTime(post.content.rendered);
-    const currentUrl = `${
-      process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
-    }/posts/${slug}`;
+    const currentUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+      }/posts/${slug}`;
 
     // JSON-LD structured data for SEO
     const structuredData = {
@@ -143,21 +144,20 @@ export default async function PostPage({ params }: PostPageProps) {
         "/images/hero-1-page-1.jpg",
       author: post.acf?.authornamepost
         ? {
-            "@type": "Person",
-            name: post.acf.authornamepost,
-          }
+          "@type": "Person",
+          name: post.acf.authornamepost,
+        }
         : {
-            "@type": "Organization",
-            name: "Prachatham Foundation",
-          },
+          "@type": "Organization",
+          name: "Prachatham Foundation",
+        },
       publisher: {
         "@type": "Organization",
         name: "Prachatham Foundation",
         logo: {
           "@type": "ImageObject",
-          url: `${
-            process.env.NEXT_PUBLIC_SITE_URL || "https://cms.prachatham.com"
-          }/wp-content/uploads/2024/01/ps-favicon.svg`,
+          url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://cms.prachatham.com"
+            }/wp-content/uploads/2024/01/ps-favicon.svg`,
         },
       },
       datePublished: post.date,
@@ -177,6 +177,7 @@ export default async function PostPage({ params }: PostPageProps) {
             __html: JSON.stringify(structuredData),
           }}
         />
+        <PostViewTracker postId={post.id} />
 
         <Container maxW="4xl" py={8}>
           <VStack align="stretch" gap={8}>
@@ -271,6 +272,7 @@ export default async function PostPage({ params }: PostPageProps) {
                           <FaClock size={14} />
                           <Text>อ่าน {readingTime} นาที</Text>
                         </HStack>
+                        <PostViewCount postId={post.id} />
                       </HStack>
                     </HStack>
                   </VStack>

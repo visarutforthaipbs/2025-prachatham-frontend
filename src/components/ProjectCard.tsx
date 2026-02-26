@@ -11,6 +11,8 @@ import {
   HStack,
   Icon,
   Link as ChakraLink,
+  Card,
+  CardBody,
 } from "@chakra-ui/react";
 import { FaArrowRight, FaMapMarkerAlt, FaClock } from "react-icons/fa";
 import type { WordPressProject } from "@/lib/wordpress";
@@ -39,23 +41,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   };
 
   return (
-    <Box
-      overflow="hidden"
-      borderRadius="xl"
-      bg="white"
-      border="1px solid"
-      borderColor="gray.100"
-      boxShadow="0 1px 3px rgba(0,0,0,0.06)"
-      _hover={{
-        boxShadow: "0 20px 40px -8px rgba(0,0,0,0.12)",
-        transform: "translateY(-4px)",
-        borderColor: "prachatham.100",
-      }}
-      transition="all 0.3s ease"
-      h="full"
-      display="flex"
-      flexDirection="column"
-    >
+    <Card h="full">
       <ChakraLink
         as={Link}
         href={`/projects/${project.slug}`}
@@ -84,13 +70,9 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               top={3}
               right={3}
               variant={project.acf.projectStatus === "active" ? "brand" : "subtle"}
-              bg={project.acf.projectStatus === "active" ? "prachatham.500" : "gray.500"}
-              color="white"
               fontSize="xs"
               px={3}
               py={1}
-              borderRadius="full"
-              fontWeight="500"
             >
               {project.acf.projectStatus === "active" ? "ดำเนินการ" : "เสร็จสิ้น"}
             </Badge>
@@ -98,13 +80,12 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         </Box>
 
         {/* Project Content */}
-        <Box p={5} flexGrow={1} display="flex" flexDirection="column">
+        <CardBody p={5} flexGrow={1} display="flex" flexDirection="column">
           <Heading
             as="h3"
-            size="md"
+            variant="card"
             color="prachatham.700"
             mb={3}
-            lineHeight="snug"
             _groupHover={{ color: "prachatham.600" }}
             css={{
               display: "-webkit-box",
@@ -149,8 +130,8 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             อ่านเพิ่มเติม
             <Icon as={FaArrowRight} boxSize={2.5} />
           </Flex>
-        </Box>
+        </CardBody>
       </ChakraLink>
-    </Box>
+    </Card>
   );
 }

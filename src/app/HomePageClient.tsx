@@ -13,6 +13,7 @@ import {
   HStack,
   Flex,
   Icon,
+  Badge,
 } from "@chakra-ui/react";
 import { FaArrowRight } from "react-icons/fa";
 import PostCard from "@/components/PostCard";
@@ -68,26 +69,25 @@ export default function HomePageClient({
         <Container maxW="7xl" position="relative" zIndex={2} textAlign="center">
           <VStack maxW="4xl" mx="auto" color="white" spacing={8}>
             {/* Overline */}
-            <Text
-              fontSize="sm"
-              fontWeight="600"
-              letterSpacing="0.1em"
-              textTransform="uppercase"
+            <Badge
+              variant="brand"
               bg="whiteAlpha.200"
+              color="white"
               backdropFilter="blur(8px)"
               px={5}
               py={2}
               borderRadius="full"
+              fontSize="sm"
+              fontWeight="600"
+              letterSpacing="0.1em"
+              border="none"
             >
               มูลนิธิสื่อประชาธรรม
-            </Text>
+            </Badge>
 
             <Heading
               as="h1"
-              fontSize={{ base: "3xl", md: "5xl", lg: "6xl" }}
-              fontWeight="bold"
-              lineHeight={1.1}
-              letterSpacing="-0.02em"
+              variant="hero"
             >
               เราสนับสนุนการเปลี่ยนแปลง
               <br />
@@ -95,10 +95,9 @@ export default function HomePageClient({
             </Heading>
 
             <Text
-              fontSize={{ base: "md", md: "lg", lg: "xl" }}
-              lineHeight="tall"
-              maxW="3xl"
+              variant="lead"
               color="whiteAlpha.900"
+              maxW="3xl"
             >
               มูลนิธิประชาธรรม เป็นองค์กรที่มุ่งหวังสร้างการเปลี่ยนแปลงเชิงบวก
               ผ่านการเสริมสร้างพลังของชุมชนในการสื่อสารและเล่าเรื่องราวของตัวเอง
@@ -108,38 +107,31 @@ export default function HomePageClient({
               <Button
                 as={Link}
                 href="/about"
+                variant="secondary"
                 size="lg"
                 bg="white"
-                color="prachatham.700"
-                px={8}
-                fontSize="md"
-                fontWeight="600"
-                borderRadius="full"
+                border="none"
                 _hover={{
+                  bg: "gray.50",
                   transform: "translateY(-2px)",
-                  boxShadow: "0 12px 30px rgba(0,0,0,0.2)",
+                  boxShadow: "xl",
                 }}
-                transition="all 0.2s"
               >
                 เรียนรู้เพิ่มเติม
               </Button>
               <Button
                 as={Link}
                 href="/causes"
-                size="lg"
                 variant="outline"
+                size="lg"
                 color="white"
                 borderColor="whiteAlpha.500"
-                px={8}
-                fontSize="md"
-                fontWeight="500"
                 borderRadius="full"
                 _hover={{
                   bg: "whiteAlpha.200",
                   borderColor: "white",
                   transform: "translateY(-2px)",
                 }}
-                transition="all 0.2s"
               >
                 ดูโครงการ
               </Button>
@@ -154,6 +146,7 @@ export default function HomePageClient({
           left="50%"
           transform="translateX(-50%)"
           zIndex={2}
+          aria-hidden="true"
         >
           <Box
             w="28px"
@@ -222,17 +215,12 @@ export default function HomePageClient({
             <Text variant="overline">ABOUT US</Text>
             <Heading
               as="h2"
-              fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
+              variant="section"
               color="prachatham.700"
-              letterSpacing="-0.02em"
             >
               ภารกิจของเรา
             </Heading>
-            <Text
-              fontSize={{ base: "md", md: "lg" }}
-              color="gray.600"
-              lineHeight="tall"
-            >
+            <Text variant="body">
               เราเชื่อว่าการเปลี่ยนแปลงที่ยั่งยืนเกิดขึ้นได้เมื่อชุมชนมีเสียง
               มีพื้นที่ในการเล่าเรื่องราวของตัวเอง
               และมีเครื่องมือในการสื่อสารกับสังคมที่กว้างขึ้น
@@ -240,16 +228,8 @@ export default function HomePageClient({
             <Button
               as={Link}
               href="/about"
-              colorScheme="prachatham"
+              variant="primary"
               size="lg"
-              borderRadius="full"
-              px={8}
-              _hover={{
-                bg: "prachatham.700",
-                transform: "translateY(-1px)",
-                boxShadow: "0 8px 25px -4px rgba(5, 150, 105, 0.35)",
-              }}
-              transition="all 0.2s"
             >
               เรียนรู้เพิ่มเติม
             </Button>
@@ -360,17 +340,14 @@ export default function HomePageClient({
         <VStack spacing={8} textAlign="center">
           <Heading
             as="h2"
-            fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
+            variant="section"
             color="prachatham.700"
-            letterSpacing="-0.02em"
           >
             ร่วมเป็นส่วนหนึ่งกับเรา
           </Heading>
           <Text
-            fontSize={{ base: "md", md: "lg" }}
-            color="gray.500"
+            variant="body"
             maxW="lg"
-            lineHeight="tall"
           >
             หากคุณมีเรื่องราวที่ต้องการเล่า หรือต้องการสนับสนุนงานของเรา
             เรายินดีต้อนรับทุกคน
@@ -379,16 +356,8 @@ export default function HomePageClient({
             <Button
               as={Link}
               href="/contact"
-              colorScheme="prachatham"
+              variant="primary"
               size="lg"
-              px={8}
-              borderRadius="full"
-              _hover={{
-                bg: "prachatham.700",
-                transform: "translateY(-1px)",
-                boxShadow: "0 8px 25px -4px rgba(5, 150, 105, 0.35)",
-              }}
-              transition="all 0.2s"
             >
               ติดต่อเรา
             </Button>
@@ -397,8 +366,6 @@ export default function HomePageClient({
               href="/donate"
               variant="secondary"
               size="lg"
-              px={8}
-              borderRadius="full"
             >
               สนับสนุนเรา
             </Button>

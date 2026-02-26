@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, VStack, Heading, Text, Icon } from "@chakra-ui/react";
+import { Box, VStack, Heading, Text, Icon, Card, CardBody } from "@chakra-ui/react";
 import type { IconType } from "react-icons";
 
 interface FeatureCardProps {
@@ -18,35 +18,25 @@ export default function FeatureCard({
   description,
 }: FeatureCardProps) {
   return (
-    <VStack
-      align="start"
-      spacing={4}
-      p={6}
-      borderRadius="xl"
-      bg="white"
-      border="1px solid"
-      borderColor="gray.100"
-      transition="all 0.3s ease"
-      _hover={{
-        borderColor: "prachatham.200",
-        boxShadow: "0 8px 30px -8px rgba(5, 150, 105, 0.15)",
-        transform: "translateY(-2px)",
-      }}
-    >
-      <Box
-        p={3}
-        borderRadius="lg"
-        bg="prachatham.50"
-        color="prachatham.600"
-      >
-        <Icon as={icon} boxSize={6} />
-      </Box>
-      <Heading as="h3" size="md" color="gray.800">
-        {title}
-      </Heading>
-      <Text color="gray.500" fontSize="sm" lineHeight="tall">
-        {description}
-      </Text>
-    </VStack>
+    <Card>
+      <CardBody p={6}>
+        <VStack align="start" spacing={4}>
+          <Box
+            p={3}
+            borderRadius="lg"
+            bg="prachatham.50"
+            color="prachatham.600"
+          >
+            <Icon as={icon} boxSize={6} />
+          </Box>
+          <Heading as="h3" variant="card" color="gray.800">
+            {title}
+          </Heading>
+          <Text variant="caption" color="gray.500" fontSize="sm" lineHeight="tall">
+            {description}
+          </Text>
+        </VStack>
+      </CardBody>
+    </Card>
   );
 }

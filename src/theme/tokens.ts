@@ -89,15 +89,15 @@ export const typography = {
     bold: 700,
   },
   lineHeight: {
-    tight: 1.2,
-    snug: 1.375,
-    normal: 1.5,
-    relaxed: 1.625,
-    loose: 1.8,
+    tight: 1.25,
+    snug: 1.45,
+    normal: 1.6,
+    relaxed: 1.8,
+    loose: 2.0,
   },
   letterSpacing: {
-    tight: "-0.02em",
-    normal: "0em",
+    tight: "0em",
+    normal: "0.01em",
     wide: "0.025em",
   },
 };

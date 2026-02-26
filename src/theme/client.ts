@@ -8,6 +8,7 @@ import {
   radii,
   layout,
   zIndices,
+  transitions,
 } from "./tokens";
 
 // ─── Config ──────────────────────────────────────────────────────────────────
@@ -137,13 +138,13 @@ const components = {
     baseStyle: {
       fontWeight: "500",
       borderRadius: radii.lg,
-      transition: "all 0.2s ease",
+      transition: transitions.spring,
     },
     sizes: {
       sm: { fontSize: "sm", px: 4, py: 2, h: "auto", minH: "2rem" },
       md: { fontSize: "md", px: 6, py: 2.5, h: "auto", minH: "2.5rem" },
-      lg: { fontSize: "lg", px: 8, py: 3, h: "auto", minH: "3rem" },
-      xl: { fontSize: "lg", px: 10, py: 4, h: "auto", minH: "3.5rem" },
+      lg: { fontSize: "lg", px: 8, py: 3, h: "auto", minH: "3.5rem" },
+      xl: { fontSize: "lg", px: 10, py: 4, h: "auto", minH: "4rem" },
     },
     variants: {
       primary: {
@@ -151,12 +152,12 @@ const components = {
         color: "white",
         _hover: {
           bg: "prachatham.700",
-          transform: "translateY(-1px)",
+          transform: "scale(1.02) translateY(-2px)",
           boxShadow: shadows.brandGlow,
         },
         _active: {
           bg: "prachatham.800",
-          transform: "translateY(0)",
+          transform: "scale(0.98) translateY(0)",
         },
       },
       secondary: {
@@ -166,11 +167,12 @@ const components = {
         borderColor: "prachatham.600",
         _hover: {
           bg: "prachatham.50",
-          transform: "translateY(-1px)",
+          transform: "scale(1.02) translateY(-2px)",
           boxShadow: shadows.md,
         },
         _active: {
           bg: "prachatham.100",
+          transform: "scale(0.98) translateY(0)",
         },
       },
       ghost: {
@@ -204,10 +206,10 @@ const components = {
         boxShadow: shadows.sm,
         border: "1px solid",
         borderColor: "gray.100",
-        transition: "all 0.3s ease",
+        transition: transitions.spring,
         _hover: {
           boxShadow: shadows.cardHover,
-          transform: "translateY(-4px)",
+          transform: "translateY(-6px) scale(1.01)",
           borderColor: "prachatham.100",
         },
       },
@@ -310,6 +312,10 @@ const styles = {
     "::selection": {
       bg: "prachatham.100",
       color: "prachatham.900",
+    },
+    "*": {
+      transitionProperty: "common",
+      transitionDuration: "fast",
     },
   },
 };

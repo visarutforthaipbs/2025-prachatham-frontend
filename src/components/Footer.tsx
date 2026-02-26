@@ -11,7 +11,6 @@ import {
   HStack,
   VStack,
   Divider,
-  Image,
   Icon,
 } from "@chakra-ui/react";
 import Link from "next/link";
@@ -41,13 +40,13 @@ export default function Footer() {
         <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={{ base: 10, lg: 8 }}>
           {/* Logo and Description */}
           <VStack align="start" spacing={5}>
-            <Text fontSize="xl" fontWeight="bold" letterSpacing="-0.02em">
+            <Heading as="h2" fontSize="xl" fontWeight="bold" letterSpacing="-0.02em" color="white">
               ประชาธรรม
-            </Text>
-            <Text fontSize="sm" color="gray.400" lineHeight="tall">
+            </Heading>
+            <Text fontSize="sm" color="gray.300" lineHeight="tall">
               สื่อ ประชาธรรม ประชาทำ
             </Text>
-            <Text fontSize="sm" color="gray.500" lineHeight="tall">
+            <Text fontSize="sm" color="gray.400" lineHeight="tall">
               77/1 หมู่ 5 ต.สุเทพ อ.เมือง
               <br />
               จ.เชียงใหม่ 50200
@@ -63,7 +62,7 @@ export default function Footer() {
               <ChakraLink
                 as={Link}
                 href="/about"
-                color="gray.400"
+                color="gray.300"
                 fontSize="sm"
                 _hover={{
                   color: "prachatham.300",
@@ -75,7 +74,7 @@ export default function Footer() {
               <ChakraLink
                 as={Link}
                 href="/contact"
-                color="gray.400"
+                color="gray.300"
                 fontSize="sm"
                 _hover={{
                   color: "prachatham.300",
@@ -96,7 +95,7 @@ export default function Footer() {
               <ChakraLink
                 as={Link}
                 href="/causes"
-                color="gray.400"
+                color="gray.300"
                 fontSize="sm"
                 _hover={{ color: "prachatham.300" }}
                 transition="color 0.15s ease"
@@ -106,7 +105,7 @@ export default function Footer() {
               <ChakraLink
                 as={Link}
                 href="/posts"
-                color="gray.400"
+                color="gray.300"
                 fontSize="sm"
                 _hover={{ color: "prachatham.300" }}
                 transition="color 0.15s ease"
@@ -116,7 +115,7 @@ export default function Footer() {
               <ChakraLink
                 as={Link}
                 href="/publications"
-                color="gray.400"
+                color="gray.300"
                 fontSize="sm"
                 _hover={{ color: "prachatham.300" }}
                 transition="color 0.15s ease"
@@ -135,7 +134,7 @@ export default function Footer() {
               <ChakraLink
                 as={Link}
                 href="/category/featured"
-                color="gray.400"
+                color="gray.300"
                 fontSize="sm"
                 _hover={{ color: "prachatham.300" }}
                 transition="color 0.15s ease"
@@ -145,7 +144,7 @@ export default function Footer() {
               <ChakraLink
                 as={Link}
                 href="/category/activist-journalist"
-                color="gray.400"
+                color="gray.300"
                 fontSize="sm"
                 _hover={{ color: "prachatham.300" }}
                 transition="color 0.15s ease"
@@ -155,7 +154,7 @@ export default function Footer() {
               <ChakraLink
                 as={Link}
                 href="/category/envilocaleyes"
-                color="gray.400"
+                color="gray.300"
                 fontSize="sm"
                 _hover={{ color: "prachatham.300" }}
                 transition="color 0.15s ease"
@@ -165,7 +164,7 @@ export default function Footer() {
               <ChakraLink
                 as={Link}
                 href="/category/firedustdialogue"
-                color="gray.400"
+                color="gray.300"
                 fontSize="sm"
                 _hover={{ color: "prachatham.300" }}
                 transition="color 0.15s ease"
@@ -175,7 +174,7 @@ export default function Footer() {
               <ChakraLink
                 as={Link}
                 href="/category/breath-talk"
-                color="gray.400"
+                color="gray.300"
                 fontSize="sm"
                 _hover={{ color: "prachatham.300" }}
                 transition="color 0.15s ease"
@@ -195,7 +194,7 @@ export default function Footer() {
           justify="space-between"
           align="center"
         >
-          <Text fontSize="sm" color="gray.500">
+          <Text fontSize="sm" color="gray.400">
             © {new Date().getFullYear()} ประชาธรรม — สื่อชุมชนเพื่อการเปลี่ยนแปลง
           </Text>
 
@@ -206,7 +205,7 @@ export default function Footer() {
                 href={href}
                 isExternal
                 aria-label={`ติดตามเราบน ${label}`}
-                color="gray.500"
+                color="gray.400"
                 _hover={{ color: "prachatham.300", transform: "translateY(-2px)" }}
                 transition="all 0.2s ease"
               >
