@@ -6,7 +6,6 @@ import {
   Tooltip,
   useClipboard,
   useToast,
-  Button,
   VStack,
   Text,
 } from "@chakra-ui/react";
@@ -16,9 +15,7 @@ import {
   FaLine,
   FaCopy,
   FaPrint,
-  FaArrowUp,
 } from "react-icons/fa";
-import { useEffect, useState } from "react";
 
 interface SocialShareProps {
   url: string;
@@ -32,16 +29,6 @@ export function SocialShare({
 }: Omit<SocialShareProps, "description">) {
   const { onCopy } = useClipboard(url);
   const toast = useToast();
-  const [showBackToTop, setShowBackToTop] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 300);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const handleCopy = () => {
     onCopy();
@@ -56,10 +43,6 @@ export function SocialShare({
 
   const handlePrint = () => {
     window.print();
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const shareToFacebook = () => {
@@ -138,24 +121,6 @@ export function SocialShare({
           </Tooltip>
         </HStack>
       </VStack>
-
-      {/* Back to Top Button */}
-      {showBackToTop && (
-        <Button
-          position="fixed"
-          bottom="20px"
-          right="20px"
-          colorScheme="prachatham"
-          size="sm"
-          borderRadius="full"
-          onClick={scrollToTop}
-          leftIcon={<FaArrowUp />}
-          shadow="lg"
-          zIndex={1000}
-        >
-          กลับขึ้นบน
-        </Button>
-      )}
     </>
   );
 }

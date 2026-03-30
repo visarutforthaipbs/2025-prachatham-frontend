@@ -40,6 +40,22 @@ function calculateReadingTime(content: string): number {
   return Math.ceil(wordCount / wordsPerMinute);
 }
 
+// Wrap WordPress footnotes in a collapsible <details> element
+function wrapFootnotesInDetails(html: string): string {
+  // Match the kadence spacer divider + the final <ol class="wp-block-list"> containing footnote back-references (↑)
+  const footnoteRegex = /(<(?:div|style)[^>]*wp-block-kadence-spacer[\s\S]*?<\/div>\s*(?:<\/div>)?\s*(?:\n\n)*)((?:<\s*ol\s+class="wp-block-list"[\s\S]*?<\/ol>\s*)$)/i;
+  const replaced = html.replace(footnoteRegex, (_match, spacer, list) => {
+    return `${spacer}<details class="wp-footnotes-collapsible"><summary class="wp-footnotes-toggle"><span class="wp-footnotes-toggle-icon"></span>เชิงอรรถและอ้างอิง</summary>${list}</details>`;
+  });
+  if (replaced !== html) return replaced;
+
+  // Fallback: match any trailing <ol> containing footnote back-ref links (↑)
+  const fallbackRegex = /(<ol\s+class="wp-block-list">\s*(?:<li>[\s\S]*?↑[\s\S]*?<\/li>\s*)+<\/ol>\s*)$/i;
+  return html.replace(fallbackRegex, (match) => {
+    return `<details class="wp-footnotes-collapsible"><summary class="wp-footnotes-toggle"><span class="wp-footnotes-toggle-icon"></span>เชิงอรรถและอ้างอิง</summary>${match}</details>`;
+  });
+}
+
 export async function generateMetadata({
   params,
 }: PostPageProps): Promise<Metadata> {
@@ -297,6 +313,11 @@ export default async function PostPage({ params }: PostPageProps) {
                   color: "var(--chakra-colors-gray-800)",
                   lineHeight: "1.3",
                 },
+                "& h1": {
+                  fontSize: "2rem",
+                  borderBottom: "3px solid var(--chakra-colors-prachatham-200)",
+                  paddingBottom: "0.5rem",
+                },
                 "& h2": {
                   fontSize: "1.75rem",
                   borderBottom: "2px solid var(--chakra-colors-prachatham-200)",
@@ -308,15 +329,44 @@ export default async function PostPage({ params }: PostPageProps) {
                 "& h4": {
                   fontSize: "1.25rem",
                 },
+                "& h5": {
+                  fontSize: "1.1rem",
+                },
+                "& h6": {
+                  fontSize: "1rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.03em",
+                },
                 "& ul, & ol": {
                   marginBottom: "1.5rem",
                   paddingLeft: "2rem",
+                },
+                "& ul": {
+                  listStyleType: "disc",
+                },
+                "& ol": {
+                  listStyleType: "decimal",
+                },
+                "& ul ul": {
+                  listStyleType: "circle",
+                },
+                "& ul ul ul": {
+                  listStyleType: "square",
                 },
                 "& li": {
                   marginBottom: "0.75rem",
                   lineHeight: "1.8",
                   color: "var(--chakra-colors-gray-700)",
                   fontSize: "1.1rem",
+                },
+                "& li > ul, & li > ol": {
+                  marginTop: "0.5rem",
+                  marginBottom: "0",
+                },
+                "& hr": {
+                  border: "none",
+                  borderTop: "2px solid var(--chakra-colors-gray-200)",
+                  margin: "2.5rem 0",
                 },
                 "& blockquote": {
                   borderLeft: "4px solid var(--chakra-colors-prachatham-500)",
@@ -369,6 +419,46 @@ export default async function PostPage({ params }: PostPageProps) {
                   margin: "1.5rem 0",
                   fontSize: "0.9rem",
                   lineHeight: "1.5",
+                },
+                "& pre.wp-block-preformatted": {
+                  backgroundColor: "var(--chakra-colors-prachatham-50)",
+                  border: "1px solid var(--chakra-colors-prachatham-200)",
+                  borderLeft: "4px solid var(--chakra-colors-prachatham-600)",
+                  borderRadius: "0 0.75rem 0.75rem 0",
+                  padding: "1.75rem 1.5rem 1.25rem",
+                  margin: "2.5rem 0 2rem",
+                  fontFamily: '"DB Helvethaica X", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+                  fontSize: "1rem",
+                  lineHeight: "1.8",
+                  color: "var(--chakra-colors-gray-800)",
+                  whiteSpace: "pre-wrap",
+                  wordWrap: "break-word",
+                  overflowWrap: "break-word",
+                  position: "relative",
+                  overflow: "visible",
+                },
+                "& pre.wp-block-preformatted::before": {
+                  content: '""',
+                  position: "absolute",
+                  top: "-0.75rem",
+                  left: "1rem",
+                  background: "var(--chakra-colors-prachatham-50)",
+                  padding: "0 0.25rem",
+                  width: "1.25rem",
+                  height: "1.25rem",
+                  backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23059669' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpolyline points='14 2 14 8 20 8'/%3E%3Cline x1='16' y1='13' x2='8' y2='13'/%3E%3Cline x1='16' y1='17' x2='8' y2='17'/%3E%3C/svg%3E\")",
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "contain",
+                },
+                "& pre.wp-block-preformatted a": {
+                  color: "var(--chakra-colors-prachatham-600)",
+                  fontWeight: "500",
+                  textDecoration: "underline",
+                  textUnderlineOffset: "2px",
+                },
+                "& pre.wp-block-preformatted a:hover": {
+                  color: "var(--chakra-colors-prachatham-700)",
+                  textDecorationThickness: "2px",
                 },
                 /* Table wrapper for horizontal scroll on mobile */
                 "& figure.wp-block-table, & .wp-block-table": {
@@ -464,8 +554,96 @@ export default async function PostPage({ params }: PostPageProps) {
                   textAlign: "center",
                   fontStyle: "italic",
                 },
+                "& mark": {
+                  backgroundColor: "#fef9c3",
+                  padding: "0.125rem 0.25rem",
+                  borderRadius: "0.125rem",
+                },
+                "& iframe": {
+                  maxWidth: "100%",
+                  margin: "2rem 0",
+                  borderRadius: "0.75rem",
+                },
+                "& .wp-block-embed": {
+                  margin: "2rem 0",
+                },
+                "& .wp-block-embed__wrapper": {
+                  position: "relative",
+                  paddingBottom: "56.25%",
+                  height: 0,
+                  overflow: "hidden",
+                },
+                "& .wp-block-embed__wrapper iframe": {
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                },
+                "& .wp-block-separator": {
+                  border: "none",
+                  borderTop: "2px solid var(--chakra-colors-gray-200)",
+                  margin: "2.5rem auto",
+                  maxWidth: "100px",
+                },
+                "& .wp-block-separator.is-style-wide": {
+                  maxWidth: "100%",
+                },
+                /* Collapsible footnotes */
+                "& .wp-footnotes-collapsible": {
+                  margin: "2.5rem 0 1rem",
+                  border: "1px solid var(--chakra-colors-gray-200)",
+                  borderRadius: "0.75rem",
+                  overflow: "hidden",
+                  backgroundColor: "var(--chakra-colors-gray-50)",
+                },
+                "& .wp-footnotes-toggle": {
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  padding: "0.875rem 1.25rem",
+                  fontSize: "0.95rem",
+                  fontWeight: "600",
+                  color: "var(--chakra-colors-gray-600)",
+                  cursor: "pointer",
+                  userSelect: "none",
+                  listStyle: "none",
+                  transition: "background-color 0.15s ease",
+                },
+                "& .wp-footnotes-toggle:hover": {
+                  backgroundColor: "var(--chakra-colors-gray-100)",
+                },
+                "& .wp-footnotes-toggle::-webkit-details-marker": {
+                  display: "none",
+                },
+                "& .wp-footnotes-toggle-icon": {
+                  display: "inline-block",
+                  width: "1rem",
+                  height: "1rem",
+                  backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 18 15 12 9 6'/%3E%3C/svg%3E\")",
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "contain",
+                  transition: "transform 0.2s ease",
+                  flexShrink: 0,
+                },
+                "& .wp-footnotes-collapsible[open] .wp-footnotes-toggle-icon": {
+                  transform: "rotate(90deg)",
+                },
+                "& .wp-footnotes-collapsible .wp-block-footnotes": {
+                  margin: "0",
+                  padding: "0.5rem 1.25rem 1.25rem 2.5rem",
+                  borderTop: "1px solid var(--chakra-colors-gray-200)",
+                  fontSize: "0.85rem",
+                  lineHeight: "1.6",
+                  color: "var(--chakra-colors-gray-500)",
+                },
+                "& .wp-footnotes-collapsible .wp-block-footnotes li": {
+                  fontSize: "0.85rem",
+                  marginBottom: "0.5rem",
+                  color: "var(--chakra-colors-gray-500)",
+                },
               }}
-              dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+              dangerouslySetInnerHTML={{ __html: wrapFootnotesInDetails(post.content.rendered) }}
             />
 
             <Divider />
