@@ -19,6 +19,7 @@ import { Metadata } from "next";
 import { SocialShare } from "@/components/SocialShare";
 import { PostViewTracker } from "@/components/PostViewTracker";
 import { PostViewCount } from "@/components/PostViewCount";
+import { TableOfContents } from "@/components/TableOfContents";
 
 interface PostPageProps {
   params: Promise<{
@@ -38,6 +39,54 @@ function calculateReadingTime(content: string): number {
   const text = stripHtml(content);
   const wordCount = text.split(/\s+/).length;
   return Math.ceil(wordCount / wordsPerMinute);
+}
+
+// Extract headings from WordPress HTML and ensure they have IDs
+interface TocHeading {
+  id: string;
+  text: string;
+  level: number;
+}
+
+function extractAndInjectHeadingIds(html: string): { html: string; headings: TocHeading[] } {
+  const headings: TocHeading[] = [];
+  let counter = 0;
+
+  const processed = html.replace(
+    /<(h[1-6])\b([^>]*)>([\s\S]*?)<\/\1>/gi,
+    (match, tag: string, attrs: string, inner: string) => {
+      const level = parseInt(tag[1]);
+
+      // Extract text content (strip HTML tags)
+      const text = inner.replace(/<[^>]+>/g, "").trim();
+      if (!text) return match;
+
+      // Check if heading already has an id attribute
+      const idMatch = attrs.match(/\bid\s*=\s*["']([^"']+)["']/i);
+      // Check for <a id="..."> inside the heading
+      const anchorIdMatch = inner.match(/<a\s+[^>]*id\s*=\s*["']([^"']+)["']/i);
+
+      let headingId: string;
+
+      if (idMatch) {
+        headingId = idMatch[1];
+        headings.push({ id: headingId, text, level });
+        return match; // already has id on the tag
+      } else if (anchorIdMatch) {
+        headingId = anchorIdMatch[1];
+        headings.push({ id: headingId, text, level });
+        // Add id to the heading tag itself for IntersectionObserver
+        return `<${tag}${attrs} id="${headingId}">${inner}</${tag}>`;
+      } else {
+        counter++;
+        headingId = `heading-${counter}`;
+        headings.push({ id: headingId, text, level });
+        return `<${tag}${attrs} id="${headingId}">${inner}</${tag}>`;
+      }
+    }
+  );
+
+  return { html: processed, headings };
 }
 
 // Wrap WordPress footnotes in a collapsible <details> element
@@ -148,6 +197,10 @@ export default async function PostPage({ params }: PostPageProps) {
     const readingTime = calculateReadingTime(post.content.rendered);
     const currentUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
       }/posts/${slug}`;
+
+    // Extract headings and inject IDs for TOC navigation
+    const { html: contentWithIds, headings: tocHeadings } = extractAndInjectHeadingIds(post.content.rendered);
+    const processedContent = wrapFootnotesInDetails(contentWithIds);
 
     // JSON-LD structured data for SEO
     const structuredData = {
@@ -643,7 +696,7 @@ export default async function PostPage({ params }: PostPageProps) {
                   color: "var(--chakra-colors-gray-500)",
                 },
               }}
-              dangerouslySetInnerHTML={{ __html: wrapFootnotesInDetails(post.content.rendered) }}
+              dangerouslySetInnerHTML={{ __html: processedContent }}
             />
 
             <Divider />
@@ -653,6 +706,9 @@ export default async function PostPage({ params }: PostPageProps) {
           </VStack>
 
         </Container>
+
+        {/* Table of Contents */}
+        {tocHeadings.length > 0 && <TableOfContents headings={tocHeadings} />}
       </>
     );
   } catch (error) {

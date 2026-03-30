@@ -3,7 +3,9 @@
   /* Hide navigation and other non-essential elements */
   nav,
   .social-share,
-  .back-to-top {
+  .back-to-top,
+  .toc-sidebar,
+  .toc-mobile {
     display: none !important;
   }
 
