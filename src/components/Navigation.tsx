@@ -3,7 +3,6 @@
 import {
   Box,
   Flex,
-  Text,
   IconButton,
   Stack,
   useDisclosure,
@@ -18,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -108,15 +108,13 @@ export default function Navigation() {
                 display="flex"
                 alignItems="center"
               >
-                <Text
-                  fontFamily="heading"
-                  fontWeight="bold"
-                  fontSize="xl"
-                  color="prachatham.700"
-                  letterSpacing="-0.02em"
-                >
-                  ประชาธรรม
-                </Text>
+                <Image
+                  src="/new-logo-2.svg"
+                  alt="ประชาธรรม"
+                  width={160}
+                  height={40}
+                  priority
+                />
               </ChakraLink>
 
               {/* Desktop Navigation */}

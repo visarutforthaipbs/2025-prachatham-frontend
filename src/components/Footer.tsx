@@ -14,6 +14,7 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   FaFacebook,
   FaTwitter,
@@ -40,9 +41,12 @@ export default function Footer() {
         <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={{ base: 10, lg: 8 }}>
           {/* Logo and Description */}
           <VStack align="start" spacing={5}>
-            <Heading as="h2" fontSize="xl" fontWeight="bold" letterSpacing="-0.02em" color="white">
-              ประชาธรรม
-            </Heading>
+            <Image
+              src="/new-footer-logo.svg"
+              alt="ประชาธรรม"
+              width={160}
+              height={40}
+            />
             <Text fontSize="sm" color="gray.300" lineHeight="tall">
               สื่อ ประชาธรรม ประชาทำ
             </Text>
