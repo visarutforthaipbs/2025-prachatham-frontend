@@ -20,6 +20,7 @@ import { SocialShare } from "@/components/SocialShare";
 import { PostViewTracker } from "@/components/PostViewTracker";
 import { PostViewCount } from "@/components/PostViewCount";
 import { TableOfContents } from "@/components/TableOfContents";
+import AdSense from "@/components/AdSense";
 
 interface PostPageProps {
   params: Promise<{
@@ -700,6 +701,14 @@ export default async function PostPage({ params }: PostPageProps) {
             />
 
             <Divider />
+
+            {/* Small ad after article — non-intrusive */}
+            <AdSense
+              slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE || ""}
+              format="fluid"
+              layout="in-article"
+              maxHeight="250px"
+            />
 
             {/* Social Share */}
             <SocialShare url={currentUrl} title={post.title.rendered} />

@@ -19,6 +19,7 @@ import { FaArrowRight } from "react-icons/fa";
 import PostCard from "@/components/PostCard";
 import ProjectCard from "@/components/ProjectCard";
 import { SectionWrapper, PageHeader, StatCard } from "@/components/ui";
+import AdSense from "@/components/AdSense";
 import type { WordPressPost, WordPressProject } from "@/lib/wordpress";
 
 interface HomePageClientProps {
@@ -203,6 +204,15 @@ export default function HomePageClient({
           </Button>
         </Flex>
       </SectionWrapper>
+
+      {/* Small non-intrusive ad between sections */}
+      <Container maxW="4xl">
+        <AdSense
+          slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME || ""}
+          format="horizontal"
+          maxHeight="90px"
+        />
+      </Container>
 
       {/* ═══ Mission Section ═══ */}
       <SectionWrapper bg="gray.50">
