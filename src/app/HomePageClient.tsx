@@ -62,7 +62,7 @@ export default function HomePageClient({
         <Box
           position="absolute"
           inset={0}
-          bgGradient="linear(to-b, rgba(4,120,87,0.82), rgba(6,78,59,0.88))"
+          bgGradient="linear(to-b, rgba(4,75,65,0.82), rgba(3,61,53,0.88))"
           zIndex={1}
         />
 
@@ -287,7 +287,7 @@ export default function HomePageClient({
 
       {/* ═══ Statistics Section ═══ */}
       <Box
-        bgGradient="linear(135deg, prachatham.700, prachatham.800, gray.900)"
+        bgGradient="linear(135deg, prachatham.600, prachatham.700, gray.900)"
         py={{ base: 16, md: 20 }}
         color="white"
         position="relative"

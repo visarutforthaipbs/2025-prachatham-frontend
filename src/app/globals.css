@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════
    Prachatham Design System — Global Styles
-   Brand: #059669 (green 600) / DB Helvethaica X
+   Brand: #044B41 (deep teal 600) / DB Helvethaica X
    ═══════════════════════════════════════════════════════════ */
 
 /* ─── Font Faces ──────────────────────────────────────── */
@@ -36,8 +36,8 @@ html {
 }
 
 ::selection {
-  background-color: #d1fae5;
-  color: #064e3b;
+  background-color: #C3F38D;
+  color: #01211D;
 }
 
 /* ─── WordPress Content ──────────────────────────────── */
@@ -64,13 +64,13 @@ html {
 
 .wordpress-content h1 {
   font-size: 2rem;
-  border-bottom: 3px solid #a7f3d0;
+  border-bottom: 3px solid #8AE0A0;
   padding-bottom: 0.5rem;
 }
 
 .wordpress-content h2 {
   font-size: 1.75rem;
-  border-bottom: 2px solid #a7f3d0;
+  border-bottom: 2px solid #8AE0A0;
   padding-bottom: 0.5rem;
 }
 
@@ -115,7 +115,7 @@ html {
 }
 
 .wordpress-content blockquote {
-  border-left: 3px solid #059669;
+  border-left: 3px solid #044B41;
   padding-left: 1.25rem;
   margin: 1.5rem 0;
   color: #475569;
@@ -123,14 +123,14 @@ html {
 }
 
 .wordpress-content a {
-  color: #059669;
+  color: #044B41;
   text-decoration: none;
   border-bottom: 1px solid transparent;
   transition: border-color 0.15s ease;
 }
 
 .wordpress-content a:hover {
-  border-bottom-color: #059669;
+  border-bottom-color: #044B41;
 }
 
 /* ─── WordPress Content: Lists ───────────────────────── */
@@ -167,9 +167,9 @@ html {
 
 /* ─── WordPress Content: Preformatted / Callout Box ──── */
 .wordpress-content pre.wp-block-preformatted {
-  background-color: #f0fdf4;
-  border: 1px solid #a7f3d0;
-  border-left: 4px solid #059669;
+  background-color: #D4FDD5;
+  border: 1px solid #8AE0A0;
+  border-left: 4px solid #044B41;
   border-radius: 0 0.75rem 0.75rem 0;
   padding: 1.75rem 1.5rem 1.25rem;
   margin: 2.5rem 0 2rem;
@@ -190,24 +190,24 @@ html {
   position: absolute;
   top: -0.75rem;
   left: 1rem;
-  background: #f0fdf4;
+  background: #D4FDD5;
   padding: 0 0.25rem;
   width: 1.25rem;
   height: 1.25rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23059669' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpolyline points='14 2 14 8 20 8'/%3E%3Cline x1='16' y1='13' x2='8' y2='13'/%3E%3Cline x1='16' y1='17' x2='8' y2='17'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23044B41' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpolyline points='14 2 14 8 20 8'/%3E%3Cline x1='16' y1='13' x2='8' y2='13'/%3E%3Cline x1='16' y1='17' x2='8' y2='17'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-size: contain;
 }
 
 .wordpress-content pre.wp-block-preformatted a {
-  color: #059669;
+  color: #044B41;
   font-weight: 500;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
 .wordpress-content pre.wp-block-preformatted a:hover {
-  color: #047857;
+  color: #033D35;
   text-decoration-thickness: 2px;
 }
 
@@ -385,7 +385,7 @@ button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid #059669;
+  outline: 2px solid #044B41;
   outline-offset: 2px;
   border-radius: 4px;
 }

@@ -3,59 +3,73 @@
  * ==========================================
  * Single source of truth for all visual design decisions.
  *
- * Brand colors extracted from existing codebase:
- *   Primary (prachatham green): #059669 / #10b981 / #047857
+ * Brand colors (2025 rebrand):
+ *   Primary (deep teal): #044B41
+ *   Accent (warm orange): #C46211
  *   Font: DB Helvethaica X
  */
 
 // ─── Color Tokens ────────────────────────────────────────────────────────────
 
 export const colors = {
-  /** Core brand palette — the identity green */
+  /** Core brand palette — deep teal identity */
   brand: {
-    50: "#ecfdf5",
-    100: "#d1fae5",
-    200: "#a7f3d0",
-    300: "#6ee7b7",
-    400: "#34d399",
-    500: "#10b981", // primary accent
-    600: "#059669", // primary brand color
-    700: "#047857", // headings / emphasis
-    800: "#065f46",
-    900: "#064e3b",
-    950: "#022c22",
+    50: "#D4FDD5",   // light mint
+    100: "#C3F38D",  // lime green
+    200: "#8AE0A0",  // soft green
+    300: "#5CC882",  // medium green
+    400: "#38A96A",  // green
+    500: "#038B71",  // lighter teal
+    600: "#044B41",  // primary brand color
+    700: "#033D35",  // headings / emphasis
+    800: "#022F29",  // dark teal
+    900: "#01211D",  // deepest teal
+    950: "#011512",  // near-black teal
+  },
+  /** Accent palette — warm orange for CTAs */
+  accent: {
+    50: "#FEF3E2",
+    100: "#FDE2BF",
+    200: "#F9C17A",
+    300: "#F5A043",
+    400: "#D87A1A",
+    500: "#C46211",  // primary accent
+    600: "#A8530E",
+    700: "#8C440B",
+    800: "#703608",
+    900: "#542806",
   },
   /** Extended green for environment / nature sections */
   nature: {
-    50: "#f0fdf9",
-    100: "#ccfbef",
-    200: "#99f6e0",
-    300: "#5eead4",
-    400: "#2dd4bf",
-    500: "#14b8a6",
-    600: "#0d9488",
-    700: "#0f766e",
-    800: "#115e59",
-    900: "#134e4a",
+    50: "#E8FBF5",
+    100: "#C0F5E3",
+    200: "#8EEBC7",
+    300: "#5EDBA8",
+    400: "#38C48D",
+    500: "#038B71",  // midpoint — matches brand.500
+    600: "#027560",
+    700: "#025F4F",
+    800: "#01493E",
+    900: "#01332C",
   },
   /** Neutral surface & text palette */
   surface: {
     white: "#ffffff",
-    50: "#f8fafc",
-    100: "#f1f5f9",
-    200: "#e2e8f0",
-    300: "#cbd5e1",
-    400: "#94a3b8",
-    500: "#64748b",
-    600: "#475569",
-    700: "#334155",
-    800: "#1e293b",
-    900: "#0f172a",
+    50: "#F0F1E9",   // cream background
+    100: "#E5E6DE",
+    200: "#D0D1C8",
+    300: "#B5B6AD",
+    400: "#8A8B82",
+    500: "#64655E",
+    600: "#494A44",
+    700: "#33342F",
+    800: "#1E1F1B",
+    900: "#0D110F",  // near-black
   },
   /** Semantic colours */
   semantic: {
-    success: "#059669",
-    warning: "#d97706",
+    success: "#038B71",
+    warning: "#C46211",
     error: "#dc2626",
     info: "#0284c7",
   },
@@ -152,7 +166,7 @@ export const shadows = {
   xl: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
   "2xl": "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
   /** Coloured glow for CTA buttons */
-  brandGlow: "0 8px 30px -4px rgba(5, 150, 105, 0.35)",
+  brandGlow: "0 8px 30px -4px rgba(196, 98, 17, 0.35)",
   /** Card hover lift */
   cardHover: "0 20px 40px -8px rgba(0, 0, 0, 0.12)",
   /** Inner shadow for inputs */

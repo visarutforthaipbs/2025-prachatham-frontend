@@ -38,7 +38,7 @@ export default function ContactPageClient() {
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://prachatham.org",
     logo: `${
       process.env.NEXT_PUBLIC_SITE_URL || "https://prachatham.org"
-    }/images/ps-favicon.svg`,
+    }/new-favicon.svg`,
     contactPoint: {
       "@type": "ContactPoint",
       telephone: "",

@@ -30,9 +30,9 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   icons: {
-    icon: "/images/ps-favicon.svg",
-    shortcut: "/images/ps-favicon.svg",
-    apple: "/images/ps-favicon.svg",
+    icon: "/new-favicon.svg",
+    shortcut: "/new-favicon.svg",
+    apple: "/new-favicon.svg",
   },
   openGraph: {
     title: "ประชาธรรม | สื่อสิ่งแวดล้อมไทย",

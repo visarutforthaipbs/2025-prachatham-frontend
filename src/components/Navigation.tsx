@@ -59,7 +59,7 @@ export default function Navigation() {
   return (
     <Box position="sticky" top={0} zIndex={1000}>
       {/* Top accent bar */}
-      <Box h="3px" bgGradient="linear(to-r, prachatham.600, prachatham.400, envGreen.400)" />
+      <Box h="3px" bgGradient="linear(to-r, prachatham.600, prachatham.500, accent.500)" />
 
       <Flex
         bg="white"

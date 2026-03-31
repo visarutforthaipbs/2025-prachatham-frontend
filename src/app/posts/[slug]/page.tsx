@@ -226,7 +226,7 @@ export default async function PostPage({ params }: PostPageProps) {
         logo: {
           "@type": "ImageObject",
           url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://cms.prachatham.com"
-            }/wp-content/uploads/2024/01/ps-favicon.svg`,
+            }/wp-content/uploads/2024/01/new-favicon.svg`,
         },
       },
       datePublished: post.date,

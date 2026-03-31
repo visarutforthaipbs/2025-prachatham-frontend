@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/images/ps-favicon.svg`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/new-favicon.svg`,
         width: 1200,
         height: 630,
         alt: "ติดต่อประชาธรรม สื่อสิ่งแวดล้อมไทย",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     title: "ช่องทางติดต่อเรา | ประชาธรรม",
     description:
       "ติดต่อประชาธรรม สื่อสิ่งแวดล้อมไทย - รับฟังความคิดเห็น คำแนะนำ และข้อเสนอแนะจากทุกท่าน",
-    images: [`${process.env.NEXT_PUBLIC_SITE_URL}/images/ps-favicon.svg`],
+    images: [`${process.env.NEXT_PUBLIC_SITE_URL}/new-favicon.svg`],
     site: "@PrachathamF",
     creator: "@PrachathamF",
   },

@@ -35,7 +35,7 @@ export default function Footer() {
   return (
     <Box bg="gray.900" color="white">
       {/* Top accent bar */}
-      <Box h="3px" bgGradient="linear(to-r, prachatham.600, prachatham.400, envGreen.400)" />
+      <Box h="3px" bgGradient="linear(to-r, prachatham.600, prachatham.500, accent.500)" />
 
       <Container maxW="7xl" py={{ base: 12, md: 16 }}>
         <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={{ base: 10, lg: 8 }}>

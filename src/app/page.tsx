@@ -89,7 +89,7 @@ export default async function HomePage() {
       "name": "มูลนิธิประชาธรรม (Prachatham Foundation)",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://www.prachatham.com/images/ps-favicon.svg"
+        "url": "https://www.prachatham.com/new-favicon.svg"
       }
     }
   };

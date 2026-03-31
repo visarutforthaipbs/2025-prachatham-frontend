@@ -34,6 +34,18 @@ const chakraColors = {
     800: colors.brand[800],
     900: colors.brand[900],
   },
+  accent: {
+    50: colors.accent[50],
+    100: colors.accent[100],
+    200: colors.accent[200],
+    300: colors.accent[300],
+    400: colors.accent[400],
+    500: colors.accent[500],
+    600: colors.accent[600],
+    700: colors.accent[700],
+    800: colors.accent[800],
+    900: colors.accent[900],
+  },
   green: {
     50: "#f0fdf4",
     100: "#dcfce7",
@@ -148,21 +160,21 @@ const components = {
     },
     variants: {
       primary: {
-        bg: "prachatham.600",
+        bg: "accent.500",
         color: "white",
         _hover: {
-          bg: "prachatham.700",
+          bg: "accent.600",
           transform: "scale(1.02) translateY(-2px)",
           boxShadow: shadows.brandGlow,
         },
         _active: {
-          bg: "prachatham.800",
+          bg: "accent.700",
           transform: "scale(0.98) translateY(0)",
         },
       },
       secondary: {
         bg: "white",
-        color: "prachatham.700",
+        color: "prachatham.600",
         border: "2px solid",
         borderColor: "prachatham.600",
         _hover: {
@@ -304,7 +316,7 @@ const styles = {
     body: {
       fontFamily: "body",
       color: "gray.700",
-      bg: "gray.50",
+      bg: "#F0F1E9",
       lineHeight: typography.lineHeight.relaxed,
       WebkitFontSmoothing: "antialiased",
       MozOsxFontSmoothing: "grayscale",
