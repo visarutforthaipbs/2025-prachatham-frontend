@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/rate-limit";
+import { wpJsonUrl } from "@/lib/wp-config";
 
 export async function GET(
     request: NextRequest,
@@ -7,8 +9,15 @@ export async function GET(
     try {
         const resolvedParams = await params;
         const { id } = resolvedParams;
+
+        // Validate that ID is a positive integer
+        const numericId = parseInt(id, 10);
+        if (isNaN(numericId) || numericId <= 0 || String(numericId) !== id) {
+            return NextResponse.json({ error: "Invalid post ID" }, { status: 400 });
+        }
+
         const response = await fetch(
-            `https://cms.prachatham.com/wp-json/post-views-counter/get-post-views/${id}`,
+            wpJsonUrl(`post-views-counter/get-post-views/${numericId}`),
             {
                 next: { revalidate: 60 }, // Cache views for 60 seconds
             }
@@ -39,9 +48,32 @@ export async function POST(
         const resolvedParams = await params;
         const { id } = resolvedParams;
 
+        // Validate that ID is a positive integer
+        const numericId = parseInt(id, 10);
+        if (isNaN(numericId) || numericId <= 0 || String(numericId) !== id) {
+            return NextResponse.json({ error: "Invalid post ID" }, { status: 400 });
+        }
+
+        // Rate limit: max 5 view increments per IP per minute
+        const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+            || request.headers.get("x-real-ip")
+            || "unknown";
+        const { limited, resetAt } = rateLimit(`view:${ip}:${numericId}`, 5, 60_000);
+        if (limited) {
+            return NextResponse.json(
+                { error: "Too many requests" },
+                {
+                    status: 429,
+                    headers: {
+                        "Retry-After": String(Math.ceil((resetAt - Date.now()) / 1000)),
+                    },
+                }
+            );
+        }
+
         // Increment the view in WordPress
         const response = await fetch(
-            `https://cms.prachatham.com/wp-json/post-views-counter/view-post/${id}`,
+            wpJsonUrl(`post-views-counter/view-post/${numericId}`),
             {
                 method: "POST",
             }

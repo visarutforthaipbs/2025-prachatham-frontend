@@ -15,6 +15,7 @@ import { FaClock, FaCalendarAlt, FaTags, FaUser } from "react-icons/fa";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { wordpressApi, formatThaiDate, stripHtml } from "@/lib/wordpress";
+import { sanitizeHtml } from "@/lib/sanitize";
 import { Metadata } from "next";
 import { SocialShare } from "@/components/SocialShare";
 import { PostViewTracker } from "@/components/PostViewTracker";
@@ -201,7 +202,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
     // Extract headings and inject IDs for TOC navigation
     const { html: contentWithIds, headings: tocHeadings } = extractAndInjectHeadingIds(post.content.rendered);
-    const processedContent = wrapFootnotesInDetails(contentWithIds);
+    const processedContent = sanitizeHtml(wrapFootnotesInDetails(contentWithIds));
 
     // JSON-LD structured data for SEO
     const structuredData = {

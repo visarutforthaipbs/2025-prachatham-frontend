@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
+import { wpRestRoute } from "@/lib/wp-config";
 
 // WordPress API base URL
-const WORDPRESS_API_URL = "https://cms.prachatham.com/?rest_route=/wp/v2";
+const WORDPRESS_API_URL = wpRestRoute("").replace(/\/$/, "");
+
+// Only allow safe query parameters to be forwarded to WordPress
+const ALLOWED_PARAMS = new Set([
+  "page", "per_page", "search", "slug", "_embed", "_fields",
+  "orderby", "order", "exclude", "include", "offset",
+]);
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -10,9 +17,11 @@ export async function GET(request: NextRequest) {
     // Use the custom post type "projects" instead of posts with category filter
     const projectSearchParams = new URLSearchParams();
 
-    // Copy all parameters from the request
+    // Copy only whitelisted parameters from the request
     for (const [key, value] of searchParams.entries()) {
-      projectSearchParams.set(key, value);
+      if (ALLOWED_PARAMS.has(key)) {
+        projectSearchParams.set(key, value);
+      }
     }
 
     // Build the correct URL for the custom post type

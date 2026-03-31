@@ -1,3 +1,5 @@
+import { wpRestRoute } from "@/lib/wp-config";
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
@@ -6,7 +8,7 @@ export async function GET(
     const { slug } = await params;
 
     // Build the WordPress API URL with slug parameter
-    const url = new URL("https://cms.prachatham.com/?rest_route=/wp/v2/posts");
+    const url = new URL(wpRestRoute("posts"));
     url.searchParams.set("slug", slug);
     url.searchParams.set("_embed", "true");
     url.searchParams.set("acf", "true"); // Include ACF fields

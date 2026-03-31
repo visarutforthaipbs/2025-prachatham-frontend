@@ -1,17 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
+import { wpRestRoute } from "@/lib/wp-config";
 
-const WORDPRESS_API_URL = "https://cms.prachatham.com/?rest_route=/wp/v2/posts";
+const WORDPRESS_API_URL = wpRestRoute("posts");
+
+// Only allow safe query parameters to be forwarded to WordPress
+const ALLOWED_PARAMS = new Set([
+  "page", "per_page", "search", "categories", "tags",
+  "slug", "_embed", "_fields", "acf", "orderby", "order",
+  "after", "before", "offset", "exclude", "include",
+]);
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
 
-  // Add ACF fields to the request by default
-  if (!searchParams.has("acf")) {
-    searchParams.set("acf", "true");
+  // Build a safe set of query parameters (whitelist only)
+  const safeParams = new URLSearchParams();
+  for (const [key, value] of searchParams.entries()) {
+    if (ALLOWED_PARAMS.has(key)) {
+      safeParams.set(key, value);
+    }
   }
 
-  // Forward all query parameters
-  const queryString = searchParams.toString();
+  // Add ACF fields to the request by default
+  if (!safeParams.has("acf")) {
+    safeParams.set("acf", "true");
+  }
+
+  // Forward only whitelisted query parameters
+  const queryString = safeParams.toString();
   const url = `${WORDPRESS_API_URL}${queryString ? `&${queryString}` : ""}`;
 
   try {

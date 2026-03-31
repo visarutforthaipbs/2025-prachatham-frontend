@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { wordpressApi, formatThaiDate } from "@/lib/wordpress";
+import { sanitizeHtml } from "@/lib/sanitize";
 import {
   Container,
   Heading,
@@ -115,7 +116,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         {/* Project Content */}
         <Box
           className="prose prose-lg max-w-none"
-          dangerouslySetInnerHTML={{ __html: project.content.rendered }}
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(project.content.rendered) }}
           sx={{
             "& p": {
               marginBottom: "1.5rem",
