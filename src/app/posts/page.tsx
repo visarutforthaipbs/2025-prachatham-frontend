@@ -116,7 +116,7 @@ export default function PostsPage() {
             บทความทั้งหมด
           </Heading>
           <Text fontSize={{ base: "md", md: "lg" }} color="gray.500" maxW="2xl" mx="auto">
-            ข่าวสารและบทความด้านสิ่งแวดล้อมและการอนุรักษ์ธรรมชาติ
+            ข่าวสารและบทความ
           </Text>
           <Box w="60px" h="3px" bg="prachatham.500" borderRadius="full" mx="auto" mt={4} />
         </Box>
