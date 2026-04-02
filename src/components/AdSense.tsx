@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Box, Text } from "@chakra-ui/react";
 
 declare global {
   interface Window {
@@ -49,31 +48,14 @@ export default function AdSense({
   if (!publisherId) return null;
 
   return (
-    <Box
-      as="aside"
+    <aside
       aria-label="โฆษณา"
-      maxH={maxHeight}
-      overflow="hidden"
-      my={4}
-      mx="auto"
-      textAlign="center"
-      opacity={0.85}
-      _hover={{ opacity: 1 }}
-      transition="opacity 0.2s"
-      className="ad-container"
-      sx={{
-        "@media print": { display: "none" },
-      }}
+      className="ad-container my-4 mx-auto text-center opacity-85 hover:opacity-100 transition-opacity duration-200 print:hidden overflow-hidden"
+      style={{ maxHeight }}
     >
-      <Text
-        fontSize="2xs"
-        color="gray.400"
-        mb={1}
-        letterSpacing="0.05em"
-        textTransform="uppercase"
-      >
+      <span className="text-[10px] text-gray-400 mb-1 block tracking-wider uppercase">
         โฆษณา
-      </Text>
+      </span>
       <ins
         ref={adRef}
         className="adsbygoogle"
@@ -89,6 +71,6 @@ export default function AdSense({
         {...(layout ? { "data-ad-layout": layout } : {})}
         data-full-width-responsive={responsive ? "true" : "false"}
       />
-    </Box>
+    </aside>
   );
 }

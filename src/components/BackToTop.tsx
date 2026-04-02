@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { IconButton, Box } from "@chakra-ui/react";
-import { ChevronUpIcon } from "@chakra-ui/icons";
 
 export default function BackToTop() {
   const [isVisible, setIsVisible] = useState(false);
@@ -30,31 +28,16 @@ export default function BackToTop() {
   if (!isVisible) return null;
 
   return (
-    <Box
-      position="fixed"
-      bottom={{ base: "20px", md: "32px" }}
-      right={{ base: "20px", md: "32px" }}
-      zIndex={1000}
-    >
-      <IconButton
+    <div className="fixed bottom-5 right-5 md:bottom-8 md:right-8 z-[1000]">
+      <button
         aria-label="กลับขึ้นด้านบน"
-        icon={<ChevronUpIcon boxSize={5} />}
         onClick={scrollToTop}
-        bg="white"
-        color="prachatham.600"
-        size="md"
-        borderRadius="full"
-        border="1px solid"
-        borderColor="gray.200"
-        boxShadow="0 4px 14px rgba(0,0,0,0.1)"
-        _hover={{
-          transform: "translateY(-2px)",
-          boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
-          bg: "prachatham.50",
-          borderColor: "prachatham.200",
-        }}
-        transition="all 0.2s ease"
-      />
-    </Box>
+        className="bg-white text-brand-600 p-2.5 rounded-full border border-gray-200 shadow-[0_4px_14px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] hover:bg-brand-50 hover:border-brand-200 transition-all duration-200"
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+        </svg>
+      </button>
+    </div>
   );
 }

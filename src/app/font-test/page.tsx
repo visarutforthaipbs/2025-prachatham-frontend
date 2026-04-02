@@ -1,4 +1,3 @@
-import { Box, Container, Heading, Text, VStack } from "@chakra-ui/react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,126 +9,91 @@ export default function FontTest() {
   return (
     <>
       {/* Hero Section with Background Image and Green Overlay */}
-      <Box
-        position="relative"
-        h="60vh"
-        minH="400px"
-        bgImage="url('/images/hero-1-page-1.jpg')"
-        bgSize="cover"
-        bgPosition="center"
-        bgRepeat="no-repeat"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
+      <div
+        className="relative min-h-[400px] h-[60vh] bg-cover bg-center bg-no-repeat flex items-center justify-center"
+        style={{ backgroundImage: "url('/images/hero-1-page-1.jpg')" }}
       >
         {/* Green Overlay */}
-        <Box
-          position="absolute"
-          top={0}
-          left={0}
-          right={0}
-          bottom={0}
-          bg="prachatham.600"
-          opacity={0.7}
-          zIndex={1}
-        />
+        <div className="absolute inset-0 bg-brand-600 opacity-70 z-[1]" />
 
         {/* Hero Content */}
-        <Container maxW="7xl" position="relative" zIndex={2}>
-          <VStack spacing={6} textAlign="center" color="white">
-            <Heading
-              as="h1"
-              size="3xl"
-              fontWeight="bold"
-              textShadow="2px 2px 4px rgba(0,0,0,0.3)"
-            >
+        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 relative z-[2]">
+          <div className="flex flex-col gap-6 text-center text-white">
+            <h1 className="text-4xl md:text-5xl font-bold" style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.3)" }}>
               ทดสอบฟอนต์ DB Helvethaica X
-            </Heading>
-            <Text
-              fontSize="xl"
-              maxW="3xl"
-              lineHeight="tall"
-              textShadow="1px 1px 2px rgba(0,0,0,0.3)"
-            >
+            </h1>
+            <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.3)" }}>
               หน้าทดสอบการแสดงผลฟอนต์ DB Helvethaica X ในน้ำหนักต่างๆ
               เพื่อให้เห็นความสวยงามและความอ่านง่ายของตัวอักษรไทย
-            </Text>
-          </VStack>
-        </Container>
-      </Box>
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* Font Testing Content */}
-      <Container maxW="7xl" py={16}>
-        <VStack spacing={8} align="start">
-          <Box>
-            <Heading as="h1" size="2xl" color="prachatham.700" mb={6}>
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-16">
+        <div className="flex flex-col gap-8 items-start">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold text-brand-700 mb-6">
               ทดสอบฟอนต์ DB Helvethaica X
-            </Heading>
+            </h1>
 
-            <VStack spacing={6} align="start">
-              <Box>
-                <Text fontSize="lg" fontWeight="bold" color="gray.700" mb={2}>
+            <div className="flex flex-col gap-6 items-start">
+              <div>
+                <p className="text-lg font-bold text-gray-700 mb-2">
                   Font Weight 400 (Regular):
-                </Text>
-                <Text fontSize="xl" fontWeight="400">
+                </p>
+                <p className="text-xl font-normal">
                   เราคือกลุ่มคนที่ต้องการสนับสนุนให้เกิดการเปลี่ยนแปลงผ่านการสื่อสารจากคนในท้องถิ่นเอง
-                </Text>
-              </Box>
+                </p>
+              </div>
 
-              <Box>
-                <Text fontSize="lg" fontWeight="bold" color="gray.700" mb={2}>
+              <div>
+                <p className="text-lg font-bold text-gray-700 mb-2">
                   Font Weight 500 (Medium):
-                </Text>
-                <Text fontSize="xl" fontWeight="500">
+                </p>
+                <p className="text-xl font-medium">
                   มูลนิธิประชาธรรม
                   เป็นองค์กรที่มุ่งหวังสร้างการเปลี่ยนแปลงเชิงบวก
-                </Text>
-              </Box>
+                </p>
+              </div>
 
-              <Box>
-                <Text fontSize="lg" fontWeight="bold" color="gray.700" mb={2}>
+              <div>
+                <p className="text-lg font-bold text-gray-700 mb-2">
                   Font Weight 700 (Bold):
-                </Text>
-                <Text fontSize="xl" fontWeight="700">
+                </p>
+                <p className="text-xl font-bold">
                   สนับสนุนให้ผู้คนบอกเล่าเรื่องราวด้วยตัวเอง
-                </Text>
-              </Box>
+                </p>
+              </div>
 
-              <Box mt={8}>
-                <Text fontSize="lg" fontWeight="bold" color="gray.700" mb={2}>
+              <div className="mt-8">
+                <p className="text-lg font-bold text-gray-700 mb-2">
                   Heading Examples:
-                </Text>
-                <VStack spacing={3} align="start">
-                  <Heading as="h1" size="2xl">
-                    Heading Size 2XL
-                  </Heading>
-                  <Heading as="h2" size="xl">
-                    Heading Size XL
-                  </Heading>
-                  <Heading as="h3" size="lg">
-                    Heading Size LG
-                  </Heading>
-                  <Heading as="h4" size="md">
-                    Heading Size MD
-                  </Heading>
-                </VStack>
-              </Box>
+                </p>
+                <div className="flex flex-col gap-3 items-start">
+                  <h1 className="text-4xl font-bold">Heading Size 2XL</h1>
+                  <h2 className="text-2xl md:text-3xl font-bold">Heading Size XL</h2>
+                  <h3 className="text-xl md:text-2xl font-bold">Heading Size LG</h3>
+                  <h4 className="text-lg font-bold">Heading Size MD</h4>
+                </div>
+              </div>
 
-              <Box mt={8}>
-                <Text fontSize="lg" fontWeight="bold" color="gray.700" mb={2}>
+              <div className="mt-8">
+                <p className="text-lg font-bold text-gray-700 mb-2">
                   Mixed Thai and English Text:
-                </Text>
-                <Text fontSize="lg" lineHeight="tall">
+                </p>
+                <p className="text-lg leading-relaxed">
                   The DB Helvethaica X font supports both Thai (ไทย) and English
                   text seamlessly. ฟอนต์ DB Helvethaica X
                   รองรับทั้งข้อความไทยและอังกฤษได้อย่างลงตัว สำหรับการใช้งานใน
                   website ของมูลนิธิประชาธรรม.
-                </Text>
-              </Box>
-            </VStack>
-          </Box>
-        </VStack>
-      </Container>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

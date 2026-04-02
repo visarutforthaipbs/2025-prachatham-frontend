@@ -1,31 +1,10 @@
-"use client";
-
-import { Link as ChakraLink } from "@chakra-ui/react";
-
 export default function SkipLink() {
   return (
-    <ChakraLink
+    <a
       href="#main-content"
-      position="absolute"
-      top="-100px"
-      left="50%"
-      transform="translateX(-50%)"
-      bg="prachatham.600"
-      color="white"
-      px={4}
-      py={2}
-      borderRadius="md"
-      fontWeight="medium"
-      zIndex={9999}
-      _focus={{
-        top: "10px",
-        outline: "2px solid",
-        outlineColor: "prachatham.300",
-        outlineOffset: "2px",
-      }}
-      transition="top 0.2s"
+      className="absolute -top-[100px] left-1/2 -translate-x-1/2 bg-brand-600 text-white px-4 py-2 rounded-md font-medium z-[9999] focus:top-2.5 focus:outline-2 focus:outline-brand-300 focus:outline-offset-2 transition-[top] duration-200"
     >
       ข้ามไปยังเนื้อหาหลัก
-    </ChakraLink>
+    </a>
   );
 }

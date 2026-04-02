@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
     ],
   },
   experimental: {
-    optimizePackageImports: ["@chakra-ui/react"],
+    optimizePackageImports: ["react-icons", "framer-motion"],
   },
 };
 

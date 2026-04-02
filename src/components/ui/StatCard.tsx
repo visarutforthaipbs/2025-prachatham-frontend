@@ -1,7 +1,3 @@
-"use client";
-
-import { VStack, Text, Box } from "@chakra-ui/react";
-
 interface StatCardProps {
   value: string;
   label: string;
@@ -14,38 +10,18 @@ interface StatCardProps {
  */
 export default function StatCard({ value, label, icon }: StatCardProps) {
   return (
-    <VStack
-      spacing={2}
-      textAlign="center"
-      p={6}
-      borderRadius="xl"
-      bg="whiteAlpha.100"
-      backdropFilter="blur(8px)"
-      transition="all 0.3s ease"
-      _hover={{
-        bg: "whiteAlpha.200",
-        transform: "translateY(-2px)",
-      }}
-    >
+    <div className="flex flex-col items-center gap-2 text-center p-6 rounded-xl bg-white/10 backdrop-blur-sm transition-all duration-300 hover:bg-white/20 hover:-translate-y-0.5">
       {icon && (
-        <Box color="whiteAlpha.800" mb={1}>
+        <div className="text-white/80 mb-1">
           {icon}
-        </Box>
+        </div>
       )}
-      <Text
-        fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
-        fontWeight="bold"
-        lineHeight={1}
-      >
+      <p className="text-3xl md:text-4xl lg:text-5xl font-bold leading-none">
         {value}
-      </Text>
-      <Text
-        fontSize={{ base: "sm", md: "md" }}
-        color="whiteAlpha.900"
-        fontWeight="medium"
-      >
+      </p>
+      <p className="text-sm md:text-base text-white/90 font-medium">
         {label}
-      </Text>
-    </VStack>
+      </p>
+    </div>
   );
 }

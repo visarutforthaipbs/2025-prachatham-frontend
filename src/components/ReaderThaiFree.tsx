@@ -1,15 +1,5 @@
 "use client";
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
-import {
-  Box,
-  Flex,
-  Button,
-  Text,
-  Select,
-  HStack,
-  Collapse,
-  IconButton,
-} from "@chakra-ui/react";
 import { FaVolumeUp, FaPlay, FaPause, FaStop, FaCog } from "react-icons/fa";
 
 function htmlToChunks(html: string, maxLen = 180) {
@@ -221,138 +211,104 @@ export default function ReaderThaiFree({
   const hasThai = voices.some((v) => v.lang?.toLowerCase().startsWith("th"));
 
   return (
-    <Box>
+    <div>
       {/* Main Controls */}
-      <HStack color="gray.600" fontSize="sm" spacing={4}>
-        <Flex align="center" gap={2}>
+      <div className="flex items-center text-gray-600 text-sm gap-4">
+        <div className="flex items-center gap-2">
           <FaVolumeUp size={14} />
-          <Text fontWeight="medium">ฟังบทความ</Text>
-        </Flex>
+          <span className="font-medium">ฟังบทความ</span>
+        </div>
 
-        <HStack spacing={2}>
-          <Button
+        <div className="flex items-center gap-2">
+          <button
             onClick={playFromStart}
-            size="sm"
-            leftIcon={<FaPlay size={12} />}
-            colorScheme="prachatham"
-            variant="solid"
-            fontSize="xs"
-            px={3}
-            py={1}
-            h="auto"
-            minH="auto"
+            className="inline-flex items-center gap-1.5 bg-brand-600 text-white text-xs font-medium px-3 py-1 rounded-md hover:bg-brand-700 transition-colors"
           >
+            <FaPlay size={12} />
             เริ่มอ่าน
-          </Button>
+          </button>
 
           {canResume && (
-            <Button
+            <button
               onClick={playFromSaved}
-              size="sm"
-              colorScheme="green"
-              variant="solid"
-              fontSize="xs"
-              px={3}
-              py={1}
-              h="auto"
-              minH="auto"
+              className="bg-green-600 text-white text-xs font-medium px-3 py-1 rounded-md hover:bg-green-700 transition-colors"
             >
               อ่านต่อ
-            </Button>
+            </button>
           )}
 
           {status === "playing" && (
-            <IconButton
+            <button
               onClick={pause}
-              icon={<FaPause />}
-              size="sm"
-              colorScheme="yellow"
-              variant="solid"
               aria-label="หยุดชั่วคราว"
-              minW="auto"
-              w={8}
-              h={8}
-            />
+              className="w-8 h-8 flex items-center justify-center bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition-colors"
+            >
+              <FaPause />
+            </button>
           )}
 
           {status === "paused" && (
-            <IconButton
+            <button
               onClick={resume}
-              icon={<FaPlay />}
-              size="sm"
-              colorScheme="orange"
-              variant="solid"
               aria-label="เล่นต่อ"
-              minW="auto"
-              w={8}
-              h={8}
-            />
+              className="w-8 h-8 flex items-center justify-center bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors"
+            >
+              <FaPlay />
+            </button>
           )}
 
           {status !== "idle" && (
-            <IconButton
+            <button
               onClick={stopAll}
-              icon={<FaStop />}
-              size="sm"
-              colorScheme="red"
-              variant="solid"
               aria-label="หยุด"
-              minW="auto"
-              w={8}
-              h={8}
-            />
+              className="w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+            >
+              <FaStop />
+            </button>
           )}
 
-          <IconButton
+          <button
             onClick={() => setShowSettings(!showSettings)}
-            icon={<FaCog />}
-            size="sm"
-            variant={showSettings ? "solid" : "outline"}
-            colorScheme="gray"
             aria-label="ตั้งค่า"
-            minW="auto"
-            w={8}
-            h={8}
-          />
-        </HStack>
-      </HStack>
+            className={`w-8 h-8 flex items-center justify-center rounded-md transition-colors ${
+              showSettings
+                ? "bg-gray-600 text-white"
+                : "border border-gray-300 text-gray-600 hover:bg-gray-100"
+            }`}
+          >
+            <FaCog />
+          </button>
+        </div>
+      </div>
 
       {/* Collapsible Settings */}
-      <Collapse in={showSettings} animateOpacity>
-        <Box mt={3} pt={3} borderTop="1px solid" borderTopColor="gray.200">
-          <HStack spacing={4} fontSize="sm">
-            <Box>
-              <Text mb={1} fontWeight="medium" color="gray.700">
-                ความเร็ว
-              </Text>
-              <Select
+      {showSettings && (
+        <div className="mt-3 pt-3 border-t border-gray-200">
+          <div className="flex items-center gap-4 text-sm">
+            <div>
+              <p className="mb-1 font-medium text-gray-700">ความเร็ว</p>
+              <select
                 value={rate}
                 onChange={(e) => changeRate(parseFloat(e.target.value))}
-                size="sm"
-                w="120px"
-                bg="white"
+                className="w-[120px] text-sm border border-gray-300 rounded-md px-2 py-1 bg-white"
               >
                 <option value={0.75}>ช้า (0.75x)</option>
                 <option value={1}>ปกติ (1.0x)</option>
                 <option value={1.25}>เร็ว (1.25x)</option>
                 <option value={1.5}>เร็วมาก (1.5x)</option>
-              </Select>
-            </Box>
+              </select>
+            </div>
 
-            <Box>
-              <Text mb={1} fontWeight="medium" color="gray.700">
-                เสียง
-              </Text>
-              <Select
+            <div>
+              <p className="mb-1 font-medium text-gray-700">เสียง</p>
+              <select
                 value={selectedVoice?.name || ""}
                 onChange={(e) =>
                   setSelectedVoice(
                     voices.find((v) => v.name === e.target.value) || null
                   )
                 }
-                size="sm"
-                w="200px"
-                bg="white"
+                className="w-[200px] text-sm border border-gray-300 rounded-md px-2 py-1 bg-white"
               >
                 {(hasThai
                   ? voices.filter((v) => v.lang?.toLowerCase().startsWith("th"))
@@ -364,17 +320,17 @@ export default function ReaderThaiFree({
                       : v.name}
                   </option>
                 ))}
-              </Select>
-            </Box>
-          </HStack>
+              </select>
+            </div>
+          </div>
 
           {!hasThai && (
-            <Text fontSize="xs" color="orange.600" mt={2}>
+            <p className="text-xs text-orange-600 mt-2">
               ⚠️ ไม่พบเสียงภาษาไทย อาจอ่านไม่ถูกต้อง
-            </Text>
+            </p>
           )}
-        </Box>
-      </Collapse>
-    </Box>
+        </div>
+      )}
+    </div>
   );
 }

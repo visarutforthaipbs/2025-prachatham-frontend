@@ -1,19 +1,5 @@
 "use client";
 
-import {
-  Container,
-  Heading,
-  Text,
-  Box,
-  VStack,
-  HStack,
-  Link as ChakraLink,
-  Button,
-  Card,
-  CardBody,
-  SimpleGrid,
-  Icon,
-} from "@chakra-ui/react";
 import Link from "next/link";
 import Script from "next/script";
 import { motion } from "framer-motion";
@@ -100,27 +86,23 @@ export default function ContactPageClient() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
       >
-        <Container maxW="6xl" py={8}>
-          <VStack align="stretch" gap={8}>
+        <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+          <div className="flex flex-col gap-8">
             {/* Breadcrumb */}
             <motion.div
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <HStack fontSize="sm" color="gray.500">
-                <ChakraLink
-                  as={Link}
-                  href="/"
-                  _hover={{ color: "prachatham.600" }}
-                >
+              <div className="flex items-center gap-2 text-sm text-gray-400">
+                <Link href="/" className="hover:text-brand-600 transition-colors">
                   หน้าแรก
-                </ChakraLink>
-                <Text>/</Text>
-                <Text color="gray.700" fontWeight="medium">
+                </Link>
+                <span className="text-gray-300">/</span>
+                <span className="text-gray-700 font-medium">
                   ช่องทางติดต่อเรา
-                </Text>
-              </HStack>
+                </span>
+              </div>
             </motion.div>
 
             {/* Header */}
@@ -129,20 +111,14 @@ export default function ContactPageClient() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <Box textAlign="center">
-                <Heading as="h1" size="xl" color="prachatham.700" mb={4}>
+              <div className="text-center">
+                <h1 className="text-2xl md:text-3xl font-bold text-brand-700 mb-4">
                   ช่องทางติดต่อเรา
-                </Heading>
-                <Text
-                  fontSize="xl"
-                  color="gray.600"
-                  maxW="3xl"
-                  mx="auto"
-                  lineHeight="tall"
-                >
+                </h1>
+                <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                   เรายินดีรับฟังความคิดเห็น คำแนะนำ และข้อเสนอแนะจากทุกท่าน
-                </Text>
-              </Box>
+                </p>
+              </div>
             </motion.div>
 
             <motion.div
@@ -150,134 +126,99 @@ export default function ContactPageClient() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              <SimpleGrid columns={{ base: 1, lg: 2 }} gap={8}>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Contact Information */}
                 <motion.div
                   whileHover={{ y: -5, scale: 1.02 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <Card h="full">
-                    <CardBody>
-                      <Heading as="h2" size="lg" color="prachatham.700" mb={6}>
+                  <div className="card h-full">
+                    <div className="p-6">
+                      <h2 className="text-xl md:text-2xl font-bold text-brand-700 mb-6">
                         ข้อมูลการติดต่อ
-                      </Heading>
+                      </h2>
 
-                      <VStack align="stretch" gap={6}>
-                        <Box>
-                          <HStack mb={2}>
-                            <Icon as={FaMapMarkerAlt} color="prachatham.600" />
-                            <Text fontWeight="semibold" color="gray.700">
+                      <div className="flex flex-col gap-6">
+                        <div>
+                          <div className="flex items-center gap-2 mb-2">
+                            <FaMapMarkerAlt className="text-brand-600" />
+                            <span className="font-semibold text-gray-700">
                               ที่อยู่
-                            </Text>
-                          </HStack>
-                          <Text color="gray.600" lineHeight="tall">
+                            </span>
+                          </div>
+                          <p className="text-gray-600 leading-relaxed">
                             77/1 หมู่ 5 ต.สุเทพ อ.เมืองจ.เชียงใหม่ 50200
-                          </Text>
-                        </Box>
+                          </p>
+                        </div>
 
-                        <Box>
-                          <HStack mb={3}>
-                            <Icon as={FaGlobe} color="prachatham.600" />
-                            <Text fontWeight="semibold" color="gray.700">
+                        <div>
+                          <div className="flex items-center gap-2 mb-3">
+                            <FaGlobe className="text-brand-600" />
+                            <span className="font-semibold text-gray-700">
                               ติดตามเราได้ที่
-                            </Text>
-                          </HStack>
-                          <SimpleGrid columns={2} gap={3}>
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-2 gap-3">
                             <motion.div whileHover={{ scale: 1.1 }}>
-                              <ChakraLink
+                              <a
                                 href="https://www.facebook.com/prachatham"
-                                isExternal
-                                display="flex"
-                                alignItems="center"
-                                gap={2}
-                                color="prachatham.600"
-                                fontWeight="medium"
-                                _hover={{
-                                  color: "prachatham.700",
-                                  textDecoration: "underline",
-                                }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-brand-600 font-medium hover:text-brand-700 hover:underline"
                               >
-                                <Icon as={FaFacebook} />
+                                <FaFacebook />
                                 Facebook
-                              </ChakraLink>
+                              </a>
                             </motion.div>
                             <motion.div whileHover={{ scale: 1.1 }}>
-                              <ChakraLink
+                              <a
                                 href="https://twitter.com/PrachathamF"
-                                isExternal
-                                display="flex"
-                                alignItems="center"
-                                gap={2}
-                                color="prachatham.600"
-                                fontWeight="medium"
-                                _hover={{
-                                  color: "prachatham.700",
-                                  textDecoration: "underline",
-                                }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-brand-600 font-medium hover:text-brand-700 hover:underline"
                               >
-                                <Icon as={FaTwitter} />
+                                <FaTwitter />
                                 Twitter
-                              </ChakraLink>
+                              </a>
                             </motion.div>
                             <motion.div whileHover={{ scale: 1.1 }}>
-                              <ChakraLink
+                              <a
                                 href="https://www.instagram.com/prachathammedia/"
-                                isExternal
-                                display="flex"
-                                alignItems="center"
-                                gap={2}
-                                color="prachatham.600"
-                                fontWeight="medium"
-                                _hover={{
-                                  color: "prachatham.700",
-                                  textDecoration: "underline",
-                                }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-brand-600 font-medium hover:text-brand-700 hover:underline"
                               >
-                                <Icon as={FaInstagram} />
+                                <FaInstagram />
                                 Instagram
-                              </ChakraLink>
+                              </a>
                             </motion.div>
                             <motion.div whileHover={{ scale: 1.1 }}>
-                              <ChakraLink
+                              <a
                                 href="https://www.tiktok.com/@prachathammedia"
-                                isExternal
-                                display="flex"
-                                alignItems="center"
-                                gap={2}
-                                color="prachatham.600"
-                                fontWeight="medium"
-                                _hover={{
-                                  color: "prachatham.700",
-                                  textDecoration: "underline",
-                                }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-brand-600 font-medium hover:text-brand-700 hover:underline"
                               >
-                                <Icon as={FaTiktok} />
+                                <FaTiktok />
                                 TikTok
-                              </ChakraLink>
+                              </a>
                             </motion.div>
                             <motion.div whileHover={{ scale: 1.1 }}>
-                              <ChakraLink
+                              <a
                                 href="https://www.youtube.com/@pnnontv"
-                                isExternal
-                                display="flex"
-                                alignItems="center"
-                                gap={2}
-                                color="prachatham.600"
-                                fontWeight="medium"
-                                _hover={{
-                                  color: "prachatham.700",
-                                  textDecoration: "underline",
-                                }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-brand-600 font-medium hover:text-brand-700 hover:underline"
                               >
-                                <Icon as={FaYoutube} />
+                                <FaYoutube />
                                 YouTube
-                              </ChakraLink>
+                              </a>
                             </motion.div>
-                          </SimpleGrid>
-                        </Box>
-                      </VStack>
-                    </CardBody>
-                  </Card>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </motion.div>
 
                 {/* Contact Form */}
@@ -285,43 +226,32 @@ export default function ContactPageClient() {
                   whileHover={{ y: -5, scale: 1.02 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <Card h="full">
-                    <CardBody>
-                      <Heading as="h2" size="lg" color="prachatham.700" mb={6}>
+                  <div className="card h-full">
+                    <div className="p-6">
+                      <h2 className="text-xl md:text-2xl font-bold text-brand-700 mb-6">
                         ส่งข้อความถึงเรา
-                      </Heading>
+                      </h2>
 
-                      <VStack gap={6} py={8}>
-                        <Box textAlign="center">
-                          <Icon
-                            as={FaEnvelope}
-                            boxSize={12}
-                            color="prachatham.600"
-                            mb={4}
-                          />
-                          <Text fontSize="lg" color="gray.700" fontWeight="semibold" mb={2}>
+                      <div className="flex flex-col gap-6 py-8">
+                        <div className="text-center">
+                          <FaEnvelope className="text-brand-600 text-5xl mx-auto mb-4" />
+                          <p className="text-lg text-gray-700 font-semibold mb-2">
                             ติดต่อเราผ่านอีเมล
-                          </Text>
+                          </p>
                           <motion.div whileHover={{ scale: 1.05 }}>
-                            <ChakraLink
+                            <a
                               href="mailto:pnn.thailand@gmail.com"
-                              fontSize="xl"
-                              color="prachatham.600"
-                              fontWeight="bold"
-                              _hover={{
-                                color: "prachatham.700",
-                                textDecoration: "underline",
-                              }}
+                              className="text-xl text-brand-600 font-bold hover:text-brand-700 hover:underline"
                             >
                               pnn.thailand@gmail.com
-                            </ChakraLink>
+                            </a>
                           </motion.div>
-                        </Box>
-                      </VStack>
-                    </CardBody>
-                  </Card>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </motion.div>
-              </SimpleGrid>
+              </div>
             </motion.div>
 
             {/* Quick Links */}
@@ -331,86 +261,51 @@ export default function ContactPageClient() {
               transition={{ duration: 0.6, delay: 0.4 }}
             >
               <motion.div whileHover={{ y: -3 }} transition={{ duration: 0.3 }}>
-                <Card>
-                  <CardBody>
-                    <Heading
-                      as="h2"
-                      size="lg"
-                      color="prachatham.700"
-                      mb={6}
-                      textAlign="center"
-                    >
+                <div className="card">
+                  <div className="p-6">
+                    <h2 className="text-xl md:text-2xl font-bold text-brand-700 mb-6 text-center">
                       ลิงก์ด่วน
-                    </Heading>
+                    </h2>
 
-                    <SimpleGrid
-                      columns={{ base: 1, md: 3 }}
-                      gap={4}
-                      maxW="4xl"
-                      mx="auto"
-                    >
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
                       <motion.div
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        <Button
-                          as={Link}
+                        <Link
                           href="/about"
-                          variant="outline"
-                          colorScheme="green"
-                          size="lg"
-                          height="auto"
-                          py={4}
-                          whiteSpace="normal"
-                          textAlign="center"
-                          width="full"
+                          className="btn-outline-green w-full text-center block py-4"
                         >
                           เกี่ยวกับเรา
-                        </Button>
+                        </Link>
                       </motion.div>
 
                       <motion.div
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        <Button
-                          as={Link}
+                        <Link
                           href="/causes"
-                          variant="outline"
-                          colorScheme="green"
-                          size="lg"
-                          height="auto"
-                          py={4}
-                          whiteSpace="normal"
-                          textAlign="center"
-                          width="full"
+                          className="btn-outline-green w-full text-center block py-4"
                         >
                           โครงการของเรา
-                        </Button>
+                        </Link>
                       </motion.div>
 
                       <motion.div
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        <Button
-                          as={Link}
+                        <Link
                           href="/posts"
-                          variant="outline"
-                          colorScheme="green"
-                          size="lg"
-                          height="auto"
-                          py={4}
-                          whiteSpace="normal"
-                          textAlign="center"
-                          width="full"
+                          className="btn-outline-green w-full text-center block py-4"
                         >
                           บทความทั้งหมด
-                        </Button>
+                        </Link>
                       </motion.div>
-                    </SimpleGrid>
-                  </CardBody>
-                </Card>
+                    </div>
+                  </div>
+                </div>
               </motion.div>
             </motion.div>
 
@@ -424,27 +319,20 @@ export default function ContactPageClient() {
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
               >
-                <Box
-                  bg="prachatham.50"
-                  borderRadius="lg"
-                  p={8}
-                  textAlign="center"
-                  border="1px solid"
-                  borderColor="prachatham.200"
-                >
-                  <Heading as="h3" size="lg" mb={4} color="prachatham.700">
+                <div className="bg-brand-50 rounded-lg p-8 text-center border border-brand-200">
+                  <h3 className="text-xl md:text-2xl font-bold text-brand-700 mb-4">
                     เราสนับสนุนให้ผู้คนบอกเล่าเรื่องด้วยตัวเอง
-                  </Heading>
-                  <Text color="gray.600" maxW="2xl" mx="auto" lineHeight="tall">
+                  </h3>
+                  <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
                     หากคุณมีเรื่องราว ปัญหา
                     หรือแนวทางแก้ไขปัญหาท้องถิ่นที่ต้องการเผยแพร่ <br />
                     เราพร้อมรับฟังและช่วยเหลือในการสื่อสาร
-                  </Text>
-                </Box>
+                  </p>
+                </div>
               </motion.div>
             </motion.div>
-          </VStack>
-        </Container>
+          </div>
+        </div>
       </motion.div>
     </>
   );

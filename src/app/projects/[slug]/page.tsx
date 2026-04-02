@@ -2,17 +2,6 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { wordpressApi, formatThaiDate } from "@/lib/wordpress";
 import { sanitizeHtml } from "@/lib/sanitize";
-import {
-  Container,
-  Heading,
-  Text,
-  Box,
-  VStack,
-  HStack,
-  Link as ChakraLink,
-  Image,
-  Badge,
-} from "@chakra-ui/react";
 import Link from "next/link";
 
 interface ProjectPageProps {
@@ -63,83 +52,57 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
 
   return (
-    <Container maxW="4xl" py={8}>
-      <VStack align="stretch" spacing={8}>
+    <div className="max-w-4xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+      <div className="flex flex-col gap-8">
         {/* Breadcrumb */}
-        <HStack fontSize="sm" color="gray.500">
-          <ChakraLink as={Link} href="/" _hover={{ color: "prachatham.600" }}>
+        <div className="flex items-center gap-2 text-sm text-gray-400">
+          <Link href="/" className="hover:text-brand-600 transition-colors">
             หน้าแรก
-          </ChakraLink>
-          <Text>/</Text>
-          <ChakraLink
-            as={Link}
-            href="/causes"
-            _hover={{ color: "prachatham.600" }}
-          >
+          </Link>
+          <span className="text-gray-300">/</span>
+          <Link href="/causes" className="hover:text-brand-600 transition-colors">
             โครงการของเรา
-          </ChakraLink>
-          <Text>/</Text>
-          <Text color="gray.700" fontWeight="medium" noOfLines={1}>
+          </Link>
+          <span className="text-gray-300">/</span>
+          <span className="text-gray-700 font-medium line-clamp-1">
             {project.title.rendered}
-          </Text>
-        </HStack>
+          </span>
+        </div>
 
         {/* Project Header */}
-        <Box>
-          <Badge colorScheme="green" fontSize="sm" mb={4}>
+        <div>
+          <span className="badge-brand text-sm mb-4 inline-block">
             โครงการ
-          </Badge>
-          <Heading as="h1" size="xl" color="prachatham.700" mb={4}>
+          </span>
+          <h1 className="text-2xl md:text-3xl font-bold text-brand-700 mb-4">
             {project.title.rendered}
-          </Heading>
-          <Text color="gray.500" fontSize="sm">
+          </h1>
+          <p className="text-gray-500 text-sm">
             {formatThaiDate(project.date)}
-          </Text>
-        </Box>
+          </p>
+        </div>
 
         {/* Featured Image */}
         {project._embedded?.["wp:featuredmedia"]?.[0] && (
-          <Box borderRadius="lg" overflow="hidden">
-            <Image
+          <div className="rounded-lg overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={project._embedded["wp:featuredmedia"][0].source_url}
               alt={
                 project._embedded["wp:featuredmedia"][0].alt_text ||
                 project.title.rendered
               }
-              w="100%"
-              h="400px"
-              objectFit="cover"
+              className="w-full h-[400px] object-cover"
             />
-          </Box>
+          </div>
         )}
 
         {/* Project Content */}
-        <Box
-          className="prose prose-lg max-w-none"
+        <div
+          className="wordpress-content"
           dangerouslySetInnerHTML={{ __html: sanitizeHtml(project.content.rendered) }}
-          sx={{
-            "& p": {
-              marginBottom: "1.5rem",
-              lineHeight: "1.75",
-              color: "gray.700",
-            },
-            "& h2, & h3, & h4": {
-              color: "prachatham.700",
-              fontWeight: "bold",
-              marginTop: "2rem",
-              marginBottom: "1rem",
-            },
-            "& ul, & ol": {
-              marginLeft: "1.5rem",
-              marginBottom: "1.5rem",
-            },
-            "& img": {
-              borderRadius: "0.5rem",
-              marginY: "1.5rem",
-            },
-          }}
         />
-      </VStack>
-    </Container>
+      </div>
+    </div>
   );
 }

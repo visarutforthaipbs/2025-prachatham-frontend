@@ -1,7 +1,3 @@
-"use client";
-
-import { VStack, Heading, Text, Badge, Box } from "@chakra-ui/react";
-
 interface PageHeaderProps {
   /** Overline / badge text — e.g. "WHO WE ARE" */
   overline?: string;
@@ -21,52 +17,28 @@ export default function PageHeader({
   title,
   subtitle,
   align = "center",
-  titleColor = "prachatham.700",
+  titleColor = "text-brand-700",
 }: PageHeaderProps) {
+  const alignClass = align === "center" ? "text-center items-center" : "text-left items-start";
+
   return (
-    <VStack
-      spacing={3}
-      textAlign={align}
-      align={align}
-      mb={{ base: 8, md: 12 }}
-    >
+    <div className={`flex flex-col gap-3 ${alignClass} mb-8 md:mb-12`}>
       {overline && (
-        <Badge
-          variant="brand"
-          fontSize="sm"
-          px={4}
-          py={1.5}
-          borderRadius="full"
-        >
+        <span className="badge-brand text-sm px-4 py-1.5 rounded-full">
           {overline}
-        </Badge>
+        </span>
       )}
-      <Heading
-        as="h1"
-        fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
-        fontWeight="bold"
-        color={titleColor}
-        letterSpacing="-0.02em"
+      <h1
+        className={`text-2xl md:text-3xl lg:text-4xl font-bold ${titleColor} tracking-tight`}
       >
         {title}
-      </Heading>
+      </h1>
       {subtitle && (
-        <Text
-          fontSize={{ base: "md", md: "lg", lg: "xl" }}
-          color="gray.500"
-          maxW="3xl"
-          lineHeight="tall"
-        >
+        <p className="text-base md:text-lg lg:text-xl text-gray-500 max-w-3xl leading-relaxed">
           {subtitle}
-        </Text>
+        </p>
       )}
-      <Box
-        w="60px"
-        h="3px"
-        bg="prachatham.500"
-        borderRadius="full"
-        mt={2}
-      />
-    </VStack>
+      <div className="w-[60px] h-[3px] bg-brand-500 rounded-full mt-2" />
+    </div>
   );
 }

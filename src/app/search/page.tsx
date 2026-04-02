@@ -1,14 +1,5 @@
 "use client";
 
-import {
-  Container,
-  Heading,
-  Text,
-  Box,
-  VStack,
-  Link as ChakraLink,
-  HStack,
-} from "@chakra-ui/react";
 import Link from "next/link";
 import { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
@@ -73,30 +64,30 @@ function SearchContent() {
   };
 
   return (
-    <Container maxW="7xl" py={8}>
-      <VStack align="stretch" gap={8}>
+    <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+      <div className="flex flex-col gap-8">
         {/* Breadcrumb */}
-        <HStack fontSize="sm" color="gray.500">
-          <ChakraLink as={Link} href="/" _hover={{ color: "prachatham.600" }}>
+        <div className="flex items-center gap-2 text-sm text-gray-400">
+          <Link href="/" className="hover:text-brand-600 transition-colors">
             หน้าแรก
-          </ChakraLink>
-          <Text>/</Text>
-          <Text color="gray.700" fontWeight="medium">
+          </Link>
+          <span className="text-gray-300">/</span>
+          <span className="text-gray-700 font-medium">
             ผลการค้นหา
-          </Text>
-        </HStack>
+          </span>
+        </div>
 
         {/* Header */}
-        <Box textAlign="center">
-          <Heading as="h1" size="xl" color="prachatham.700" mb={4}>
+        <div className="text-center">
+          <h1 className="text-2xl md:text-3xl font-bold text-brand-700 mb-4">
             ผลการค้นหา
-          </Heading>
+          </h1>
           {query && (
-            <Text fontSize="lg" color="gray.600" maxW="2xl" mx="auto">
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               ค้นหาด้วยคำว่า &ldquo;{query}&rdquo;
-            </Text>
+            </p>
           )}
-        </Box>
+        </div>
 
         {/* Search Results */}
         {query ? (
@@ -110,14 +101,14 @@ function SearchContent() {
             onLoadMore={handleLoadMore}
           />
         ) : (
-          <Box textAlign="center" py={12} bg="gray.50" borderRadius="md">
-            <Text color="gray.500" fontSize="lg">
+          <div className="text-center py-12 bg-gray-50 rounded-md">
+            <p className="text-gray-500 text-lg">
               กรุณาพิมพ์คำที่ต้องการค้นหา
-            </Text>
-          </Box>
+            </p>
+          </div>
         )}
-      </VStack>
-    </Container>
+      </div>
+    </div>
   );
 }
 

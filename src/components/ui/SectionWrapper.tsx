@@ -1,11 +1,8 @@
-"use client";
-
-import { Box, Container } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
 interface SectionWrapperProps {
   children: ReactNode;
-  /** Background colour token — defaults to white */
+  /** Background colour — defaults to white */
   bg?: string;
   /** Extra vertical padding preset */
   size?: "sm" | "md" | "lg";
@@ -16,9 +13,9 @@ interface SectionWrapperProps {
 }
 
 const paddingMap = {
-  sm: { base: 10, md: 12 },
-  md: { base: 12, md: 16, lg: 20 },
-  lg: { base: 16, md: 20, lg: 24 },
+  sm: "py-10 md:py-12",
+  md: "py-12 md:py-16 lg:py-20",
+  lg: "py-16 md:py-20 lg:py-24",
 };
 
 /**
@@ -26,14 +23,16 @@ const paddingMap = {
  */
 export default function SectionWrapper({
   children,
-  bg = "white",
+  bg = "bg-white",
   size = "md",
   narrow = false,
   id,
 }: SectionWrapperProps) {
   return (
-    <Box as="section" bg={bg} py={paddingMap[size]} id={id}>
-      <Container maxW={narrow ? "4xl" : "7xl"}>{children}</Container>
-    </Box>
+    <section className={`${bg} ${paddingMap[size]}`} id={id}>
+      <div className={`mx-auto px-4 sm:px-6 lg:px-8 ${narrow ? "max-w-4xl" : "max-w-7xl"}`}>
+        {children}
+      </div>
+    </section>
   );
 }

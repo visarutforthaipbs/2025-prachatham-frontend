@@ -1,21 +1,5 @@
 "use client";
 
-import {
-  Box,
-  Flex,
-  IconButton,
-  Stack,
-  useDisclosure,
-  Container,
-  Input,
-  InputGroup,
-  Button,
-  VStack,
-  Link as ChakraLink,
-  Collapse,
-  HStack,
-} from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -42,8 +26,8 @@ const NAV_ITEMS: Array<NavItem> = [
 ];
 
 export default function Navigation() {
-  const { isOpen, onToggle } = useDisclosure();
-  const { isOpen: isSearchOpen, onToggle: onSearchToggle } = useDisclosure();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
 
@@ -52,61 +36,47 @@ export default function Navigation() {
     if (searchQuery.trim()) {
       router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
       setSearchQuery("");
-      onSearchToggle();
+      setIsSearchOpen(false);
     }
   };
 
   return (
-    <Box position="sticky" top={0} zIndex={1000}>
+    <div className="sticky top-0 z-[1000]">
       {/* Top accent bar */}
-      <Box h="3px" bgGradient="linear(to-r, prachatham.600, prachatham.500, accent.500)" />
+      <div className="h-[3px] bg-gradient-to-r from-brand-600 via-brand-500 to-accent-500" />
 
-      <Flex
-        bg="white"
-        color="gray.600"
-        minH="64px"
-        py={2}
-        px={4}
-        borderBottomWidth="1px"
-        borderBottomColor="gray.100"
-        align="center"
-        boxShadow="sm"
-        backdropFilter="saturate(180%) blur(12px)"
-        backgroundColor="rgba(255, 255, 255, 0.92)"
+      <div
+        className="flex text-gray-600 min-h-16 py-2 px-4 border-b border-gray-100 items-center shadow-sm backdrop-blur-[12px] backdrop-saturate-[180%]"
+        style={{ backgroundColor: "rgba(255, 255, 255, 0.92)" }}
       >
-        <Container maxW="7xl">
-          <Flex align="center" justify="space-between">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 w-full">
+          <div className="flex items-center justify-between">
             {/* Mobile menu button */}
-            <Flex
-              flex={{ base: 1, md: "auto" }}
-              ml={{ base: -2 }}
-              display={{ base: "flex", md: "none" }}
-            >
-              <IconButton
-                onClick={onToggle}
+            <div className="flex flex-1 md:flex-none -ml-2 md:hidden">
+              <button
+                onClick={() => setIsOpen(!isOpen)}
                 aria-label={isOpen ? "ปิดเมนู" : "เปิดเมนู"}
                 aria-expanded={isOpen}
                 aria-controls="mobile-nav"
-                variant="ghost"
-                size="sm"
-                borderRadius="md"
+                className="p-2 rounded-md hover:bg-gray-100 transition-colors"
               >
                 {isOpen ? (
-                  <CloseIcon boxSize={3} />
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
                 ) : (
-                  <HamburgerIcon boxSize={5} />
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
                 )}
-              </IconButton>
-            </Flex>
+              </button>
+            </div>
 
             {/* Logo */}
-            <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }} align="center">
-              <ChakraLink
-                as={Link}
+            <div className="flex flex-1 justify-center md:justify-start items-center">
+              <Link
                 href="/"
-                _hover={{ textDecoration: "none" }}
-                display="flex"
-                alignItems="center"
+                className="flex items-center hover:no-underline"
               >
                 <Image
                   src="/new-logo-2.svg"
@@ -115,173 +85,111 @@ export default function Navigation() {
                   height={40}
                   priority
                 />
-              </ChakraLink>
+              </Link>
 
               {/* Desktop Navigation */}
-              <Flex display={{ base: "none", md: "flex" }} ml={10}>
-                <HStack spacing={1}>
+              <div className="hidden md:flex ml-10">
+                <div className="flex items-center gap-1">
                   {NAV_ITEMS.map((navItem) => (
-                    <ChakraLink
+                    <Link
                       key={navItem.label}
-                      as={Link}
                       href={navItem.href || "#"}
-                      px={4}
-                      py={2}
-                      fontSize="sm"
-                      fontWeight={500}
-                      color="gray.600"
-                      borderRadius="md"
-                      position="relative"
-                      _hover={{
-                        textDecoration: "none",
-                        color: "prachatham.700",
-                        bg: "prachatham.50",
-                      }}
-                      transition="all 0.2s ease"
+                      className="px-4 py-2 text-sm font-medium text-gray-600 rounded-md relative hover:no-underline hover:text-brand-700 hover:bg-brand-50 transition-all duration-200"
                     >
                       {navItem.label}
-                    </ChakraLink>
+                    </Link>
                   ))}
-                </HStack>
-              </Flex>
-            </Flex>
+                </div>
+              </div>
+            </div>
 
             {/* Right side buttons */}
-            <Stack
-              flex={{ base: 1, md: 0 }}
-              justify="flex-end"
-              direction="row"
-              spacing={2}
-              align="center"
-            >
+            <div className="flex flex-1 md:flex-none justify-end items-center gap-2">
               {/* Search button */}
-              <IconButton
+              <button
                 aria-label="Search"
-                variant="ghost"
-                onClick={onSearchToggle}
-                color="gray.500"
-                size="sm"
-                borderRadius="md"
-                _hover={{
-                  bg: "gray.100",
-                  color: "gray.700",
-                }}
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                className="p-2 text-gray-500 rounded-md hover:bg-gray-100 hover:text-gray-700 transition-colors"
               >
-                <SearchIcon />
-              </IconButton>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </button>
 
               {/* Contact Us Button - Desktop */}
-              <Button
-                as={Link}
+              <Link
                 href="/contact"
-                variant="primary"
-                size="sm"
-                display={{ base: "none", md: "flex" }}
+                className="btn-primary hidden md:flex text-sm"
               >
                 ติดต่อเรา
-              </Button>
-            </Stack>
-          </Flex>
-        </Container>
-      </Flex>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Mobile Navigation */}
-      <Collapse in={isOpen} animateOpacity>
-        <Box
+      {isOpen && (
+        <div
           id="mobile-nav"
-          bg="white"
-          display={{ md: "none" }}
-          p={5}
-          borderBottomWidth="1px"
-          borderColor="gray.100"
-          boxShadow="lg"
+          className="md:hidden bg-white p-5 border-b border-gray-100 shadow-lg"
         >
-          <VStack align="stretch" gap={1}>
+          <div className="flex flex-col gap-1">
             {NAV_ITEMS.map((navItem) => (
-              <ChakraLink
+              <Link
                 key={navItem.label}
-                as={Link}
                 href={navItem.href || "#"}
-                w="full"
-                py={3}
-                px={4}
-                fontWeight={500}
-                color="gray.700"
-                borderRadius="lg"
-                _hover={{
-                  textDecoration: "none",
-                  color: "prachatham.700",
-                  bg: "prachatham.50",
-                }}
-                transition="all 0.15s ease"
-                onClick={onToggle}
+                className="w-full py-3 px-4 font-medium text-gray-700 rounded-lg hover:no-underline hover:text-brand-700 hover:bg-brand-50 transition-all duration-150"
+                onClick={() => setIsOpen(false)}
               >
                 {navItem.label}
-              </ChakraLink>
+              </Link>
             ))}
 
             {/* Contact Us Button - Mobile */}
-            <Button
-              as={Link}
+            <Link
               href="/contact"
-              colorScheme="prachatham"
-              variant="solid"
-              w="full"
-              mt={3}
-              borderRadius="lg"
-              fontWeight="medium"
-              onClick={onToggle}
+              className="btn-primary w-full mt-3 rounded-lg font-medium text-center"
+              onClick={() => setIsOpen(false)}
             >
               ติดต่อเรา
-            </Button>
-          </VStack>
-        </Box>
-      </Collapse>
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* Search Box */}
       {isSearchOpen && (
-        <Box
-          bg="white"
-          p={5}
-          borderBottomWidth="1px"
-          borderColor="gray.100"
-          boxShadow="lg"
-        >
-          <Container maxW="7xl">
-          <form onSubmit={handleSearch}>
-              <InputGroup>
-                <Input
-                  placeholder="พิมพ์คำที่ต้องการค้นหา..."
-                  aria-label="ค้นหาบทความ"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  size="lg"
-                  borderRadius="lg"
-                  bg="gray.50"
-                  variant="outline"
-                  autoFocus
-                />
-              </InputGroup>
-              <Flex justify="flex-end" mt={3} gap={2}>
-                <Button
-                  variant="ghost"
-                  onClick={onSearchToggle}
-                  size="md"
+        <div className="bg-white p-5 border-b border-gray-100 shadow-lg">
+          <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+            <form onSubmit={handleSearch}>
+              <input
+                placeholder="พิมพ์คำที่ต้องการค้นหา..."
+                aria-label="ค้นหาบทความ"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-4 py-3 text-lg rounded-lg bg-gray-50 border border-gray-200 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-200 transition-colors"
+                autoFocus
+              />
+              <div className="flex justify-end mt-3 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsSearchOpen(false)}
+                  className="px-4 py-2 text-sm rounded-md hover:bg-gray-100 transition-colors"
                 >
                   ยกเลิก
-                </Button>
-                <Button
-                  variant="primary"
+                </button>
+                <button
                   type="submit"
-                  size="md"
+                  className="btn-primary text-sm"
                 >
                   ค้นหา
-                </Button>
-              </Flex>
+                </button>
+              </div>
             </form>
-          </Container>
-        </Box>
+          </div>
+        </div>
       )}
-    </Box>
+    </div>
   );
 }

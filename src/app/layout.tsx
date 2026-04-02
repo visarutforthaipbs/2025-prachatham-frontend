@@ -1,13 +1,17 @@
 import type { Metadata, Viewport } from "next";
+import dynamic from "next/dynamic";
+import Script from "next/script";
 import { Providers } from "./providers";
 import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import BackToTop from "@/components/BackToTop";
 import SkipLink from "@/components/SkipLink";
-import { Box } from "@chakra-ui/react";
 import "./globals.css";
 import "@/styles/fonts.css";
 import "@/styles/print.css";
+
+const Footer = dynamic(() => import("@/components/Footer"), {
+  loading: () => null,
+});
+const BackToTop = dynamic(() => import("@/components/BackToTop"));
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -83,26 +87,50 @@ export default function RootLayout({
   return (
     <html lang="th" suppressHydrationWarning>
       <head>
+        {/* Preload critical fonts */}
+        <link
+          rel="preload"
+          href="/font/dbhelvethaicax-webfont.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/font/dbhelvethaicaxbd-webfont.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        {/* Preconnect to external origins */}
+        <link rel="dns-prefetch" href="https://cms.prachatham.com" />
+        <link rel="preconnect" href="https://cms.prachatham.com" crossOrigin="anonymous" />
         {adsenseId && (
-          <script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`}
-            crossOrigin="anonymous"
-          />
+          <>
+            <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+            <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
+          </>
         )}
       </head>
       <body suppressHydrationWarning>
         <Providers>
           <SkipLink />
-          <Box minH="100vh" bg="gray.50" display="flex" flexDirection="column">
+          <div className="min-h-screen bg-gray-50 flex flex-col">
             <Navigation />
-            <Box as="main" id="main-content" flex="1" tabIndex={-1}>
+            <main id="main-content" className="flex-1" tabIndex={-1}>
               {children}
-            </Box>
+            </main>
             <Footer />
-          </Box>
+          </div>
           <BackToTop />
         </Providers>
+        {adsenseId && (
+          <Script
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`}
+            crossOrigin="anonymous"
+            strategy="lazyOnload"
+          />
+        )}
       </body>
     </html>
   );

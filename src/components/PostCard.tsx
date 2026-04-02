@@ -1,17 +1,5 @@
 "use client";
 
-import {
-  Box,
-  Heading,
-  Text,
-  Badge,
-  Flex,
-  Link as ChakraLink,
-  HStack,
-  Icon,
-  Card,
-  CardBody,
-} from "@chakra-ui/react";
 import { FaUser, FaArrowRight } from "react-icons/fa";
 import Link from "next/link";
 import NextImage from "next/image";
@@ -34,15 +22,11 @@ export default function PostCard({ post }: PostCardProps) {
   const categories = (post._embedded?.["wp:term"]?.[0] || []) as Category[];
 
   return (
-    <Card h="full" display="flex" flexDirection="column">
+    <article className="card h-full flex flex-col">
       {/* Featured Image */}
       {featuredImage && (
-        <ChakraLink
-          as={Link}
-          href={`/posts/${post.slug}`}
-          _hover={{ textDecoration: "none" }}
-        >
-          <Box position="relative" height="220px" overflow="hidden">
+        <Link href={`/posts/${post.slug}`} className="hover:no-underline" tabIndex={-1} aria-hidden="true">
+          <div className="relative h-[220px] overflow-hidden">
             <NextImage
               src={featuredImage.source_url}
               alt={featuredImage.alt_text || post.title.rendered}
@@ -54,120 +38,67 @@ export default function PostCard({ post }: PostCardProps) {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
             {/* Subtle gradient for readability */}
-            <Box
-              position="absolute"
-              bottom={0}
-              left={0}
-              right={0}
-              h="60px"
-              bgGradient="linear(to-t, blackAlpha.200, transparent)"
-            />
-          </Box>
-        </ChakraLink>
+            <div className="absolute bottom-0 left-0 right-0 h-[60px] bg-gradient-to-t from-black/10 to-transparent" />
+          </div>
+        </Link>
       )}
 
-      <CardBody flex={1} display="flex" flexDirection="column" p={5}>
+      <div className="flex-1 flex flex-col p-5">
         {/* Categories */}
         {categories.length > 0 && (
-          <HStack mb={3} flexWrap="wrap" gap={1.5}>
+          <div className="flex items-center mb-3 flex-wrap gap-1.5">
             {categories.slice(0, 2).map((category) => (
-              <ChakraLink
+              <Link
                 key={category.id}
-                as={Link}
                 href={`/category/${category.slug}`}
-                _hover={{ textDecoration: "none" }}
+                className="hover:no-underline"
               >
-                <Badge
-                  variant="brand"
-                  _hover={{
-                    bg: "prachatham.100",
-                  }}
-                  transition="all 0.15s ease"
-                >
+                <span className="badge-brand hover:bg-brand-100 transition-all duration-150">
                   {category.name}
-                </Badge>
-              </ChakraLink>
+                </span>
+              </Link>
             ))}
-          </HStack>
+          </div>
         )}
 
         {/* Title */}
-        <ChakraLink
-          as={Link}
+        <Link
           href={`/posts/${post.slug}`}
-          _hover={{ textDecoration: "none" }}
-          flex={1}
+          className="hover:no-underline flex-1"
         >
-          <Heading
-            variant="card"
-            _hover={{ color: "prachatham.600" }}
-            transition="color 0.2s ease"
-            mb={3}
-            css={{
-              display: "-webkit-box",
-              WebkitLineClamp: 3,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-            }}
-          >
+          <h3 className="text-3xl font-bold text-gray-800 hover:text-brand-600 transition-colors duration-200 mb-3 line-clamp-3 leading-tight">
             {post.title.rendered}
-          </Heading>
-        </ChakraLink>
+          </h3>
+        </Link>
 
         {/* Excerpt */}
-        <Text
-          variant="caption"
-          color="gray.600"
-          fontSize="sm"
-          mb={4}
-          flex={1}
-          css={{
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-          }}
-        >
+        <p className="text-sm text-gray-600 mb-4 flex-1 line-clamp-2">
           {getExcerpt(post.excerpt.rendered, 120)}
-        </Text>
+        </p>
 
         {/* Date, Author & Read More */}
-        <Flex
-          justify="space-between"
-          align="center"
-          mt="auto"
-          pt={4}
-          borderTop="1px solid"
-          borderColor="gray.100"
-        >
-          <Flex direction="column" fontSize="xs" color="gray.400" gap={1}>
-            <Text>{formatThaiDate(post.date)}</Text>
-            <HStack spacing={3}>
+        <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-100">
+          <div className="flex flex-col text-xs text-gray-400 gap-1">
+            <span>{formatThaiDate(post.date)}</span>
+            <div className="flex items-center gap-3">
               {post.acf?.authornamepost && (
-                <HStack spacing={1}>
+                <div className="flex items-center gap-1">
                   <FaUser size={9} />
-                  <Text>{post.acf.authornamepost}</Text>
-                </HStack>
+                  <span>{post.acf.authornamepost}</span>
+                </div>
               )}
               <PostViewCount postId={post.id} />
-            </HStack>
-          </Flex>
-          <ChakraLink
-            as={Link}
+            </div>
+          </div>
+          <Link
             href={`/posts/${post.slug}`}
-            variant="link"
-            display="flex"
-            alignItems="center"
-            gap={1}
-            _hover={{
-              gap: 2,
-            }}
+            className="flex items-center gap-1 text-brand-600 text-sm font-medium hover:gap-2 transition-all duration-200"
           >
             อ่านต่อ
-            <Icon as={FaArrowRight} boxSize={2.5} />
-          </ChakraLink>
-        </Flex>
-      </CardBody>
-    </Card>
+            <FaArrowRight className="w-2.5 h-2.5" />
+          </Link>
+        </div>
+      </div>
+    </article>
   );
 }

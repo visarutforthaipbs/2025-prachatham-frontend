@@ -1,16 +1,5 @@
 "use client";
 
-import {
-  Container,
-  Heading,
-  Text,
-  SimpleGrid,
-  Box,
-  VStack,
-  Button,
-  Link as ChakraLink,
-  HStack,
-} from "@chakra-ui/react";
 import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
@@ -49,7 +38,6 @@ export default function CategoryPage() {
 
         if (page === 1) {
           setPosts(data.posts);
-          // Get category name from first post if available
           if (data.posts.length > 0) {
             const categories = data.posts[0]._embedded?.["wp:term"]?.[0] || [];
             const category = categories.find(
@@ -89,99 +77,79 @@ export default function CategoryPage() {
 
   if (error) {
     return (
-      <Container maxW="7xl" py={8}>
-        <Box
-          bg="red.50"
-          borderColor="red.200"
-          borderWidth="1px"
-          borderRadius="md"
-          p={6}
-          color="red.800"
-          textAlign="center"
-        >
-          <Text fontSize="lg">{error}</Text>
-        </Box>
-      </Container>
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+        <div className="bg-red-50 border border-red-200 rounded-md p-6 text-red-800 text-center">
+          <p className="text-lg">{error}</p>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Container maxW="7xl" py={8}>
-      <VStack align="stretch" gap={8}>
+    <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+      <div className="flex flex-col gap-8">
         {/* Breadcrumb */}
-        <HStack fontSize="sm" color="gray.500">
-          <ChakraLink as={Link} href="/" _hover={{ color: "prachatham.600" }}>
+        <div className="flex items-center gap-2 text-sm text-gray-400">
+          <Link href="/" className="hover:text-brand-600 transition-colors">
             หน้าแรก
-          </ChakraLink>
-          <Text>/</Text>
-          <ChakraLink
-            as={Link}
-            href="/posts"
-            _hover={{ color: "prachatham.600" }}
-          >
+          </Link>
+          <span className="text-gray-300">/</span>
+          <Link href="/posts" className="hover:text-brand-600 transition-colors">
             บทความ
-          </ChakraLink>
-          <Text>/</Text>
-          <Text color="gray.700" fontWeight="medium">
+          </Link>
+          <span className="text-gray-300">/</span>
+          <span className="text-gray-700 font-medium">
             {categoryName || slug}
-          </Text>
-        </HStack>
+          </span>
+        </div>
 
         {/* Header */}
-        <Box textAlign="center">
-          <Heading as="h1" size="xl" color="prachatham.700" mb={4}>
+        <div className="text-center">
+          <h1 className="text-2xl md:text-3xl font-bold text-brand-700 mb-4">
             หมวดหมู่: {categoryName || slug}
-          </Heading>
-          <Text fontSize="lg" color="gray.600" maxW="2xl" mx="auto">
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             บทความทั้งหมดในหมวดหมู่นี้
-          </Text>
-        </Box>
+          </p>
+        </div>
 
         {/* Posts Grid */}
         {posts.length > 0 ? (
-          <VStack align="stretch" gap={6}>
-            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
+          <div className="flex flex-col gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {posts.map((post) => (
                 <PostCard key={post.id} post={post} />
               ))}
-            </SimpleGrid>
+            </div>
 
             {/* Load More Button */}
             {currentPage < totalPages && (
-              <Box textAlign="center">
-                <Button
+              <div className="text-center">
+                <button
                   onClick={handleLoadMore}
-                  isLoading={loadingMore}
-                  colorScheme="green"
-                  size="md"
-                  variant="outline"
-                  _hover={{
-                    bg: "prachatham.50",
-                  }}
                   disabled={loadingMore}
+                  className="btn-outline-green disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loadingMore ? "กำลังโหลด..." : "โหลดเพิ่มเติม"}
-                </Button>
-              </Box>
+                </button>
+              </div>
             )}
-          </VStack>
+          </div>
         ) : !loading ? (
-          <Box textAlign="center" py={12} bg="gray.50" borderRadius="md">
-            <Text color="gray.500" fontSize="lg">
+          <div className="text-center py-12 bg-gray-50 rounded-md">
+            <p className="text-gray-500 text-lg">
               ไม่มีบทความในหมวดหมู่นี้
-            </Text>
-            <ChakraLink as={Link} href="/posts">
-              <Button mt={4} colorScheme="green" variant="outline">
-                ดูบทความทั้งหมด
-              </Button>
-            </ChakraLink>
-          </Box>
+            </p>
+            <Link href="/posts" className="inline-block mt-4 btn-outline-green">
+              ดูบทความทั้งหมด
+            </Link>
+          </div>
         ) : (
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <LoadingSkeleton count={6} />
-          </SimpleGrid>
+          </div>
         )}
-      </VStack>
-    </Container>
+      </div>
+    </div>
   );
 }

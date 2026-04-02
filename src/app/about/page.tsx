@@ -1,20 +1,3 @@
-import {
-  Container,
-  Heading,
-  Text,
-  Box,
-  VStack,
-  HStack,
-  Link as ChakraLink,
-  SimpleGrid,
-  Card,
-  CardBody,
-  Divider,
-  Badge,
-  UnorderedList,
-  ListItem,
-  OrderedList,
-} from "@chakra-ui/react";
 import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
@@ -32,38 +15,31 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <Container maxW="6xl" py={8}>
-      <VStack align="stretch" gap={12}>
+    <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+      <div className="flex flex-col gap-12">
         {/* Breadcrumb */}
-        <HStack fontSize="sm" color="gray.500">
-          <ChakraLink as={Link} href="/" _hover={{ color: "prachatham.600" }}>
+        <div className="flex items-center gap-2 text-sm text-gray-400">
+          <Link href="/" className="hover:text-brand-600 transition-colors">
             หน้าแรก
-          </ChakraLink>
-          <Text>/</Text>
-          <Text color="gray.700" fontWeight="medium">
+          </Link>
+          <span className="text-gray-300">/</span>
+          <span className="text-gray-700 font-medium">
             ประชาธรรมคือใคร
-          </Text>
-        </HStack>
+          </span>
+        </div>
 
         {/* Header */}
-        <Box textAlign="center">
-          <Badge colorScheme="green" fontSize="sm" px={3} py={1} mb={4}>
+        <div className="text-center">
+          <span className="badge-brand text-sm px-3 py-1 mb-4 inline-block">
             WHO WE ARE
-          </Badge>
-          <Heading as="h1" size="2xl" color="prachatham.700" mb={6}>
+          </span>
+          <h1 className="text-3xl md:text-4xl font-bold text-brand-700 mb-6">
             ประชาธรรมคือใคร
-          </Heading>
-        </Box>
+          </h1>
+        </div>
 
         {/* About Image */}
-        <Box
-          position="relative"
-          width="100%"
-          height={{ base: "300px", md: "400px" }}
-          borderRadius="xl"
-          overflow="hidden"
-          shadow="lg"
-        >
+        <div className="relative w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden shadow-lg">
           <Image
             src="/images/about-1.jpg"
             alt="มูลนิธิสื่อประชาธรรม"
@@ -71,24 +47,18 @@ export default function AboutPage() {
             style={{ objectFit: "cover" }}
             priority
           />
-        </Box>
+        </div>
 
         {/* Who We Are Section */}
-        <Card>
-          <CardBody>
-            <Heading as="h2" size="lg" color="prachatham.700" mb={6}>
+        <div className="card">
+          <div className="p-6">
+            <h2 className="text-xl md:text-2xl font-bold text-brand-700 mb-6">
               เราคือใคร
-            </Heading>
-            <VStack
-              align="stretch"
-              gap={6}
-              fontSize="md"
-              lineHeight="tall"
-              color="gray.700"
-            >
-              <Text>
+            </h2>
+            <div className="flex flex-col gap-6 text-base leading-relaxed text-gray-700">
+              <p>
                 มูลนิธิสื่อประชาธรรมจดทะเบียนเมื่อปี 2558 เดิมคือ
-                “สำนักข่าวประชาธรรม” อันเป็นองค์กร สื่อทางเลือกที่ก่อตั้งเมื่อปี
+                &ldquo;สำนักข่าวประชาธรรม&rdquo; อันเป็นองค์กร สื่อทางเลือกที่ก่อตั้งเมื่อปี
                 2542 โดยกลุ่มนักวิชาการ
                 องค์กรพัฒนาเอกชนและองค์กรชุมชนในเขตภาคเหนือ
                 ซึ่งต่อมาได้มีการขยายการระดมหุ้นจากสมาชิกเครือข่ายประชาชนทั่วประเทศ
@@ -99,54 +69,48 @@ export default function AboutPage() {
                 เพราะประสบปัญหาด้านเศรษฐกิจไม่สามารถส่งผู้สื่อข่าวมาติดตามข่าว
                 ประกอบกับแนวคิดของบรรณาธิการบางส่วนที่สนใจแต่ประเด็นระดับชาติและยังขึ้นอยู่กับสปอนเซอร์ที่สนับสนุนสื่อมวลชน
                 ขณะที่ข้อมูลข่าวสารที่เป็นประโยชน์กับสาธารณะรวมถึงประชาชนที่อยู่ในท้องถิ่นโดยส่วนใหญ่ล้วนเป็นอุบัติการณ์ที่เกิดขึ้นในท้องถิ่น
-              </Text>
+              </p>
 
-              <Box>
-                <Text fontWeight="semibold" mb={3}>
+              <div>
+                <p className="font-semibold mb-3">
                   ในการดำเนินงานของสำนักข่าวประชาธรรมในปี 2542-2557
                   ได้มีการดำเนินงาน 3 ด้านคือ
-                </Text>
-                <OrderedList spacing={3} pl={6}>
-                  <ListItem>
+                </p>
+                <ol className="list-decimal pl-6 space-y-3">
+                  <li>
                     ผลิตข่าวสารข้อมูลข่าวสารเพื่อขยายพื้นที่ภาคประชาชนในสื่อกระแสหลักอย่างต่อเนื่องเป็นประจำทุกวันในรูปแบบของ
                     ข่าว บทความ รายงานพิเศษ ส่งให้แก่สื่อมวลชนกระแสหลัก
-                  </ListItem>
-                  <ListItem>
+                  </li>
+                  <li>
                     ผลิตสื่อเพื่อหนุนเสริมขบวนภาคประชาชน เช่น เว็บไซต์
                     www.prachatham.com หนังสือ เช่น คู่มือการทำข่าว
                     ประสบการณ์การทำข่าวของนักข่าวมืออาชีพ
-                  </ListItem>
-                  <ListItem>
+                  </li>
+                  <li>
                     สร้างอาสาสมัครผู้สื่อข่าว ในระดับท้องถิ่นตามจุดต่าง ๆ
                     โดยการฝึกอบรมเช่นการสื่อข่าว เขียนข่าว
                     การทำข่าวสืบสวนสอบสวนและการทำข่าวสิ่งแวดล้อม
                     โดยประสานงานกับสมาคมนักข่าวและชมรมนักข่าวสิ่งแวดล้อมเพื่อช่วยในเรื่องกระบวนการดังกล่าว
                     ภายหลังจากฝึกอบรมก็มีกระบวนการติดตามต่อโดยให้ผู้สื่อข่าวของสำนักข่าวประชาธรรมเป็นพี่เลี้ยงเพื่อช่วยในการทำข่าวจากพื้นที่
-                  </ListItem>
-                </OrderedList>
-              </Box>
+                  </li>
+                </ol>
+              </div>
 
-              <Text>
+              <p>
                 ช่วงปีแรก ๆ เน้นกลุ่มเป้าหมายเป็นองค์กรชุมชน องค์กรพัฒนาเอกชน
                 ระหว่างปี 2547-2549
                 เริ่มมีการขยายกลุ่มเป้าหมายไปยังนักศึกษาในสถาบันราชภัฎ
                 วิทยุชุมชน และองค์กรปกครองส่วนท้องถิ่น
-              </Text>
-            </VStack>
-          </CardBody>
-        </Card>
+              </p>
+            </div>
+          </div>
+        </div>
 
         {/* Network Cooperation */}
-        <Card>
-          <CardBody>
-            <VStack
-              align="stretch"
-              gap={4}
-              fontSize="md"
-              lineHeight="tall"
-              color="gray.700"
-            >
-              <Text>
+        <div className="card">
+          <div className="p-6">
+            <div className="flex flex-col gap-4 text-base leading-relaxed text-gray-700">
+              <p>
                 ในการดำเนินงานของสำนักข่าวประชาธรรมจะมีการประสานความร่วมมือกับเครือข่ายองค์กรชาวบ้านที่อยู่ตามพื้นที่ต่าง
                 ๆ เช่น เครือข่ายทรัพยากรธรรมชาติและสิ่งแวดล้อมภาคเหนือ
                 เครือข่ายป่าชุมชน เครือข่ายเกษตรกรรมทางเลือก กลุ่มรักษ์เชียงของ
@@ -154,9 +118,9 @@ export default function AboutPage() {
                 เพื่อที่จะนำข้อมูลข่าวสารในพื้นที่ดังกล่าวออกมาเผยแพร่
                 ขณะเดียวกันก็มีการเสริมศักยภาพบุคลากรในพื้นที่ดังกล่าวให้สามารถเป็นผู้สื่อสารเองได้ด้วย
                 และเชื่อมต่อกับวิทยุชุมชนเพื่อใช้เป็นช่องทางในการเผยแพร่
-              </Text>
+              </p>
 
-              <Text>
+              <p>
                 ต่อมาในปี 2547
                 จากการสรุปบทเรียนการดำเนินงานของสำนักข่าวประชาธรรม
                 พบว่าการดำเนินงานเพื่อสื่อสารแนวดิ่งเพียงอย่างเดียวนั้นไม่เพียงพอ
@@ -166,59 +130,53 @@ export default function AboutPage() {
                 ถูกครอบงำจากภาคทุนและรัฐบาลที่มีผลประโยชน์ทับซ้อนอย่างหนัก
                 ดังนั้นจึงมีการขยายโครงการสื่อสารแนวราบ (local talk) ขึ้นมา
                 ทั้งนี้เพื่อเป็นการเปิดพื้นที่การสื่อสารของภาคประชาชนในแนวระนาบมากขึ้น
-              </Text>
-            </VStack>
-          </CardBody>
-        </Card>
+              </p>
+            </div>
+          </div>
+        </div>
 
         {/* Local Talk Project */}
-        <Card>
-          <CardBody>
-            <Heading as="h3" size="md" color="prachatham.700" mb={4}>
+        <div className="card">
+          <div className="p-6">
+            <h3 className="text-lg font-bold text-brand-700 mb-4">
               โครงการสื่อสารแนวราบ (Local Talk)
-            </Heading>
-            <VStack
-              align="stretch"
-              gap={4}
-              fontSize="md"
-              lineHeight="tall"
-              color="gray.700"
-            >
-              <Text>
+            </h3>
+            <div className="flex flex-col gap-4 text-base leading-relaxed text-gray-700">
+              <p>
                 การทำงานของโครงการสื่อสารแนวราบมีภารกิจอยู่ 3 ด้าน คือ
-              </Text>
-              <OrderedList spacing={3} pl={6}>
-                <ListItem>
+              </p>
+              <ol className="list-decimal pl-6 space-y-3">
+                <li>
                   การพัฒนาสื่อทางเลือกเพื่อขยายการสื่อสารในแนวราบที่สอดคล้องกับชุมชนท้องถิ่น
                   เช่น พัฒนาสถานีข่าววิทยุชุมชน การพัฒนาเว็บไซต์สื่อทางเลือก
                   เช่น ผลิตจดหมายข่าว &ldquo;ท้องถิ่นสนทนา&rdquo;
                   และทำรายการวิทยุ &ldquo;ท้องถิ่นสนทนา&rdquo;
-                </ListItem>
-                <ListItem>
+                </li>
+                <li>
                   การหนุนเสริม
                   เชื่อมโยงเครือข่ายการสื่อสารแนวราบในเครือข่ายภาคประชาชน เช่น
                   การจัดเวทีโต๊ะข่าวสัญจรไปตามพื้นที่ต่าง ๆ
                   เพื่อเสริมทักษะการคิดวิเคราะห์และเชื่อมโยง
-                </ListItem>
-                <ListItem>
+                </li>
+                <li>
                   การเสริมทักษะเครือข่ายในด้านการสื่อสาร เช่น
                   การฝึกอบรมการใช้อินเทอร์เน็ตค้นข้อมูลให้แก่สถานีวิทยุชุมชน
-                </ListItem>
-              </OrderedList>
-            </VStack>
-          </CardBody>
-        </Card>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
 
         {/* Board of Directors */}
-        <Card>
-          <CardBody>
-            <Heading as="h2" size="lg" color="prachatham.700" mb={6}>
+        <div className="card">
+          <div className="p-6">
+            <h2 className="text-xl md:text-2xl font-bold text-brand-700 mb-6">
               กรรมการมูลนิธิ
-            </Heading>
-            <Badge colorScheme="blue" fontSize="sm" px={3} py={1} mb={6}>
+            </h2>
+            <span className="inline-block bg-blue-100 text-blue-700 text-sm px-3 py-1 rounded-full mb-6">
               BOARD OF DIRECTORS
-            </Badge>
-            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
+            </span>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
                 {
                   name: "ชยันต์ วรรธนะภูติ",
@@ -261,18 +219,11 @@ export default function AboutPage() {
                   image: "/images/board-member/นันทา เบญจศิลารักษ์.webp",
                 },
               ].map((member, index) => (
-                <Box
+                <div
                   key={index}
-                  p={4}
-                  border="1px solid"
-                  borderColor="gray.200"
-                  borderRadius="md"
-                  textAlign="center"
-                  bg="white"
-                  _hover={{ shadow: "md", transform: "translateY(-2px)" }}
-                  transition="all 0.2s"
+                  className="p-4 border border-gray-200 rounded-md text-center bg-white hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
                 >
-                  <VStack spacing={3}>
+                  <div className="flex flex-col items-center gap-3">
                     <Image
                       src={member.image}
                       alt={member.name}
@@ -283,45 +234,35 @@ export default function AboutPage() {
                         objectFit: "cover",
                       }}
                     />
-                    <VStack spacing={1}>
-                      <Heading as="h4" size="sm" color="gray.700">
+                    <div className="flex flex-col items-center gap-1">
+                      <h4 className="text-sm font-bold text-gray-700">
                         {member.name}
-                      </Heading>
-                      <Text
-                        fontSize="sm"
-                        color="prachatham.600"
-                        fontWeight="medium"
-                      >
+                      </h4>
+                      <p className="text-sm text-brand-600 font-medium">
                         {member.position}
-                      </Text>
-                    </VStack>
-                  </VStack>
-                </Box>
+                      </p>
+                    </div>
+                  </div>
+                </div>
               ))}
-            </SimpleGrid>
-          </CardBody>
-        </Card>
+            </div>
+          </div>
+        </div>
 
         {/* Our Mission */}
-        <Card>
-          <CardBody>
-            <Heading as="h2" size="lg" color="prachatham.700" mb={6}>
+        <div className="card">
+          <div className="p-6">
+            <h2 className="text-xl md:text-2xl font-bold text-brand-700 mb-6">
               พันธกิจของเรา
-            </Heading>
-            <Badge colorScheme="green" fontSize="sm" px={3} py={1} mb={6}>
+            </h2>
+            <span className="badge-brand text-sm px-3 py-1 mb-6 inline-block">
               OUR MISSION
-            </Badge>
-            <Text
-              fontSize="lg"
-              color="gray.600"
-              mb={8}
-              fontStyle="italic"
-              textAlign="center"
-            >
+            </span>
+            <p className="text-lg text-gray-600 mb-8 italic text-center">
               เราคือกลุ่มคนที่ต้องการสนับสนุนให้เกิดการเปลี่ยนแปลงผ่านการสื่อสารจากคนในท้องถิ่นเอง
-            </Text>
+            </p>
 
-            <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={8}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {[
                 {
                   title: "ฝึกอบรม",
@@ -354,292 +295,237 @@ export default function AboutPage() {
                     "การดำเนินการใด ๆ ของมูลนิธิไม่มีวัตถุประสงค์ในการทำการเมือง หรือแสวงหาผลกำไร การดำเนินการและจัดทำกิจกรรมใด ๆ ของมูลนิธิต้องเป็นไปเพื่อการส่งเสริมให้เกิดการสื่อสารอย่างสร้างสรรค์ในสังคม",
                 },
               ].map((mission, index) => (
-                <Card key={index} variant="outline">
-                  <CardBody>
-                    <Heading as="h4" size="sm" color="prachatham.700" mb={3}>
+                <div key={index} className="card">
+                  <div className="p-6">
+                    <h4 className="text-sm font-bold text-brand-700 mb-3">
                       {mission.title}
-                    </Heading>
-                    <Text fontSize="sm" lineHeight="tall" color="gray.600">
+                    </h4>
+                    <p className="text-sm leading-relaxed text-gray-600">
                       {mission.content}
-                    </Text>
-                  </CardBody>
-                </Card>
+                    </p>
+                  </div>
+                </div>
               ))}
-            </SimpleGrid>
-          </CardBody>
-        </Card>
+            </div>
+          </div>
+        </div>
 
         {/* Our History */}
-        <Card>
-          <CardBody>
-            <Heading as="h2" size="lg" color="prachatham.700" mb={6}>
+        <div className="card">
+          <div className="p-6">
+            <h2 className="text-xl md:text-2xl font-bold text-brand-700 mb-6">
               พลวัตของประชาธรรม
-            </Heading>
-            <Badge colorScheme="orange" fontSize="sm" px={3} py={1} mb={6}>
+            </h2>
+            <span className="inline-block bg-orange-100 text-orange-700 text-sm px-3 py-1 rounded-full mb-6">
               OUR HISTORY
-            </Badge>
-            <Text
-              fontSize="lg"
-              color="gray.600"
-              mb={8}
-              textAlign="center"
-              fontStyle="italic"
-            >
+            </span>
+            <p className="text-lg text-gray-600 mb-8 text-center italic">
               จากสำนักข่าวท้องถิ่นสู่ผู้สนับสนุนให้เกิดการสื่อสาร
-            </Text>
+            </p>
 
-            <VStack align="stretch" gap={8}>
+            <div className="flex flex-col gap-8">
               {/* Foundation Phase */}
-              <Box>
-                <Heading as="h3" size="md" color="prachatham.700" mb={4}>
+              <div>
+                <h3 className="text-lg font-bold text-brand-700 mb-4">
                   ยุคเริ่มต้น
-                </Heading>
-                <Text fontSize="sm" color="gray.500" mb={4}>
+                </h3>
+                <p className="text-sm text-gray-500 mb-4">
                   ปี 2542-2548
-                </Text>
-                <VStack
-                  align="stretch"
-                  gap={3}
-                  fontSize="sm"
-                  lineHeight="relaxed"
-                  color="gray.700"
-                >
-                  <UnorderedList spacing={2} pl={6}>
-                    <ListItem>
+                </p>
+                <div className="flex flex-col gap-3 text-sm leading-relaxed text-gray-700">
+                  <ul className="list-disc pl-6 space-y-2">
+                    <li>
                       ปี 2542-2545 พัฒนากองบรรณาธิการ และโต๊ะข่าว
                       และการพัฒนาเว็บไซต์กลาง (www.prachatham.com)
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       ปี 2546 จัดทำโครงการฝึกอบรมผู้สื่อข่าวเชิงลึก เช่น
                       ทำข่าวสัมภาษณ์ การทำข่าวเชิงสืบสวนสอบสวน
                       เทคนิคการเขียนรายงานพิเศษ ร่วมกับสมาคมนักข่าว
                       และสถาบันพัฒนาองค์กรชุมชน (พอช.)
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       ปี 2547 โครงการฝึกอบรมผู้สื่อภูมิภาค 4 ภูมิภาค ได้แก่
                       ภาคอีสาน ภาคใต้ ภาคกลาง และภาคเหนือ
                       ร่วมกับสมาคมนักข่าวนักหนังสือพิมพ์แห่งประเทศไทย
                       และสถาบันพัฒนาองค์กรชุมชน (พอช.)
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       ปี 2547 พัฒนาเว็บไซต์ Localtalk
                       เพื่อเป็นการเชื่อมโยงการสื่อสารในแนวระนาบกับเครือข่ายวิทยุชุมชน
                       องค์กรชุมชน และนักข่าวในท้องถิ่น
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       ปี 2547 โครงการฝึกอบรมเยาวชนด้านเอดส์
                       ร่วมกับมูลนิธิพะเยาเพื่อการพัฒนา
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       ปี 2547 โครงการฝึกอบรมให้กับสถานีวิทยุชุมชน
                       ในการเป็นผู้สื่อข่าว
                       ร่วมกับเครือข่ายสื่อภาคประชาชนภาคเหนือ
                       และเครือข่ายวิทยุชุมชนจาวล้านนา
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       ปี 2548 โครงการฝึกอบรมผู้สื่อข่าวกับนโยบายสาธารณะ
                       ร่วมกับมูลนิธิสาธารณสุขแห่งชาติ ที่ จ.เชียงราย และ
                       จ.เชียงใหม่
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       ปี 2548 โครงการฝึกอบรมผู้สื่อข่าวเยาวชนที่ จ.นครสวรรค์
                       ร่วมกับ เครือข่ายเอดส์และสุขภาพ
-                    </ListItem>
-                  </UnorderedList>
-                </VStack>
-              </Box>
+                    </li>
+                  </ul>
+                </div>
+              </div>
 
-              <Divider />
+              <hr className="border-gray-200" />
 
               {/* Expansion Phase */}
-              <Box>
-                <Heading as="h3" size="md" color="prachatham.700" mb={4}>
+              <div>
+                <h3 className="text-lg font-bold text-brand-700 mb-4">
                   ระยะสร้างฐาน พัฒนาเว็บไซต์ WWW.PRACHATHAM.COM
-                </Heading>
-                <Text fontSize="sm" color="gray.500" mb={4}>
+                </h3>
+                <p className="text-sm text-gray-500 mb-4">
                   ปี 2549-2556
-                </Text>
-                <VStack
-                  align="stretch"
-                  gap={3}
-                  fontSize="sm"
-                  lineHeight="relaxed"
-                  color="gray.700"
-                >
-                  <UnorderedList spacing={2} pl={6}>
-                    <ListItem>
+                </p>
+                <div className="flex flex-col gap-3 text-sm leading-relaxed text-gray-700">
+                  <ul className="list-disc pl-6 space-y-2">
+                    <li>
                       ปี 2549 โครงการฝึกอบรมผู้สื่อข่าวท้องถิ่นเรื่องความยากจน
                       ที่จ.เพชรบุรี จ.เชียงราย ร่วมมือกับสถาบันพัฒนาองค์กรชุมชน
                       (พอช.) และเครือข่ายชุมชนท้องถิ่น
                       สถาบันการศึกษาในระดับท้องถิ่น เช่น สถาบันราชภัฎเชียงราย
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       ปี 2550 โครงการจัดตั้งผู้สื่อข่าวท้องถิ่น
                       นำร่องจัดตั้งศูนย์ข่าวท้องถิ่นในพื้นที่ จ.แม่ฮ่องสอน
                       และจ.เชียงราย ร่วมมือกับสถาบันพัฒนาองค์กรชุมชน
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       ปี 2550-2554 จัดทำโครงการจัดตั้งนักข่าวพลเมืองพื้นที่ 3
                       จังหวัด คือ เชียงใหม่ เชียงราย และ
                       แม่ฮ่องสอนได้รับทุนสนับสนุนจากสถาบันพัฒนาองค์กรชุมชน
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       ปี 2550-2554 จัดทำโครงการสื่อสารแนวราบ (Local Talk)
                       ได้รับทุนสนับสนุนจาก สถาบันพัฒนาองค์กรชุมชน และ สสส.
                       ในการพัฒนาเว็บไซต์ Local talk
                       และการสนับสนุนการสื่อสารระหว่างชุมชน ผลิตสื่อและวิทยุชุมชน
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       ปี 2550-2556 จัดทำโครงการ Alternative Journalist
                       ได้รับทุนสนับสนุนจาก OSF (Open Society Foundation)
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       ปี 2551-2554
                       การจัดทำโครงการนักข่าวสิ่งแวดล้อมในพื้นที่ลุ่มน้ำปิง-ฝาง
                       จ.เชียงใหม่ได้รับทุนสนับสนุนจาก กองทุนสิ่งแวดล้อม
                       สำนักงานนโยบายและแผนทรัพยากรธรรมชาติและสิ่งแวดล้อม
                       กระทรวงทรัพยากรธรรมชาติและสิ่งแวดล้อม
-                    </ListItem>
-                  </UnorderedList>
-                </VStack>
-              </Box>
+                    </li>
+                  </ul>
+                </div>
+              </div>
 
-              <Divider />
+              <hr className="border-gray-200" />
 
               {/* Foundation Establishment */}
-              <Box>
-                <Heading as="h3" size="md" color="prachatham.700" mb={4}>
+              <div>
+                <h3 className="text-lg font-bold text-brand-700 mb-4">
                   ระยะขยายตัว สร้างเครือข่ายผู้สื่อข่าว
                   และนักสื่อสารทั้งในแนวดิ่งและแนวราบ
-                </Heading>
-                <Text fontSize="sm" color="gray.500" mb={4}>
+                </h3>
+                <p className="text-sm text-gray-500 mb-4">
                   ปี 2556-2564
-                </Text>
-                <VStack
-                  align="stretch"
-                  gap={3}
-                  fontSize="sm"
-                  lineHeight="relaxed"
-                  color="gray.700"
-                >
-                  <UnorderedList spacing={2} pl={6}>
-                    <ListItem>
+                </p>
+                <div className="flex flex-col gap-3 text-sm leading-relaxed text-gray-700">
+                  <ul className="list-disc pl-6 space-y-2">
+                    <li>
                       ปี 2556-2565 ได้รับทุนสนับสนุนจาก
                       สำนักงานกองทุนการสร้างเสริมสุขภาพ (สสส.) Open Soceity
                       Foundation (OSF) สถาบันพัฒนาองค์กรชุมชน (พอช.)
                       และกองทุนสิ่งแวดล้อม
                       สำนักงานนโยบายและแผนทรัพยากรธรรมชาติและสิ่งแวดล้อม
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       ปี 2556-2557 โครงการประชาธรรมทีวี และการพัฒนาสื่อพลเมือง
                       ได้รับทุนสนับสนุนจาก usaid
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       ปี 2562-2563
                       โครงการพัฒนากระบวนการสื่อสารเพื่อสิทธิพลเมืองของผู้สูงวัย
                       ได้รับทุนสนับสนุนจากกองทุนสื่อสร้างสรรค์
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       ปี 2563-2564
                       โครงการเยาวชนเท่าทันสื่อรับมือโรคอุบัติใหม่ในชุมชน
                       ภายใต้โครงการ MIDL for Inclusive Cities 2020
                       ได้รับทุนจากสถาบันสื่อเด็กและเยาวชน
-                    </ListItem>
-                  </UnorderedList>
-                </VStack>
-              </Box>
+                    </li>
+                  </ul>
+                </div>
+              </div>
 
-              <Divider />
+              <hr className="border-gray-200" />
 
               {/* Knowledge Building */}
-              <Box>
-                <Heading as="h3" size="md" color="prachatham.700" mb={4}>
+              <div>
+                <h3 className="text-lg font-bold text-brand-700 mb-4">
                   จัดตั้งเป็นมูลนิธิสื่อประชาธรรม
-                </Heading>
-                <Text fontSize="sm" color="gray.500" mb={4}>
+                </h3>
+                <p className="text-sm text-gray-500 mb-4">
                   ปี 2564 - ปัจจุบัน
-                </Text>
-                <VStack
-                  align="stretch"
-                  gap={3}
-                  fontSize="sm"
-                  lineHeight="relaxed"
-                  color="gray.700"
-                >
-                  <UnorderedList spacing={2} pl={6}>
-                    <ListItem>
+                </p>
+                <div className="flex flex-col gap-3 text-sm leading-relaxed text-gray-700">
+                  <ul className="list-disc pl-6 space-y-2">
+                    <li>
                       ปี 2564-2566
                       โครงการสร้างนักสื่อสารสิ่งแวดล้อมเพื่อเฝ้าระวังและฟื้นฟูสิ่งแวดล้อมอย่างยั่งยืน
                       (เชียงใหม่) ได้รับทุนสนับสนุนจาก กองทุนสิ่งแวดล้อม
                       สำนักงานนโยบายและแผนทรัพยากรธรรมชาติและสิ่งแวดล้อม
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       ปี 2566-2567 ได้รับทุนสนับสนุนจาก กองทุนสื่อสร้างสรรค์
                       สถาบันสื่อเด็กและเยาวชน (สสย.)
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       ปี 2566-2567 โครงการ Citizen Accountability for Local
                       governance Media (CALM) ได้รับทุนจาก Internews
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       ปี 2567-2568 โครงการ Strengthening Transparency in
                       Infrastructure Development Through Environmental Reporting
                       in Southeast Asia (STRIDES) ได้รับทุนจาก Earth Journalism
                       Network (EJN)
-                    </ListItem>
-                  </UnorderedList>
-                </VStack>
-              </Box>
-            </VStack>
-          </CardBody>
-        </Card>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* Contact Section */}
-        <Box
-          bg="prachatham.50"
-          borderRadius="lg"
-          p={8}
-          textAlign="center"
-          border="1px solid"
-          borderColor="prachatham.200"
-        >
-          <Heading as="h3" size="lg" mb={4} color="prachatham.700">
+        <div className="bg-brand-50 rounded-lg p-8 text-center border border-brand-200">
+          <h3 className="text-xl md:text-2xl font-bold text-brand-700 mb-4">
             สื่อ สิ่งแวดล้อม ประชาทำ
-          </Heading>
-          <Text color="gray.600" mb={6}>
+          </h3>
+          <p className="text-gray-600 mb-6">
             77/1 หมู่ 5 ต.สุเทพ อ.เมืองจ.เชียงใหม่ 50200
-          </Text>
-          <HStack justify="center" gap={4} flexWrap="wrap">
-            <ChakraLink
-              as={Link}
-              href="/donate"
-              color="prachatham.600"
-              fontWeight="medium"
-              _hover={{ color: "prachatham.700", textDecoration: "underline" }}
-            >
+          </p>
+          <div className="flex items-center justify-center gap-4 flex-wrap">
+            <Link href="/donate" className="text-brand-600 font-medium hover:text-brand-700 hover:underline transition-colors">
               ร่วมทำงานกับเรา
-            </ChakraLink>
-            <ChakraLink
-              as={Link}
-              href="/contact"
-              color="prachatham.600"
-              fontWeight="medium"
-              _hover={{ color: "prachatham.700", textDecoration: "underline" }}
-            >
+            </Link>
+            <Link href="/contact" className="text-brand-600 font-medium hover:text-brand-700 hover:underline transition-colors">
               ช่องทางติดต่อเรา
-            </ChakraLink>
-            <ChakraLink
-              as={Link}
-              href="/causes"
-              color="prachatham.600"
-              fontWeight="medium"
-              _hover={{ color: "prachatham.700", textDecoration: "underline" }}
-            >
+            </Link>
+            <Link href="/causes" className="text-brand-600 font-medium hover:text-brand-700 hover:underline transition-colors">
               โครงการของเรา
-            </ChakraLink>
-          </HStack>
-        </Box>
-      </VStack>
-    </Container>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

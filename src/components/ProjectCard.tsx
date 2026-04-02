@@ -2,18 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Box,
-  Heading,
-  Text,
-  Badge,
-  Flex,
-  HStack,
-  Icon,
-  Link as ChakraLink,
-  Card,
-  CardBody,
-} from "@chakra-ui/react";
 import { FaArrowRight, FaMapMarkerAlt, FaClock } from "react-icons/fa";
 import type { WordPressProject } from "@/lib/wordpress";
 
@@ -41,17 +29,13 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   };
 
   return (
-    <Card h="full">
-      <ChakraLink
-        as={Link}
+    <article className="card h-full">
+      <Link
         href={`/projects/${project.slug}`}
-        _hover={{ textDecoration: "none" }}
-        h="full"
-        display="flex"
-        flexDirection="column"
+        className="hover:no-underline h-full flex flex-col group"
       >
         {/* Project Image */}
-        <Box position="relative" height="220px" overflow="hidden">
+        <div className="relative h-[220px] overflow-hidden">
           <Image
             src={getImageUrl()}
             alt={getImageAlt()}
@@ -65,73 +49,47 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
           {/* Status Badge */}
           {project.acf?.projectStatus && (
-            <Badge
-              position="absolute"
-              top={3}
-              right={3}
-              variant={project.acf.projectStatus === "active" ? "brand" : "subtle"}
-              fontSize="xs"
-              px={3}
-              py={1}
+            <span
+              className={`absolute top-3 right-3 text-xs px-3 py-1 rounded-full font-medium ${
+                project.acf.projectStatus === "active"
+                  ? "badge-brand"
+                  : "bg-gray-100 text-gray-600"
+              }`}
             >
               {project.acf.projectStatus === "active" ? "ดำเนินการ" : "เสร็จสิ้น"}
-            </Badge>
+            </span>
           )}
-        </Box>
+        </div>
 
         {/* Project Content */}
-        <CardBody p={5} flexGrow={1} display="flex" flexDirection="column">
-          <Heading
-            as="h3"
-            variant="card"
-            color="prachatham.700"
-            mb={3}
-            _groupHover={{ color: "prachatham.600" }}
-            css={{
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-            }}
-          >
+        <div className="p-5 flex-grow flex flex-col">
+          <h3 className="text-3xl font-bold text-brand-700 mb-3 group-hover:text-brand-600 line-clamp-2 transition-colors duration-200 leading-tight">
             {project.title.rendered}
-          </Heading>
+          </h3>
 
           {/* Project Details */}
-          <Flex direction="column" gap={2} mb={4} flexGrow={1}>
+          <div className="flex flex-col gap-2 mb-4 flex-grow">
             {project.acf?.project_duration && (
-              <HStack fontSize="sm" color="gray.500" spacing={2}>
-                <Icon as={FaClock} boxSize={3} color="gray.400" />
-                <Text>{project.acf.project_duration}</Text>
-              </HStack>
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <FaClock className="w-3 h-3 text-gray-400" />
+                <span>{project.acf.project_duration}</span>
+              </div>
             )}
             {project.acf?.project_location && (
-              <HStack fontSize="sm" color="gray.500" spacing={2}>
-                <Icon as={FaMapMarkerAlt} boxSize={3} color="gray.400" />
-                <Text>{project.acf.project_location}</Text>
-              </HStack>
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <FaMapMarkerAlt className="w-3 h-3 text-gray-400" />
+                <span>{project.acf.project_location}</span>
+              </div>
             )}
-          </Flex>
+          </div>
 
           {/* Read More */}
-          <Flex
-            align="center"
-            gap={1}
-            mt="auto"
-            pt={4}
-            borderTop="1px solid"
-            borderColor="gray.100"
-            color="prachatham.600"
-            fontSize="sm"
-            fontWeight="500"
-            _hover={{ gap: 2 }}
-            transition="all 0.2s ease"
-          >
+          <div className="flex items-center gap-1 mt-auto pt-4 border-t border-gray-100 text-brand-600 text-sm font-medium hover:gap-2 transition-all duration-200">
             อ่านเพิ่มเติม
-            <Icon as={FaArrowRight} boxSize={2.5} />
-          </Flex>
-        </CardBody>
-      </ChakraLink>
-    </Card>
+            <FaArrowRight className="w-2.5 h-2.5" />
+          </div>
+        </div>
+      </Link>
+    </article>
   );
 }

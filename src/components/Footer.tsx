@@ -1,18 +1,5 @@
 "use client";
 
-import {
-  Box,
-  Container,
-  SimpleGrid,
-  Stack,
-  Text,
-  Heading,
-  Link as ChakraLink,
-  HStack,
-  VStack,
-  Divider,
-  Icon,
-} from "@chakra-ui/react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -33,192 +20,142 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <Box bg="gray.900" color="white">
+    <footer className="bg-gray-900 text-white">
       {/* Top accent bar */}
-      <Box h="3px" bgGradient="linear(to-r, prachatham.600, prachatham.500, accent.500)" />
+      <div className="h-[3px] bg-gradient-to-r from-brand-600 via-brand-500 to-accent-500" />
 
-      <Container maxW="7xl" py={{ base: 12, md: 16 }}>
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={{ base: 10, lg: 8 }}>
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-12 md:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
           {/* Logo and Description */}
-          <VStack align="start" spacing={5}>
+          <div className="flex flex-col items-start gap-5">
             <Image
               src="/new-footer-logo.svg"
               alt="ประชาธรรม"
               width={160}
               height={40}
             />
-            <Text fontSize="sm" color="gray.300" lineHeight="tall">
+            <p className="text-sm text-gray-300 leading-relaxed">
               สื่อ ประชาธรรม ประชาทำ
-            </Text>
-            <Text fontSize="sm" color="gray.400" lineHeight="tall">
+            </p>
+            <p className="text-sm text-gray-400 leading-relaxed">
               77/1 หมู่ 5 ต.สุเทพ อ.เมือง
               <br />
               จ.เชียงใหม่ 50200
-            </Text>
-          </VStack>
+            </p>
+          </div>
 
           {/* About Foundation */}
-          <VStack align="start" spacing={4}>
-            <Heading as="h3" size="sm" color="white" fontWeight="600" letterSpacing="0.02em">
+          <div className="flex flex-col items-start gap-4">
+            <h3 className="text-sm font-semibold text-white tracking-wide">
               เกี่ยวกับมูลนิธิ
-            </Heading>
-            <Stack spacing={3}>
-              <ChakraLink
-                as={Link}
+            </h3>
+            <div className="flex flex-col gap-3">
+              <Link
                 href="/about"
-                color="gray.300"
-                fontSize="sm"
-                _hover={{
-                  color: "prachatham.300",
-                }}
-                transition="color 0.15s ease"
+                className="text-gray-300 text-sm hover:text-brand-300 transition-colors duration-150"
               >
                 เกี่ยวกับเรา
-              </ChakraLink>
-              <ChakraLink
-                as={Link}
+              </Link>
+              <Link
                 href="/contact"
-                color="gray.300"
-                fontSize="sm"
-                _hover={{
-                  color: "prachatham.300",
-                }}
-                transition="color 0.15s ease"
+                className="text-gray-300 text-sm hover:text-brand-300 transition-colors duration-150"
               >
                 ช่องทางติดต่อเรา
-              </ChakraLink>
-            </Stack>
-          </VStack>
+              </Link>
+            </div>
+          </div>
 
           {/* Our Projects */}
-          <VStack align="start" spacing={4}>
-            <Heading as="h3" size="sm" color="white" fontWeight="600" letterSpacing="0.02em">
+          <div className="flex flex-col items-start gap-4">
+            <h3 className="text-sm font-semibold text-white tracking-wide">
               เมนูหลัก
-            </Heading>
-            <Stack spacing={3}>
-              <ChakraLink
-                as={Link}
+            </h3>
+            <div className="flex flex-col gap-3">
+              <Link
                 href="/causes"
-                color="gray.300"
-                fontSize="sm"
-                _hover={{ color: "prachatham.300" }}
-                transition="color 0.15s ease"
+                className="text-gray-300 text-sm hover:text-brand-300 transition-colors duration-150"
               >
                 โครงการที่กำลังทำ
-              </ChakraLink>
-              <ChakraLink
-                as={Link}
+              </Link>
+              <Link
                 href="/posts"
-                color="gray.300"
-                fontSize="sm"
-                _hover={{ color: "prachatham.300" }}
-                transition="color 0.15s ease"
+                className="text-gray-300 text-sm hover:text-brand-300 transition-colors duration-150"
               >
                 สื่อ
-              </ChakraLink>
-              <ChakraLink
-                as={Link}
+              </Link>
+              <Link
                 href="/publications"
-                color="gray.300"
-                fontSize="sm"
-                _hover={{ color: "prachatham.300" }}
-                transition="color 0.15s ease"
+                className="text-gray-300 text-sm hover:text-brand-300 transition-colors duration-150"
               >
                 สิ่งพิมพ์
-              </ChakraLink>
-            </Stack>
-          </VStack>
+              </Link>
+            </div>
+          </div>
 
           {/* Categories */}
-          <VStack align="start" spacing={4}>
-            <Heading as="h3" size="sm" color="white" fontWeight="600" letterSpacing="0.02em">
+          <div className="flex flex-col items-start gap-4">
+            <h3 className="text-sm font-semibold text-white tracking-wide">
               หมวดหมู่
-            </Heading>
-            <Stack spacing={3}>
-              <ChakraLink
-                as={Link}
+            </h3>
+            <div className="flex flex-col gap-3">
+              <Link
                 href="/category/featured"
-                color="gray.300"
-                fontSize="sm"
-                _hover={{ color: "prachatham.300" }}
-                transition="color 0.15s ease"
+                className="text-gray-300 text-sm hover:text-brand-300 transition-colors duration-150"
               >
                 ข่าวเด่น
-              </ChakraLink>
-              <ChakraLink
-                as={Link}
+              </Link>
+              <Link
                 href="/category/activist-journalist"
-                color="gray.300"
-                fontSize="sm"
-                _hover={{ color: "prachatham.300" }}
-                transition="color 0.15s ease"
+                className="text-gray-300 text-sm hover:text-brand-300 transition-colors duration-150"
               >
                 ACTIVIST JOURNALIST
-              </ChakraLink>
-              <ChakraLink
-                as={Link}
+              </Link>
+              <Link
                 href="/category/envilocaleyes"
-                color="gray.300"
-                fontSize="sm"
-                _hover={{ color: "prachatham.300" }}
-                transition="color 0.15s ease"
+                className="text-gray-300 text-sm hover:text-brand-300 transition-colors duration-150"
               >
                 ENVILOCALEYES
-              </ChakraLink>
-              <ChakraLink
-                as={Link}
+              </Link>
+              <Link
                 href="/category/firedustdialogue"
-                color="gray.300"
-                fontSize="sm"
-                _hover={{ color: "prachatham.300" }}
-                transition="color 0.15s ease"
+                className="text-gray-300 text-sm hover:text-brand-300 transition-colors duration-150"
               >
                 ฝุ่นไฟ DIALOGUE
-              </ChakraLink>
-              <ChakraLink
-                as={Link}
+              </Link>
+              <Link
                 href="/category/breath-talk"
-                color="gray.300"
-                fontSize="sm"
-                _hover={{ color: "prachatham.300" }}
-                transition="color 0.15s ease"
+                className="text-gray-300 text-sm hover:text-brand-300 transition-colors duration-150"
               >
                 BREATH TALK
-              </ChakraLink>
-            </Stack>
-          </VStack>
-        </SimpleGrid>
+              </Link>
+            </div>
+          </div>
+        </div>
 
-        <Divider my={10} borderColor="gray.700" />
+        <hr className="my-10 border-gray-700" />
 
         {/* Bottom section */}
-        <Stack
-          direction={{ base: "column", md: "row" }}
-          spacing={6}
-          justify="space-between"
-          align="center"
-        >
-          <Text fontSize="sm" color="gray.400">
-            © {new Date().getFullYear()} ประชาธรรม — สื่อชุมชนเพื่อการเปลี่ยนแปลง
-          </Text>
+        <div className="flex flex-col md:flex-row gap-6 justify-between items-center">
+          <p className="text-sm text-gray-400">
+            &copy; {new Date().getFullYear()} ประชาธรรม — สื่อชุมชนเพื่อการเปลี่ยนแปลง
+          </p>
 
-          <HStack spacing={4}>
-            {socialLinks.map(({ label, icon, href }) => (
-              <ChakraLink
+          <div className="flex items-center gap-4">
+            {socialLinks.map(({ label, icon: IconComponent, href }) => (
+              <a
                 key={label}
                 href={href}
-                isExternal
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label={`ติดตามเราบน ${label}`}
-                color="gray.400"
-                _hover={{ color: "prachatham.300", transform: "translateY(-2px)" }}
-                transition="all 0.2s ease"
+                className="text-gray-400 hover:text-brand-300 hover:-translate-y-0.5 transition-all duration-200"
               >
-                <Icon as={icon} boxSize={5} />
-              </ChakraLink>
+                <IconComponent className="w-5 h-5" />
+              </a>
             ))}
-          </HStack>
-        </Stack>
-      </Container>
-    </Box>
+          </div>
+        </div>
+      </div>
+    </footer>
   );
 }

@@ -1,6 +1,3 @@
-"use client";
-
-import { Box, VStack, Heading, Text, Icon, Card, CardBody } from "@chakra-ui/react";
 import type { IconType } from "react-icons";
 
 interface FeatureCardProps {
@@ -13,30 +10,25 @@ interface FeatureCardProps {
  * Icon + title + description card for feature / mission sections.
  */
 export default function FeatureCard({
-  icon,
+  icon: IconComponent,
   title,
   description,
 }: FeatureCardProps) {
   return (
-    <Card>
-      <CardBody p={6}>
-        <VStack align="start" spacing={4}>
-          <Box
-            p={3}
-            borderRadius="lg"
-            bg="prachatham.50"
-            color="prachatham.600"
-          >
-            <Icon as={icon} boxSize={6} />
-          </Box>
-          <Heading as="h3" variant="card" color="gray.800">
+    <div className="card">
+      <div className="p-6">
+        <div className="flex flex-col items-start gap-4">
+          <div className="p-3 rounded-lg bg-brand-50 text-brand-600">
+            <IconComponent className="w-6 h-6" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-800">
             {title}
-          </Heading>
-          <Text variant="caption" color="gray.500" fontSize="sm" lineHeight="tall">
+          </h3>
+          <p className="text-sm text-gray-500 leading-relaxed">
             {description}
-          </Text>
-        </VStack>
-      </CardBody>
-    </Card>
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }

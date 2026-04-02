@@ -1,16 +1,5 @@
 "use client";
 
-import {
-  Container,
-  Heading,
-  Text,
-  SimpleGrid,
-  Box,
-  VStack,
-  Button,
-  Link as ChakraLink,
-  HStack,
-} from "@chakra-ui/react";
 import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
 import {
@@ -80,95 +69,76 @@ export default function PostsPage() {
 
   if (error) {
     return (
-      <Container maxW="7xl" py={8}>
-        <Box
-          bg="red.50"
-          borderColor="red.200"
-          borderWidth="1px"
-          borderRadius="md"
-          p={6}
-          color="red.800"
-          textAlign="center"
-        >
-          <Text fontSize="lg">{error}</Text>
-        </Box>
-      </Container>
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+        <div className="bg-red-50 border border-red-200 rounded-md p-6 text-red-800 text-center">
+          <p className="text-lg">{error}</p>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Container maxW="7xl" py={{ base: 8, md: 12 }}>
-      <VStack align="stretch" gap={8}>
+    <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12">
+      <div className="flex flex-col gap-8">
         {/* Breadcrumb */}
-        <HStack fontSize="sm" color="gray.400">
-          <ChakraLink as={Link} href="/" _hover={{ color: "prachatham.600" }} transition="color 0.15s ease">
+        <div className="flex items-center gap-2 text-sm text-gray-400">
+          <Link href="/" className="hover:text-brand-600 transition-colors duration-150">
             หน้าแรก
-          </ChakraLink>
-          <Text color="gray.300">/</Text>
-          <Text color="gray.700" fontWeight="medium">
+          </Link>
+          <span className="text-gray-300">/</span>
+          <span className="text-gray-700 font-medium">
             บทความ
-          </Text>
-        </HStack>
+          </span>
+        </div>
 
         {/* Header */}
-        <Box textAlign="center" mb={4}>
-          <Heading as="h1" fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }} color="prachatham.700" mb={3} letterSpacing="-0.02em">
+        <div className="text-center mb-4">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-brand-700 mb-3 tracking-tight">
             บทความทั้งหมด
-          </Heading>
-          <Text fontSize={{ base: "md", md: "lg" }} color="gray.500" maxW="2xl" mx="auto">
+          </h1>
+          <p className="text-base md:text-lg text-gray-500 max-w-2xl mx-auto">
             ข่าวสารและบทความ
-          </Text>
-          <Box w="60px" h="3px" bg="prachatham.500" borderRadius="full" mx="auto" mt={4} />
-        </Box>
+          </p>
+          <div className="w-[60px] h-[3px] bg-brand-500 rounded-full mx-auto mt-4" />
+        </div>
 
         {/* Category Filter */}
         {categories.length > 0 && <CategoryFilter categories={categories} />}
 
         {/* Posts Grid */}
         {posts.length > 0 ? (
-          <VStack align="stretch" gap={6}>
-            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
+          <div className="flex flex-col gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {posts.map((post) => (
                 <PostCard key={post.id} post={post} />
               ))}
-            </SimpleGrid>
+            </div>
 
             {/* Load More Button */}
             {currentPage < totalPages && (
-              <Box textAlign="center">
-                <Button
+              <div className="text-center">
+                <button
                   onClick={handleLoadMore}
-                  isLoading={loadingMore}
-                  colorScheme="prachatham"
-                  size="md"
-                  variant="outline"
-                  borderRadius="full"
-                  px={8}
-                  border="2px solid"
-                  _hover={{
-                    bg: "prachatham.50",
-                    transform: "translateY(-1px)",
-                  }}
-                  transition="all 0.2s ease"
                   disabled={loadingMore}
+                  className="btn-outline-green rounded-full px-8 border-2 hover:bg-brand-50 hover:-translate-y-px transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loadingMore ? "กำลังโหลด..." : "โหลดเพิ่มเติม"}
-                </Button>
-              </Box>
+                </button>
+              </div>
             )}
-          </VStack>
+          </div>
         ) : !loading ? (
-          <Box textAlign="center" py={12} bg="gray.50" borderRadius="md">
-            <Text color="gray.500" fontSize="lg">
+          <div className="text-center py-12 bg-gray-50 rounded-md">
+            <p className="text-gray-500 text-lg">
               ยังไม่มีบทความ
-            </Text>
-          </Box>
+            </p>
+          </div>
         ) : (
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <LoadingSkeleton count={12} />
-          </SimpleGrid>
+          </div>
         )}
-      </VStack>
-    </Container>
+      </div>
+    </div>
   );
 }

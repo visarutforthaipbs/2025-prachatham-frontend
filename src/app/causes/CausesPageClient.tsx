@@ -1,23 +1,5 @@
 "use client";
 
-import {
-  Container,
-  Heading,
-  Text,
-  Box,
-  VStack,
-  HStack,
-  Link as ChakraLink,
-  Button,
-  Card,
-  CardBody,
-  SimpleGrid,
-  Badge,
-  Image,
-  Flex,
-  Spinner,
-  Center,
-} from "@chakra-ui/react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { WordPressProject } from "@/lib/wordpress";
@@ -26,22 +8,20 @@ interface CausesPageClientProps {
   projects: WordPressProject[];
 }
 
-const MotionCard = motion.create(Card);
-
 export default function CausesPageClient({ projects }: CausesPageClientProps) {
   return (
-    <Container maxW="7xl" py={8}>
-      <VStack align="stretch" spacing={8}>
+    <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+      <div className="flex flex-col gap-8">
         {/* Breadcrumb */}
-        <HStack fontSize="sm" color="gray.500">
-          <ChakraLink as={Link} href="/" _hover={{ color: "prachatham.600" }}>
+        <div className="flex items-center gap-2 text-sm text-gray-400">
+          <Link href="/" className="hover:text-brand-600 transition-colors">
             หน้าแรก
-          </ChakraLink>
-          <Text>/</Text>
-          <Text color="gray.700" fontWeight="medium">
+          </Link>
+          <span className="text-gray-300">/</span>
+          <span className="text-gray-700 font-medium">
             โครงการของเรา
-          </Text>
-        </HStack>
+          </span>
+        </div>
 
         {/* Header */}
         <motion.div
@@ -49,24 +29,18 @@ export default function CausesPageClient({ projects }: CausesPageClientProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <Box textAlign="center">
-            <Badge colorScheme="green" fontSize="md" px={4} py={2} mb={4}>
+          <div className="text-center">
+            <span className="badge-brand text-base px-4 py-2 mb-4 inline-block">
               โครงการและผลงาน
-            </Badge>
-            <Heading as="h1" size="2xl" color="prachatham.700" mb={4}>
+            </span>
+            <h1 className="text-3xl md:text-4xl font-bold text-brand-700 mb-4">
               โครงการของมูลนิธิสื่อประชาธรรม
-            </Heading>
-            <Text
-              fontSize="xl"
-              color="gray.600"
-              maxW="4xl"
-              mx="auto"
-              lineHeight="tall"
-            >
+            </h1>
+            <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
               ดูผลงานและโครงการทั้งหมดที่เราได้ดำเนินการมา
               เพื่อสร้างการเปลี่ยนแปลงเชิงบวกในชุมชนและสังคม
-            </Text>
-          </Box>
+            </p>
+          </div>
         </motion.div>
 
         {/* Projects Grid */}
@@ -76,25 +50,21 @@ export default function CausesPageClient({ projects }: CausesPageClientProps) {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {projects.map((project, index) => (
-                <MotionCard
+                <motion.div
                   key={project.id}
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 * index }}
                   whileHover={{ y: -5, scale: 1.02 }}
-                  overflow="hidden"
-                  bg="white"
-                  boxShadow="md"
-                  _hover={{
-                    boxShadow: "xl",
-                  }}
+                  className="card overflow-hidden bg-white shadow-md hover:shadow-xl transition-shadow"
                 >
                   {/* Project Image */}
                   {project._embedded?.["wp:featuredmedia"]?.[0] && (
-                    <Box position="relative" h="200px" overflow="hidden">
-                      <Image
+                    <div className="relative h-[200px] overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
                         src={
                           project._embedded["wp:featuredmedia"][0].media_details
                             ?.sizes?.medium?.source_url ||
@@ -104,167 +74,103 @@ export default function CausesPageClient({ projects }: CausesPageClientProps) {
                           project._embedded["wp:featuredmedia"][0].alt_text ||
                           project.title.rendered
                         }
-                        objectFit="cover"
-                        w="100%"
-                        h="100%"
-                        transition="transform 0.3s ease"
-                        _hover={{ transform: "scale(1.05)" }}
+                        className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
                       />
-                      <Box
-                        position="absolute"
-                        top={0}
-                        left={0}
-                        right={0}
-                        bottom={0}
-                        bg="linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.3))"
-                      />
+                      <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/30" />
 
                       {/* Project Status Badge on Image */}
                       {project.acf?.projectStatus && (
-                        <Badge
-                          position="absolute"
-                          top={3}
-                          right={3}
-                          colorScheme={
+                        <span
+                          className={`absolute top-3 right-3 text-xs px-2 py-1 rounded-md z-[2] font-medium ${
                             project.acf.projectStatus === "active"
-                              ? "green"
-                              : "gray"
-                          }
-                          size="sm"
-                          fontSize="xs"
-                          px={2}
-                          py={1}
-                          borderRadius="md"
-                          zIndex={2}
+                              ? "bg-green-100 text-green-800"
+                              : "bg-gray-100 text-gray-800"
+                          }`}
                         >
                           {project.acf.projectStatus === "active"
                             ? "ดำเนินการ"
                             : "เสร็จสิ้น"}
-                        </Badge>
+                        </span>
                       )}
-                    </Box>
+                    </div>
                   )}
 
-                  <CardBody p={6}>
-                    <VStack align="start" spacing={4}>
+                  <div className="p-6">
+                    <div className="flex flex-col gap-4 items-start">
                       {/* Title */}
-                      <Heading
-                        as="h3"
-                        size="md"
-                        color="prachatham.700"
-                        lineHeight="shorter"
-                        noOfLines={2}
-                      >
+                      <h3 className="text-lg font-bold text-brand-700 leading-snug line-clamp-2">
                         {project.title.rendered}
-                      </Heading>
+                      </h3>
 
                       {/* Project Details */}
-                      <VStack align="start" spacing={2} w="100%">
+                      <div className="flex flex-col gap-2 w-full">
                         {project.acf?.project_duration && (
-                          <Flex align="start" fontSize="sm">
-                            <Text
-                              color="gray.700"
-                              fontWeight="medium"
-                              minW="fit-content"
-                              mr={2}
-                            >
+                          <div className="flex items-start text-sm">
+                            <span className="text-gray-700 font-medium whitespace-nowrap mr-2">
                               ระยะเวลา:
-                            </Text>
-                            <Text color="gray.600" lineHeight="shorter">
+                            </span>
+                            <span className="text-gray-600 leading-snug">
                               {project.acf.project_duration}
-                            </Text>
-                          </Flex>
+                            </span>
+                          </div>
                         )}
 
                         {project.acf?.project_location && (
-                          <Flex align="start" fontSize="sm">
-                            <Text
-                              color="gray.700"
-                              fontWeight="medium"
-                              minW="fit-content"
-                              mr={2}
-                            >
+                          <div className="flex items-start text-sm">
+                            <span className="text-gray-700 font-medium whitespace-nowrap mr-2">
                               สถานที่:
-                            </Text>
-                            <Text color="gray.600" lineHeight="shorter">
+                            </span>
+                            <span className="text-gray-600 leading-snug">
                               {project.acf.project_location}
-                            </Text>
-                          </Flex>
+                            </span>
+                          </div>
                         )}
 
                         {project.acf?.project_partners && (
-                          <Flex align="start" fontSize="sm">
-                            <Text
-                              color="gray.700"
-                              fontWeight="medium"
-                              minW="fit-content"
-                              mr={2}
-                            >
+                          <div className="flex items-start text-sm">
+                            <span className="text-gray-700 font-medium whitespace-nowrap mr-2">
                               พันธมิตร:
-                            </Text>
-                            <Text
-                              color="gray.600"
-                              lineHeight="shorter"
-                              noOfLines={2}
-                            >
+                            </span>
+                            <span className="text-gray-600 leading-snug line-clamp-2">
                               {project.acf.project_partners}
-                            </Text>
-                          </Flex>
+                            </span>
+                          </div>
                         )}
 
                         {project.acf?.project_beneficiaries && (
-                          <Flex align="start" fontSize="sm">
-                            <Text
-                              color="gray.700"
-                              fontWeight="medium"
-                              minW="fit-content"
-                              mr={2}
-                            >
+                          <div className="flex items-start text-sm">
+                            <span className="text-gray-700 font-medium whitespace-nowrap mr-2">
                               ผู้รับผลประโยชน์:
-                            </Text>
-                            <Text
-                              color="gray.600"
-                              lineHeight="shorter"
-                              noOfLines={2}
-                            >
+                            </span>
+                            <span className="text-gray-600 leading-snug line-clamp-2">
                               {project.acf.project_beneficiaries}
-                            </Text>
-                          </Flex>
+                            </span>
+                          </div>
                         )}
-                      </VStack>
+                      </div>
 
                       {/* Read More Button */}
-                      <Button
-                        as={Link}
+                      <Link
                         href={`/projects/${project.slug}`}
-                        colorScheme="green"
-                        variant="outline"
-                        size="sm"
-                        alignSelf="start"
-                        _hover={{
-                          bg: "prachatham.600",
-                          color: "white",
-                          transform: "translateY(-1px)",
-                        }}
-                        transition="all 0.2s ease"
+                        className="btn-outline-green text-sm self-start hover:bg-brand-600 hover:text-white hover:-translate-y-px transition-all duration-200"
                       >
                         อ่านเพิ่มเติม
-                      </Button>
-                    </VStack>
-                  </CardBody>
-                </MotionCard>
+                      </Link>
+                    </div>
+                  </div>
+                </motion.div>
               ))}
-            </SimpleGrid>
+            </div>
           </motion.div>
         ) : (
-          <Center py={16}>
-            <VStack spacing={4}>
-              <Spinner size="xl" color="prachatham.600" />
-              <Text color="gray.500" fontSize="lg">
+          <div className="flex justify-center py-16">
+            <div className="flex flex-col items-center gap-4">
+              <div className="animate-spin rounded-full h-12 w-12 border-4 border-brand-600 border-t-transparent" />
+              <p className="text-gray-500 text-lg">
                 กำลังโหลดข้อมูลโครงการ...
-              </Text>
-            </VStack>
-          </Center>
+              </p>
+            </div>
+          </div>
         )}
 
         {/* Call to Action Section */}
@@ -273,58 +179,32 @@ export default function CausesPageClient({ projects }: CausesPageClientProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.8 }}
         >
-          <Card bg="prachatham.50" borderColor="prachatham.200">
-            <CardBody p={8} textAlign="center">
-              <VStack spacing={6}>
-                <Heading as="h3" size="lg" mb={4} color="prachatham.700">
+          <div className="card bg-brand-50 border border-brand-200">
+            <div className="p-8 text-center">
+              <div className="flex flex-col gap-6">
+                <h3 className="text-xl md:text-2xl font-bold text-brand-700 mb-4">
                   สนใจร่วมงานกับเรา?
-                </Heading>
-                <Text
-                  color="gray.600"
-                  mb={6}
-                  maxW="2xl"
-                  mx="auto"
-                  lineHeight="tall"
-                >
+                </h3>
+                <p className="text-gray-600 mb-6 max-w-2xl mx-auto leading-relaxed">
                   หากคุณมีไอเดียโครงการที่น่าสนใจ หรือต้องการร่วมมือกับเรา
                   เรายินดีต้อนรับและพร้อมที่จะสนับสนุนการสร้างการเปลี่ยนแปลงที่ดี
-                </Text>
-                <Flex justify="center" gap={4} flexWrap="wrap">
-                  <Button
-                    as={Link}
-                    href="/contact"
-                    colorScheme="green"
-                    size="lg"
-                    px={8}
-                  >
+                </p>
+                <div className="flex justify-center gap-4 flex-wrap">
+                  <Link href="/contact" className="btn-primary text-lg px-8">
                     ติดต่อเรา
-                  </Button>
-                  <Button
-                    as={Link}
-                    href="/donate"
-                    variant="outline"
-                    colorScheme="green"
-                    size="lg"
-                    px={8}
-                  >
+                  </Link>
+                  <Link href="/donate" className="btn-outline-green text-lg px-8">
                     ร่วมสนับสนุน
-                  </Button>
-                  <Button
-                    as={Link}
-                    href="/about"
-                    variant="ghost"
-                    colorScheme="green"
-                    size="lg"
-                    px={8}
-                  >
+                  </Link>
+                  <Link href="/about" className="text-brand-600 hover:text-brand-700 font-medium text-lg px-8 py-2 transition-colors">
                     เรียนรู้เพิ่มเติม
-                  </Button>
-                </Flex>
-              </VStack>
-            </CardBody>
-          </Card>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
         </motion.div>
-      </VStack>
-    </Container>
+      </div>
+    </div>
   );
 }
