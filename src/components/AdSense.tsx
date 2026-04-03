@@ -33,12 +33,21 @@ export default function AdSense({
 
   useEffect(() => {
     if (!isAdPushed.current && adRef.current) {
-      try {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-        isAdPushed.current = true;
-      } catch {
-        // AdSense may not be loaded yet or ad blocker is active
-      }
+      // Wait for layout to settle, then check container width
+      const timer = setTimeout(() => {
+        const container = adRef.current?.parentElement;
+        if (!container || container.clientWidth < 250) {
+          // Container too narrow for any ad — skip to avoid AdSense error
+          return;
+        }
+        try {
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+          isAdPushed.current = true;
+        } catch {
+          // AdSense may not be loaded yet or ad blocker is active
+        }
+      }, 300);
+      return () => clearTimeout(timer);
     }
   }, []);
 
@@ -51,7 +60,7 @@ export default function AdSense({
     <aside
       aria-label="โฆษณา"
       className="ad-container my-4 mx-auto text-center opacity-85 hover:opacity-100 transition-opacity duration-200 print:hidden overflow-hidden"
-      style={{ maxHeight }}
+      style={{ maxHeight, minWidth: "250px" }}
     >
       <span className="text-[10px] text-gray-400 mb-1 block tracking-wider uppercase">
         โฆษณา

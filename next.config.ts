@@ -18,9 +18,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  experimental: {
-    optimizePackageImports: ["react-icons", "framer-motion"],
-  },
+  // experimental: {
+  //   optimizePackageImports: ["react-icons", "framer-motion"],
+  // },
 };
 
 export default nextConfig;

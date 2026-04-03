@@ -10,6 +10,7 @@ import { PostViewCount } from "@/components/PostViewCount";
 import { TableOfContents } from "@/components/TableOfContents";
 import dynamic from "next/dynamic";
 const AdSense = dynamic(() => import("@/components/AdSense"));
+const ReaderThaiFree = dynamic(() => import("@/components/ReaderThaiFree"));
 
 interface PostPageProps {
   params: Promise<{
@@ -23,12 +24,22 @@ interface Category {
   slug: string;
 }
 
-// Function to calculate reading time
+// Calculate reading time using character-based approach for Thai accuracy
+// Thai text doesn't use spaces between words, so character count is more reliable
+// Thai reading speed for formal/news content: ~1,400 chars/min
+// Non-Thai (English etc.): standard 200 words/min
 function calculateReadingTime(content: string): number {
-  const wordsPerMinute = 200; // Average reading speed
-  const text = stripHtml(content);
-  const wordCount = text.split(/\s+/).length;
-  return Math.ceil(wordCount / wordsPerMinute);
+  const text = stripHtml(content).trim();
+  if (!text) return 1;
+
+  const thaiChars = (text.match(/[\u0E00-\u0E7F]/g) || []).length;
+  const nonThaiText = text.replace(/[\u0E00-\u0E7F]/g, "");
+  const nonThaiWords = nonThaiText.split(/\s+/).filter(Boolean).length;
+
+  const thaiMinutes = thaiChars / 1400;
+  const nonThaiMinutes = nonThaiWords / 200;
+
+  return Math.max(1, Math.ceil(thaiMinutes + nonThaiMinutes));
 }
 
 // Extract headings from WordPress HTML and ensure they have IDs
@@ -311,6 +322,12 @@ export default async function PostPage({ params }: PostPageProps) {
                       <PostViewCount postId={post.id} />
                     </div>
                   </div>
+                  {/* TTS Reader */}
+                  <hr className="border-gray-200" />
+                  <ReaderThaiFree
+                    postKey={post.slug || String(post.id)}
+                    articleSelector=".wordpress-content"
+                  />
                 </div>
               </div>
             </div>

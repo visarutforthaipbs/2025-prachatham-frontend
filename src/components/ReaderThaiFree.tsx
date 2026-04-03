@@ -211,27 +211,29 @@ export default function ReaderThaiFree({
   const hasThai = voices.some((v) => v.lang?.toLowerCase().startsWith("th"));
 
   return (
-    <div>
+    <div role="region" aria-label="เครื่องมืออ่านบทความออกเสียง" id="tts-player">
       {/* Main Controls */}
       <div className="flex items-center text-gray-600 text-sm gap-4">
         <div className="flex items-center gap-2">
-          <FaVolumeUp size={14} />
+          <FaVolumeUp size={14} aria-hidden="true" />
           <span className="font-medium">ฟังบทความ</span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" role="toolbar" aria-label="ควบคุมการเล่น">
           <button
             onClick={playFromStart}
-            className="inline-flex items-center gap-1.5 bg-brand-600 text-white text-xs font-medium px-3 py-1 rounded-md hover:bg-brand-700 transition-colors"
+            aria-label="เริ่มอ่านบทความตั้งแต่ต้น"
+            className="inline-flex items-center gap-1.5 bg-brand-600 text-white text-xs font-medium px-3 py-1 rounded-full hover:bg-brand-700 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
           >
-            <FaPlay size={12} />
+            <FaPlay size={12} aria-hidden="true" />
             เริ่มอ่าน
           </button>
 
           {canResume && (
             <button
               onClick={playFromSaved}
-              className="bg-green-600 text-white text-xs font-medium px-3 py-1 rounded-md hover:bg-green-700 transition-colors"
+              aria-label="อ่านต่อจากตำแหน่งเดิม"
+              className="bg-brand-500 text-white text-xs font-medium px-3 py-1 rounded-full hover:bg-brand-600 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
             >
               อ่านต่อ
             </button>
@@ -241,9 +243,9 @@ export default function ReaderThaiFree({
             <button
               onClick={pause}
               aria-label="หยุดชั่วคราว"
-              className="w-8 h-8 flex items-center justify-center bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition-colors"
+              className="w-8 h-8 flex items-center justify-center bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
             >
-              <FaPause />
+              <FaPause aria-hidden="true" />
             </button>
           )}
 
@@ -251,46 +253,48 @@ export default function ReaderThaiFree({
             <button
               onClick={resume}
               aria-label="เล่นต่อ"
-              className="w-8 h-8 flex items-center justify-center bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors"
+              className="w-8 h-8 flex items-center justify-center bg-orange-500 text-white rounded-full hover:bg-orange-600 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
             >
-              <FaPlay />
+              <FaPlay aria-hidden="true" />
             </button>
           )}
 
           {status !== "idle" && (
             <button
               onClick={stopAll}
-              aria-label="หยุด"
-              className="w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+              aria-label="หยุดการอ่าน"
+              className="w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
             >
-              <FaStop />
+              <FaStop aria-hidden="true" />
             </button>
           )}
 
           <button
             onClick={() => setShowSettings(!showSettings)}
-            aria-label="ตั้งค่า"
-            className={`w-8 h-8 flex items-center justify-center rounded-md transition-colors ${
+            aria-label="ตั้งค่าการอ่านออกเสียง"
+            aria-expanded={showSettings}
+            className={`w-8 h-8 flex items-center justify-center rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 ${
               showSettings
                 ? "bg-gray-600 text-white"
                 : "border border-gray-300 text-gray-600 hover:bg-gray-100"
             }`}
           >
-            <FaCog />
+            <FaCog aria-hidden="true" />
           </button>
         </div>
       </div>
 
       {/* Collapsible Settings */}
       {showSettings && (
-        <div className="mt-3 pt-3 border-t border-gray-200">
+        <div className="mt-3 pt-3 border-t border-gray-200" role="group" aria-label="ตั้งค่าการอ่านออกเสียง">
           <div className="flex items-center gap-4 text-sm">
             <div>
-              <p className="mb-1 font-medium text-gray-700">ความเร็ว</p>
+              <label htmlFor="tts-rate" className="mb-1 font-medium text-gray-700 block">ความเร็ว</label>
               <select
+                id="tts-rate"
                 value={rate}
                 onChange={(e) => changeRate(parseFloat(e.target.value))}
-                className="w-[120px] text-sm border border-gray-300 rounded-md px-2 py-1 bg-white"
+                className="w-[120px] text-sm border border-gray-300 rounded-lg px-2 py-1 bg-white focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
               >
                 <option value={0.75}>ช้า (0.75x)</option>
                 <option value={1}>ปกติ (1.0x)</option>
@@ -300,15 +304,16 @@ export default function ReaderThaiFree({
             </div>
 
             <div>
-              <p className="mb-1 font-medium text-gray-700">เสียง</p>
+              <label htmlFor="tts-voice" className="mb-1 font-medium text-gray-700 block">เสียง</label>
               <select
+                id="tts-voice"
                 value={selectedVoice?.name || ""}
                 onChange={(e) =>
                   setSelectedVoice(
                     voices.find((v) => v.name === e.target.value) || null
                   )
                 }
-                className="w-[200px] text-sm border border-gray-300 rounded-md px-2 py-1 bg-white"
+                className="w-[200px] text-sm border border-gray-300 rounded-lg px-2 py-1 bg-white focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
               >
                 {(hasThai
                   ? voices.filter((v) => v.lang?.toLowerCase().startsWith("th"))
@@ -325,8 +330,8 @@ export default function ReaderThaiFree({
           </div>
 
           {!hasThai && (
-            <p className="text-xs text-orange-600 mt-2">
-              ⚠️ ไม่พบเสียงภาษาไทย อาจอ่านไม่ถูกต้อง
+            <p className="text-xs text-orange-600 mt-2" role="alert">
+              <span aria-hidden="true">⚠️</span> ไม่พบเสียงภาษาไทย อาจอ่านไม่ถูกต้อง
             </p>
           )}
         </div>
