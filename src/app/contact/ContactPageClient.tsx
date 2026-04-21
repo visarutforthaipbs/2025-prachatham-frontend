@@ -94,11 +94,11 @@ export default function ContactPageClient() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <div className="flex items-center gap-2 text-sm text-gray-400">
+              <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 dark:text-gray-400">
                 <Link href="/" className="hover:text-brand-600 transition-colors">
                   หน้าแรก
                 </Link>
-                <span className="text-gray-300">/</span>
+                <span className="text-gray-300 dark:text-gray-600 dark:text-gray-400">/</span>
                 <span className="text-gray-700 font-medium">
                   ช่องทางติดต่อเรา
                 </span>
@@ -142,7 +142,7 @@ export default function ContactPageClient() {
                         <div>
                           <div className="flex items-center gap-2 mb-2">
                             <FaMapMarkerAlt className="text-brand-600" />
-                            <span className="font-semibold text-gray-700">
+                            <span className="font-semibold text-gray-700 dark:text-gray-200">
                               ที่อยู่
                             </span>
                           </div>
@@ -154,7 +154,7 @@ export default function ContactPageClient() {
                         <div>
                           <div className="flex items-center gap-2 mb-3">
                             <FaGlobe className="text-brand-600" />
-                            <span className="font-semibold text-gray-700">
+                            <span className="font-semibold text-gray-700 dark:text-gray-200">
                               ติดตามเราได้ที่
                             </span>
                           </div>

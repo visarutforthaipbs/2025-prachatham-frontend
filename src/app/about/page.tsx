@@ -11,6 +11,13 @@ export const metadata: Metadata = {
     description:
       "ประวัติและพันธกิจของมูลนิธิสื่อประชาธรรม องค์กรสื่อทางเลือกเพื่อการพัฒนาที่ยั่งยืน",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "ประชาธรรมคือใคร | มูลนิธิสื่อประชาธรรม",
+    description:
+      "ประวัติและพันธกิจของมูลนิธิสื่อประชาธรรม องค์กรสื่อทางเลือกเพื่อการพัฒนาที่ยั่งยืน",
+    images: ["/images/hero-1-page-1.jpg"],
+  },
 };
 
 export default function AboutPage() {
@@ -18,12 +25,12 @@ export default function AboutPage() {
     <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-8">
       <div className="flex flex-col gap-12">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-gray-400">
+        <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500">
           <Link href="/" className="hover:text-brand-600 transition-colors">
             หน้าแรก
           </Link>
-          <span className="text-gray-300">/</span>
-          <span className="text-gray-700 font-medium">
+          <span className="text-gray-300 dark:text-gray-600">/</span>
+          <span className="text-gray-700 dark:text-gray-200 font-medium">
             ประชาธรรมคือใคร
           </span>
         </div>
@@ -33,7 +40,7 @@ export default function AboutPage() {
           <span className="badge-brand text-sm px-3 py-1 mb-4 inline-block">
             WHO WE ARE
           </span>
-          <h1 className="text-3xl md:text-4xl font-bold text-brand-700 mb-6">
+          <h1 className="text-3xl md:text-4xl font-bold text-brand-700 dark:text-brand-400 mb-6">
             ประชาธรรมคือใคร
           </h1>
         </div>

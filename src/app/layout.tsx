@@ -4,6 +4,7 @@ import Script from "next/script";
 import { Providers } from "./providers";
 import Navigation from "@/components/Navigation";
 import SkipLink from "@/components/SkipLink";
+import ErrorBoundaryWrapper from "@/components/ErrorBoundary";
 import "./globals.css";
 import "@/styles/fonts.css";
 import "@/styles/print.css";
@@ -112,10 +113,12 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <Providers>
           <SkipLink />
-          <div className="min-h-screen bg-gray-50 flex flex-col">
+          <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col">
             <Navigation />
             <main id="main-content" className="flex-1" tabIndex={-1}>
-              {children}
+              <ErrorBoundaryWrapper>
+                {children}
+              </ErrorBoundaryWrapper>
             </main>
             <Footer />
           </div>

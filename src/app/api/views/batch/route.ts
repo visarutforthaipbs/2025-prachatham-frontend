@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { wpJsonUrl } from "@/lib/wp-config";
+import { rateLimit, getClientIP, rateLimitedResponse } from "@/lib/rate-limit";
 
 export async function GET(request: NextRequest) {
+  // Rate limit: 30 batch requests per IP per minute
+  const ip = getClientIP(request);
+  const { limited, resetAt } = rateLimit(`views-batch:${ip}`, 30, 60_000);
+  if (limited) return rateLimitedResponse(resetAt);
+
   try {
     const idsParam = request.nextUrl.searchParams.get("ids");
     if (!idsParam) {

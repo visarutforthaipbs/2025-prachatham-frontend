@@ -1,9 +1,16 @@
+import { NextRequest } from "next/server";
 import { wpRestRoute } from "@/lib/wp-config";
+import { rateLimit, getClientIP, rateLimitedResponse } from "@/lib/rate-limit";
 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
 ) {
+  // Rate limit: 60 requests per IP per minute
+  const ip = getClientIP(request as unknown as NextRequest);
+  const { limited, resetAt } = rateLimit(`post-slug:${ip}`, 60, 60_000);
+  if (limited) return rateLimitedResponse(resetAt);
+
   try {
     const { slug } = await params;
 
@@ -12,8 +19,6 @@ export async function GET(
     url.searchParams.set("slug", slug);
     url.searchParams.set("_embed", "true");
     url.searchParams.set("acf", "true"); // Include ACF fields
-
-    console.log("Fetching from WordPress API:", url.toString());
 
     const response = await fetch(url.toString(), {
       headers: {

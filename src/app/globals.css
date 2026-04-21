@@ -3,7 +3,22 @@
    Brand: #044B41 (deep teal 600) / DB Helvethaica X
    ═══════════════════════════════════════════════════════════ */
 
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 @import "tailwindcss";
+
+/* Enable class-based dark mode (toggled via .dark on <html>) */
+@custom-variant dark (&:is(.dark *));
 
 @theme {
   /* ─── Brand Colors (prachatham teal) ─── */
@@ -46,6 +61,9 @@
   --animate-fade-in-up: fadeInUp 0.6s ease forwards;
   --animate-pulse-soft: pulse-soft 2s infinite;
 
+  /* ─── Durations (Tailwind v4 compat) ─── */
+  --transition-duration-400: 400ms;
+
   @keyframes bounce-scroll {
     0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
     40% { transform: translateY(6px); }
@@ -76,9 +94,19 @@ body {
   line-height: 1.8;
 }
 
+.dark body {
+  color: #d1d5db;
+  background-color: #0f172a;
+}
+
 ::selection {
   background-color: #C3F38D;
   color: #01211D;
+}
+
+.dark ::selection {
+  background-color: #044B41;
+  color: #D4FDD5;
 }
 
 /* ─── WordPress Content ──────────────────────────────── */
@@ -86,6 +114,9 @@ body {
   font-family: var(--font-sans);
   line-height: 1.8;
   color: #334155;
+}
+.dark .wordpress-content {
+  color: #cbd5e1;
 }
 
 .wordpress-content h1,
@@ -100,6 +131,14 @@ body {
   margin-bottom: 0.75rem;
   letter-spacing: -0.02em;
   line-height: 1.3;
+}
+.dark .wordpress-content h1,
+.dark .wordpress-content h2,
+.dark .wordpress-content h3,
+.dark .wordpress-content h4,
+.dark .wordpress-content h5,
+.dark .wordpress-content h6 {
+  color: #f1f5f9;
 }
 
 .wordpress-content h1 { font-size: 2rem; border-bottom: 3px solid #8AE0A0; padding-bottom: 0.5rem; }
@@ -128,9 +167,14 @@ body {
   color: #475569;
   font-style: italic;
 }
+.dark .wordpress-content blockquote {
+  color: #94a3b8;
+}
 
 .wordpress-content a { color: #044B41; text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.15s ease; }
 .wordpress-content a:hover { border-bottom-color: #044B41; }
+.dark .wordpress-content a { color: #5CC882; }
+.dark .wordpress-content a:hover { border-bottom-color: #5CC882; }
 
 /* ─── WordPress Content: Lists ───────────────────────── */
 .wordpress-content ul { list-style-type: disc; padding-left: 2rem; margin-bottom: 1.25rem; }
@@ -179,9 +223,11 @@ body {
 
 /* ─── WordPress Content: Horizontal Rule ─────────────── */
 .wordpress-content hr { border: none; border-top: 2px solid #e2e8f0; margin: 2.5rem 0; }
+.dark .wordpress-content hr { border-top-color: #334155; }
 
 /* ─── WordPress Content: Mark / Highlight ────────────── */
 .wordpress-content mark { background-color: #fef9c3; padding: 0.125rem 0.25rem; border-radius: 0.125rem; }
+.dark .wordpress-content mark { background-color: #713f12; color: #fef9c3; }
 
 /* ─── WordPress Content: Subscript / Superscript ─────── */
 .wordpress-content sub { font-size: 0.75em; vertical-align: sub; }
@@ -195,53 +241,75 @@ body {
 
 /* ─── WordPress Content: Separator blocks ────────────── */
 .wordpress-content .wp-block-separator { border: none; border-top: 2px solid #e2e8f0; margin: 2.5rem auto; max-width: 100px; }
+.dark .wordpress-content .wp-block-separator { border-top-color: #334155; }
 .wordpress-content .wp-block-separator.is-style-wide { max-width: 100%; }
 .wordpress-content .wp-block-separator.is-style-dots { border: none; text-align: center; max-width: 100%; }
 .wordpress-content .wp-block-separator.is-style-dots::before { content: "···"; font-size: 1.5rem; letter-spacing: 1rem; color: #94a3b8; }
+.dark .wordpress-content .wp-block-separator.is-style-dots::before { color: #64748b; }
 
 /* ─── WordPress Content: Collapsible Footnotes ───────── */
 .wordpress-content .wp-footnotes-collapsible { margin: 2.5rem 0 1rem; border: 1px solid #e2e8f0; border-radius: 0.75rem; overflow: hidden; background-color: #f8fafc; }
+.dark .wordpress-content .wp-footnotes-collapsible { border-color: #334155; background-color: #1e293b; }
 .wordpress-content .wp-footnotes-toggle { display: flex; align-items: center; gap: 0.5rem; padding: 0.875rem 1.25rem; font-size: 0.95rem; font-weight: 600; color: #475569; cursor: pointer; user-select: none; list-style: none; transition: background-color 0.15s ease; }
 .wordpress-content .wp-footnotes-toggle:hover { background-color: #f1f5f9; }
+.dark .wordpress-content .wp-footnotes-toggle { color: #94a3b8; }
+.dark .wordpress-content .wp-footnotes-toggle:hover { background-color: #334155; }
 .wordpress-content .wp-footnotes-toggle::-webkit-details-marker { display: none; }
 .wordpress-content .wp-footnotes-toggle-icon { display: inline-block; width: 1rem; height: 1rem; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 18 15 12 9 6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-size: contain; transition: transform 0.2s ease; flex-shrink: 0; }
 .wordpress-content .wp-footnotes-collapsible[open] .wp-footnotes-toggle-icon { transform: rotate(90deg); }
 .wordpress-content .wp-footnotes-collapsible .wp-block-footnotes { margin: 0; padding: 0.5rem 1.25rem 1.25rem 2.5rem; border-top: 1px solid #e2e8f0; font-size: 0.85rem; line-height: 1.6; color: #64748b; }
 .wordpress-content .wp-footnotes-collapsible .wp-block-footnotes li { font-size: 0.85rem; margin-bottom: 0.5rem; color: #64748b; }
+.dark .wordpress-content .wp-footnotes-collapsible .wp-block-footnotes { border-top-color: #334155; color: #94a3b8; }
+.dark .wordpress-content .wp-footnotes-collapsible .wp-block-footnotes li { color: #94a3b8; }
 
 /* ─── WordPress Content: Inline text ─────────────────── */
 .wordpress-content strong, .wordpress-content b { font-weight: 600; color: #1e293b; }
+.dark .wordpress-content strong, .dark .wordpress-content b { color: #f1f5f9; }
 .wordpress-content em, .wordpress-content i { font-style: italic; color: #475569; }
+.dark .wordpress-content em, .dark .wordpress-content i { color: #94a3b8; }
 .wordpress-content code { background-color: #f1f5f9; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.9rem; color: #1e293b; }
+.dark .wordpress-content code { background-color: #334155; color: #e2e8f0; }
 .wordpress-content pre { background-color: #1e293b; color: #fff; padding: 1rem; border-radius: 0.5rem; overflow: auto; margin: 1.5rem 0; font-size: 0.9rem; line-height: 1.5; }
 
 /* ─── WordPress Content: Tables ──────────────────────── */
 .wordpress-content figure.wp-block-table,
 .wordpress-content .wp-block-table { margin: 2rem 0; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 0.75rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06); }
+.dark .wordpress-content figure.wp-block-table,
+.dark .wordpress-content .wp-block-table { border-color: #334155; }
 .wordpress-content table { width: 100%; border-collapse: collapse; margin: 0; font-size: 0.82rem; line-height: 1.55; min-width: 480px; }
 .wordpress-content > table { margin: 2rem 0; border-radius: 0.75rem; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06); }
+.dark .wordpress-content > table { border-color: #334155; }
 .wordpress-content th,
 .wordpress-content td { padding: 0.625rem 0.75rem; text-align: left; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #f1f5f9; vertical-align: top; word-break: break-word; color: #334155; }
+.dark .wordpress-content th,
+.dark .wordpress-content td { border-color: #334155; color: #cbd5e1; }
 .wordpress-content td { font-size: 0.82rem; line-height: 1.55; white-space: pre-line; }
 .wordpress-content th:last-child, .wordpress-content td:last-child { border-right: none; }
 .wordpress-content thead { position: sticky; top: 0; z-index: 1; }
 .wordpress-content th { background-color: #D4FDD5; font-weight: 600; color: #1e293b; font-size: 0.82rem; letter-spacing: 0.01em; border-bottom-width: 2px; border-bottom-color: #8AE0A0; white-space: nowrap; }
+.dark .wordpress-content th { background-color: #022F29; color: #8AE0A0; border-bottom-color: #033D35; }
 .wordpress-content tbody tr { transition: background-color 0.15s ease; }
 .wordpress-content tbody tr:hover { background-color: #f8fafc; }
 .wordpress-content tbody tr:nth-of-type(even) { background-color: rgba(0, 0, 0, 0.015); }
 .wordpress-content tbody tr:nth-of-type(even):hover { background-color: #f8fafc; }
+.dark .wordpress-content tbody tr:hover { background-color: #1e293b; }
+.dark .wordpress-content tbody tr:nth-of-type(even) { background-color: rgba(255, 255, 255, 0.02); }
+.dark .wordpress-content tbody tr:nth-of-type(even):hover { background-color: #1e293b; }
 .wordpress-content tbody tr:last-child td { border-bottom: none; }
 .wordpress-content td ul, .wordpress-content td ol { padding-left: 1.25rem; margin: 0.25rem 0; font-size: 0.82rem; }
 .wordpress-content td li { font-size: 0.82rem; margin-bottom: 0.25rem; line-height: 1.5; }
 .wordpress-content td p { font-size: 0.82rem; margin-bottom: 0.35rem; line-height: 1.55; }
 .wordpress-content td br { display: block; content: ""; margin-top: 0.2rem; }
 .wordpress-content caption, .wordpress-content figcaption { padding: 0.75rem 1rem; font-size: 0.8rem; color: #64748b; text-align: center; font-style: italic; }
+.dark .wordpress-content caption, .dark .wordpress-content figcaption { color: #94a3b8; }
 
 /* ─── Custom Scrollbar ───────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+.dark ::-webkit-scrollbar-thumb { background: #475569; }
+.dark ::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
 /* ─── Focus Styles ───────────────────────────────────── */
 button:focus-visible,
@@ -265,24 +333,39 @@ textarea:focus-visible {
 .btn-secondary {
   @apply bg-white text-brand-600 font-medium rounded-lg px-6 py-2.5 border-2 border-brand-600 transition-all duration-400;
 }
+.dark .btn-secondary {
+  background-color: #1e293b;
+  color: #5CC882;
+  border-color: #044B41;
+}
 .btn-secondary:hover {
   @apply bg-brand-50 shadow-md;
   transform: scale(1.02) translateY(-2px);
 }
+.dark .btn-secondary:hover {
+  background-color: #022F29;
+}
 .btn-outline-green {
   @apply border-2 border-brand-600 text-brand-600 font-medium rounded-lg px-6 py-2.5 transition-all duration-200;
+}
+.dark .btn-outline-green {
+  border-color: #5CC882;
+  color: #5CC882;
 }
 .btn-outline-green:hover {
   @apply bg-brand-50;
   transform: translateY(-1px);
 }
+.dark .btn-outline-green:hover {
+  background-color: #022F29;
+}
 
-/* Card */
+/* Card — background is set by the element's own utilities, not here */
 .card {
-  @apply bg-white rounded-xl overflow-hidden border border-gray-800 shadow-sm transition-all duration-400;
+  @apply rounded-xl overflow-hidden border shadow-sm transition-all duration-400;
 }
 .card:hover {
-  @apply shadow-card-hover border-brand-100;
+  @apply shadow-card-hover;
   transform: translateY(-6px) scale(1.01);
 }
 
@@ -290,10 +373,18 @@ textarea:focus-visible {
 .badge-brand {
   @apply bg-brand-50 text-brand-700 border border-brand-200 rounded-full px-3 py-1 text-xs font-medium tracking-wide;
 }
+.dark .badge-brand {
+  background-color: #022F29;
+  color: #8AE0A0;
+  border-color: #033D35;
+}
 
 /* Skeleton animation */
 .skeleton {
   @apply bg-gray-200 rounded animate-pulse;
+}
+.dark .skeleton {
+  background-color: #334155;
 }
 
 /* Line clamp utilities */

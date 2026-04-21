@@ -1,3 +1,31 @@
+import { NextRequest, NextResponse } from "next/server";
+
+/**
+ * Extract client IP from request headers.
+ */
+export function getClientIP(request: NextRequest): string {
+  return (
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    request.headers.get("x-real-ip") ||
+    "unknown"
+  );
+}
+
+/**
+ * Create a standard 429 rate-limited response.
+ */
+export function rateLimitedResponse(resetAt: number): NextResponse {
+  return NextResponse.json(
+    { error: "Too many requests" },
+    {
+      status: 429,
+      headers: {
+        "Retry-After": String(Math.ceil((resetAt - Date.now()) / 1000)),
+      },
+    }
+  );
+}
+
 /**
  * Simple in-memory rate limiter for serverless functions.
  * Tracks requests per IP within a sliding time window.

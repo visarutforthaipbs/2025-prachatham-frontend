@@ -5,6 +5,10 @@ import Link from "next/link";
 import { FaArrowRight, FaMapMarkerAlt, FaClock } from "react-icons/fa";
 import type { WordPressProject } from "@/lib/wordpress";
 
+// Tiny gray SVG to prevent layout shift while images load
+const BLUR_DATA_URL =
+  "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PC9zdmc+";
+
 interface ProjectCardProps {
   project: WordPressProject;
 }
@@ -29,7 +33,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   };
 
   return (
-    <article className="card h-full">
+    <article className="card h-full bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
       <Link
         href={`/projects/${project.slug}`}
         className="hover:no-underline h-full flex flex-col group"
@@ -40,6 +44,8 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             src={getImageUrl()}
             alt={getImageAlt()}
             fill
+            placeholder="blur"
+            blurDataURL={BLUR_DATA_URL}
             style={{
               objectFit: "cover",
               transition: "transform 0.4s ease",
@@ -53,7 +59,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               className={`absolute top-3 right-3 text-xs px-3 py-1 rounded-full font-medium ${
                 project.acf.projectStatus === "active"
                   ? "badge-brand"
-                  : "bg-gray-100 text-gray-600"
+                  : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
               }`}
             >
               {project.acf.projectStatus === "active" ? "ดำเนินการ" : "เสร็จสิ้น"}
@@ -63,28 +69,28 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
         {/* Project Content */}
         <div className="p-5 flex-grow flex flex-col">
-          <h3 className="text-3xl font-bold text-brand-700 mb-3 group-hover:text-brand-600 line-clamp-2 transition-colors duration-200 leading-tight">
+          <h3 className="text-3xl font-bold text-brand-700 dark:text-brand-400 mb-3 group-hover:text-brand-600 dark:group-hover:text-brand-300 line-clamp-2 transition-colors duration-200 leading-tight">
             {project.title.rendered}
           </h3>
 
           {/* Project Details */}
           <div className="flex flex-col gap-2 mb-4 flex-grow">
             {project.acf?.project_duration && (
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <FaClock className="w-3 h-3 text-gray-400" />
+              <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                <FaClock className="w-3 h-3 text-gray-400 dark:text-gray-500" />
                 <span>{project.acf.project_duration}</span>
               </div>
             )}
             {project.acf?.project_location && (
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <FaMapMarkerAlt className="w-3 h-3 text-gray-400" />
+              <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                <FaMapMarkerAlt className="w-3 h-3 text-gray-400 dark:text-gray-500" />
                 <span>{project.acf.project_location}</span>
               </div>
             )}
           </div>
 
           {/* Read More */}
-          <div className="flex items-center gap-1 mt-auto pt-4 border-t border-gray-100 text-brand-600 text-sm font-medium hover:gap-2 transition-all duration-200">
+          <div className="flex items-center gap-1 mt-auto pt-4 border-t border-gray-100 dark:border-gray-700 text-brand-600 dark:text-brand-400 text-sm font-medium hover:gap-2 transition-all duration-200">
             อ่านเพิ่มเติม
             <FaArrowRight className="w-2.5 h-2.5" />
           </div>

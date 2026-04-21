@@ -2,7 +2,7 @@
 
 import { WordPressPost } from "@/lib/wordpress";
 import PostCard from "./PostCard";
-import LoadingSkeleton from "./LoadingSkeleton";
+import { PostCardSkeleton } from "./LoadingSkeleton";
 
 interface SearchResultsProps {
   posts: WordPressPost[];
@@ -25,7 +25,7 @@ export default function SearchResults({
 }: SearchResultsProps) {
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-md p-4 text-red-800">
+      <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-md p-4 text-red-800 dark:text-red-300">
         เกิดข้อผิดพลาด: {error}
       </div>
     );
@@ -33,7 +33,7 @@ export default function SearchResults({
 
   if (!loading && posts.length === 0 && query) {
     return (
-      <div className="bg-blue-50 border border-blue-200 rounded-md p-4 text-blue-800">
+      <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900 rounded-md p-4 text-blue-800 dark:text-blue-300">
         ไม่พบผลการค้นหาสำหรับ &ldquo;{query}&rdquo;
       </div>
     );
@@ -44,7 +44,7 @@ export default function SearchResults({
       {/* Results header */}
       {query && posts.length > 0 && (
         <div>
-          <p className="text-lg font-semibold text-gray-700">
+          <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
             ผลการค้นหาสำหรับ &ldquo;{query}&rdquo; ({posts.length} รายการ)
           </p>
         </div>
@@ -53,9 +53,12 @@ export default function SearchResults({
       {/* Results grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {posts.map((post) => (
-          <PostCard key={post.id} post={post} />
+          <PostCard key={post.id} post={post} highlightQuery={query} />
         ))}
-        {loading && <LoadingSkeleton count={6} />}
+        {loading &&
+          Array.from({ length: 6 }).map((_, i) => (
+            <PostCardSkeleton key={`skeleton-${i}`} />
+          ))}
       </div>
 
       {/* Load more button */}

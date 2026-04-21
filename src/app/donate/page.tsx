@@ -10,6 +10,13 @@ export const metadata: Metadata = {
     description:
       "ร่วมสนับสนุนและทำงานกับประชาธรรม เพื่อการสื่อสารสิ่งแวดล้อมที่ยั่งยืน",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "ร่วมทำงานกับเรา | ประชาธรรม สื่อสิ่งแวดล้อมไทย",
+    description:
+      "ร่วมสนับสนุนและทำงานกับประชาธรรม เพื่อการสื่อสารสิ่งแวดล้อมที่ยั่งยืน",
+    images: ["/images/hero-1-page-1.jpg"],
+  },
 };
 
 export default function DonatePage() {
@@ -17,22 +24,22 @@ export default function DonatePage() {
     <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-8">
       <div className="flex flex-col gap-8">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-gray-500">
+        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-500">
           <Link href="/" className="hover:text-brand-600">
             หน้าแรก
           </Link>
-          <span>/</span>
-          <span className="text-gray-700 font-medium">
+          <span className="dark:text-gray-600">/</span>
+          <span className="text-gray-700 dark:text-gray-200 font-medium">
             ร่วมทำงานกับเรา
           </span>
         </div>
 
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-brand-700 mb-4">
+          <h1 className="text-3xl font-bold text-brand-700 dark:text-brand-400 mb-4">
             ร่วมทำงานกับเรา
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
             มาร่วมเป็นส่วนหนึ่งของการสร้างการเปลี่ยนแปลงด้านสิ่งแวดล้อม
           </p>
         </div>

@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
+import withBundleAnalyzer from "@next/bundle-analyzer";
 
 const nextConfig: NextConfig = {
+  compress: true,
+  poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
@@ -18,9 +21,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // experimental: {
-  //   optimizePackageImports: ["react-icons", "framer-motion"],
-  // },
+  experimental: {
+    optimizePackageImports: ["react-icons", "framer-motion"],
+  },
 };
 
-export default nextConfig;
+const withAnalyzer = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
+
+export default withAnalyzer(nextConfig);

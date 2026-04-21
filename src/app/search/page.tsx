@@ -1,67 +1,39 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useCallback, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import { wordpressApi, WordPressPost } from "@/lib/wordpress";
+import { Suspense, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import SearchResults from "@/components/SearchResults";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
+import { usePaginatedPosts } from "@/lib/hooks/usePaginatedPosts";
 
 function SearchContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const query = searchParams.get("q") || "";
 
-  const [posts, setPosts] = useState<WordPressPost[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const {
+    posts,
+    loading,
+    error,
+    currentPage,
+    totalPages,
+    loadMore,
+  } = usePaginatedPosts({
+    searchQuery: query || undefined,
+    perPage: 12,
+  });
 
-  const searchPosts = useCallback(
-    async (searchQuery: string, page: number = 1) => {
-      if (!searchQuery.trim()) {
-        setPosts([]);
-        return;
-      }
-
-      try {
-        setLoading(true);
-        setError(null);
-
-        const data = await wordpressApi.searchPosts(searchQuery, page);
-
-        if (page === 1) {
-          setPosts(data.posts);
-        } else {
-          setPosts((prev) => [...prev, ...data.posts]);
-        }
-
-        setCurrentPage(page);
-        setTotalPages(data.totalPages);
-      } catch (err) {
-        setError("เกิดข้อผิดพลาดในการค้นหา");
-        console.error("Search error:", err);
-      } finally {
-        setLoading(false);
-      }
-    },
-    []
-  );
-
-  useEffect(() => {
+  // Sync pagination to URL for shareable deep-links
+  const handleLoadMore = useCallback(() => {
+    loadMore();
     if (query) {
-      setCurrentPage(1);
-      searchPosts(query, 1);
-    } else {
-      setPosts([]);
+      const nextPage = currentPage + 1;
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("page", String(nextPage));
+      router.replace(`/search?${params.toString()}`, { scroll: false });
     }
-  }, [query, searchPosts]);
-
-  const handleLoadMore = () => {
-    if (currentPage < totalPages && query) {
-      searchPosts(query, currentPage + 1);
-    }
-  };
+  }, [loadMore, currentPage, query, searchParams, router]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
@@ -114,7 +86,7 @@ function SearchContent() {
 
 export default function SearchPage() {
   return (
-    <Suspense fallback={<LoadingSkeleton />}>
+    <Suspense fallback={<LoadingSkeleton type="page" />}>
       <SearchContent />
     </Suspense>
   );

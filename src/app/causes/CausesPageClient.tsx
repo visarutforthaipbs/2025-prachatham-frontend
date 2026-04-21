@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { WordPressProject } from "@/lib/wordpress";
 
@@ -13,12 +14,12 @@ export default function CausesPageClient({ projects }: CausesPageClientProps) {
     <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
       <div className="flex flex-col gap-8">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-gray-400">
+        <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500">
           <Link href="/" className="hover:text-brand-600 transition-colors">
             หน้าแรก
           </Link>
-          <span className="text-gray-300">/</span>
-          <span className="text-gray-700 font-medium">
+          <span className="text-gray-300 dark:text-gray-600">/</span>
+          <span className="text-gray-700 dark:text-gray-200 font-medium">
             โครงการของเรา
           </span>
         </div>
@@ -33,10 +34,10 @@ export default function CausesPageClient({ projects }: CausesPageClientProps) {
             <span className="badge-brand text-base px-4 py-2 mb-4 inline-block">
               โครงการและผลงาน
             </span>
-            <h1 className="text-3xl md:text-4xl font-bold text-brand-700 mb-4">
+            <h1 className="text-3xl md:text-4xl font-bold text-brand-700 dark:text-brand-400 mb-4">
               โครงการของมูลนิธิสื่อประชาธรรม
             </h1>
-            <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-4xl mx-auto leading-relaxed">
               ดูผลงานและโครงการทั้งหมดที่เราได้ดำเนินการมา
               เพื่อสร้างการเปลี่ยนแปลงเชิงบวกในชุมชนและสังคม
             </p>
@@ -58,13 +59,12 @@ export default function CausesPageClient({ projects }: CausesPageClientProps) {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 * index }}
                   whileHover={{ y: -5, scale: 1.02 }}
-                  className="card overflow-hidden bg-white shadow-md hover:shadow-xl transition-shadow"
+                  className="card overflow-hidden bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-md hover:shadow-xl transition-shadow"
                 >
                   {/* Project Image */}
                   {project._embedded?.["wp:featuredmedia"]?.[0] && (
                     <div className="relative h-[200px] overflow-hidden">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                      <Image
                         src={
                           project._embedded["wp:featuredmedia"][0].media_details
                             ?.sizes?.medium?.source_url ||
@@ -74,7 +74,9 @@ export default function CausesPageClient({ projects }: CausesPageClientProps) {
                           project._embedded["wp:featuredmedia"][0].alt_text ||
                           project.title.rendered
                         }
-                        className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-300 hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/30" />
 
@@ -106,10 +108,10 @@ export default function CausesPageClient({ projects }: CausesPageClientProps) {
                       <div className="flex flex-col gap-2 w-full">
                         {project.acf?.project_duration && (
                           <div className="flex items-start text-sm">
-                            <span className="text-gray-700 font-medium whitespace-nowrap mr-2">
+                            <span className="text-gray-700 dark:text-gray-300 font-medium whitespace-nowrap mr-2">
                               ระยะเวลา:
                             </span>
-                            <span className="text-gray-600 leading-snug">
+                            <span className="text-gray-600 dark:text-gray-400 leading-snug">
                               {project.acf.project_duration}
                             </span>
                           </div>
@@ -182,10 +184,10 @@ export default function CausesPageClient({ projects }: CausesPageClientProps) {
           <div className="card bg-brand-50 border border-brand-200">
             <div className="p-8 text-center">
               <div className="flex flex-col gap-6">
-                <h3 className="text-xl md:text-2xl font-bold text-brand-700 mb-4">
+                <h3 className="text-xl md:text-2xl font-bold text-brand-700 dark:text-brand-400 mb-4">
                   สนใจร่วมงานกับเรา?
                 </h3>
-                <p className="text-gray-600 mb-6 max-w-2xl mx-auto leading-relaxed">
+                <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto leading-relaxed">
                   หากคุณมีไอเดียโครงการที่น่าสนใจ หรือต้องการร่วมมือกับเรา
                   เรายินดีต้อนรับและพร้อมที่จะสนับสนุนการสร้างการเปลี่ยนแปลงที่ดี
                 </p>

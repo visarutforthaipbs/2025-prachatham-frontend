@@ -17,9 +17,9 @@ export default function LoadingSkeleton({
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {Array.from({ length: count }).map((_, index) =>
         type === "project" ? (
-          <ProjectCardSkeleton key={index} />
+          <ProjectCardSkeleton key={`skeleton-${index}`} />
         ) : (
-          <PostCardSkeleton key={index} />
+          <PostCardSkeleton key={`skeleton-${index}`} />
         )
       )}
     </div>
@@ -28,7 +28,7 @@ export default function LoadingSkeleton({
 
 function PostCardSkeleton() {
   return (
-    <div className="max-w-sm overflow-hidden rounded-lg shadow-sm bg-white h-full flex flex-col">
+    <div className="max-w-sm overflow-hidden rounded-lg shadow-sm bg-white dark:bg-gray-800 h-full flex flex-col">
       {/* Image Skeleton */}
       <div className="skeleton h-[200px]" />
 
@@ -65,7 +65,7 @@ function PostCardSkeleton() {
 
 function ProjectCardSkeleton() {
   return (
-    <div className="overflow-hidden rounded-lg shadow-sm bg-white h-full flex flex-col">
+    <div className="overflow-hidden rounded-lg shadow-sm bg-white dark:bg-gray-800 h-full flex flex-col">
       <div className="skeleton h-[200px]" />
       <div className="p-6">
         <div className="skeleton h-6 w-4/5 mb-3" />

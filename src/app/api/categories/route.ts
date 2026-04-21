@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { wpRestRoute } from "@/lib/wp-config";
+import { rateLimit, getClientIP, rateLimitedResponse } from "@/lib/rate-limit";
 
 const WORDPRESS_API_URL = wpRestRoute("categories");
 
@@ -10,6 +11,11 @@ const ALLOWED_PARAMS = new Set([
 ]);
 
 export async function GET(request: NextRequest) {
+  // Rate limit: 60 requests per IP per minute
+  const ip = getClientIP(request);
+  const { limited, resetAt } = rateLimit(`categories:${ip}`, 60, 60_000);
+  if (limited) return rateLimitedResponse(resetAt);
+
   const { searchParams } = new URL(request.url);
 
   // Build a safe set of query parameters (whitelist only)

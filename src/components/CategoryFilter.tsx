@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { WordPressCategory } from "@/lib/wordpress";
 
@@ -16,7 +14,7 @@ export default function CategoryFilter({
 
   return (
     <div className="mb-8">
-      <p className="text-sm font-semibold mb-3 text-gray-500 tracking-wide uppercase">
+      <p className="text-sm font-semibold mb-3 text-gray-500 dark:text-gray-400 tracking-wide uppercase">
         หมวดหมู่
       </p>
       <div className="flex flex-wrap gap-2">
@@ -26,7 +24,7 @@ export default function CategoryFilter({
             className={`inline-block text-sm font-medium rounded-full px-4 py-2 cursor-pointer border transition-all duration-200 hover:-translate-y-px hover:shadow-sm ${
               allCategoriesActive
                 ? "bg-brand-600 text-white border-brand-600 hover:bg-brand-700"
-                : "bg-white text-gray-600 border-gray-200 hover:bg-brand-50 hover:border-brand-300"
+                : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-brand-50 dark:hover:bg-brand-900/30 hover:border-brand-300 dark:hover:border-brand-700"
             }`}
           >
             ทั้งหมด

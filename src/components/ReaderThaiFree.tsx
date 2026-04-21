@@ -56,51 +56,50 @@ export default function ReaderThaiFree({
   const [status, setStatus] = useState<"idle" | "playing" | "paused">("idle");
   const [canResume, setCanResume] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [currentIdx, setCurrentIdx] = useState(0);
 
   const queueRef = useRef<SpeechSynthesisUtterance[]>([]);
   const currentIdxRef = useRef(0);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     const el = document.querySelector(
       articleSelector as string
     ) as HTMLElement | null;
+    if (!el) {
+      setError("ไม่พบเนื้อหาบทความสำหรับอ่านออกเสียง");
+    }
     setHtml(el?.innerHTML || "");
   }, [articleSelector]);
 
   const chunks = useMemo(() => htmlToChunks(html), [html]);
 
   useEffect(() => {
-    function loadVoices() {
-      if (typeof window === "undefined" || !("speechSynthesis" in window))
-        return;
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
 
+    function loadVoices() {
       const vs = window.speechSynthesis.getVoices();
       setVoices(vs);
       const th = vs.find((v) => v.lang?.toLowerCase().startsWith("th"));
       if (th) setSelectedVoice(th);
     }
 
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      loadVoices();
-      window.speechSynthesis.onvoiceschanged = loadVoices;
-    }
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
 
     return () => {
-      if (typeof window !== "undefined" && "speechSynthesis" in window) {
-        window.speechSynthesis.onvoiceschanged = null;
-      }
+      window.speechSynthesis.onvoiceschanged = null;
     };
   }, []);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const saved = localStorage.getItem(`tts:${postKey}:idx`);
-        setCanResume(saved !== null && Number(saved) < chunks.length);
-      } catch (error) {
-        console.warn("localStorage not available:", error);
-        setCanResume(false);
-      }
+    if (typeof window === "undefined") return;
+    try {
+      const saved = localStorage.getItem(`tts:${postKey}:idx`);
+      setCanResume(saved !== null && Number(saved) < chunks.length);
+    } catch {
+      setCanResume(false);
     }
   }, [postKey, chunks.length]);
 
@@ -110,10 +109,14 @@ export default function ReaderThaiFree({
     }
     queueRef.current = [];
     setStatus("idle");
+    setCurrentIdx(0);
+    currentIdxRef.current = 0;
   }, []);
 
   const buildQueue = useCallback(
     (startIndex = 0) => {
+      setCurrentIdx(startIndex);
+      currentIdxRef.current = startIndex;
       queueRef.current = chunks.map((text, idx) => {
         const u = new SpeechSynthesisUtterance(text);
         u.lang = selectedVoice?.lang || "th-TH";
@@ -121,29 +124,31 @@ export default function ReaderThaiFree({
         u.rate = rate;
         u.onstart = () => {
           currentIdxRef.current = idx;
+          setCurrentIdx(idx);
           setStatus("playing");
-          if (typeof window !== "undefined") {
-            try {
-              localStorage.setItem(`tts:${postKey}:idx`, String(idx));
-            } catch (error) {
-              console.warn("Failed to save TTS progress:", error);
-            }
+          setError(null);
+          try {
+            localStorage.setItem(`tts:${postKey}:idx`, String(idx));
+          } catch {
+            // localStorage may be unavailable
           }
         };
         u.onend = () => {
           if (idx === chunks.length - 1) {
-            if (typeof window !== "undefined") {
-              try {
-                localStorage.removeItem(`tts:${postKey}:idx`);
-              } catch (error) {
-                console.warn("Failed to clear TTS progress:", error);
-              }
+            try {
+              localStorage.removeItem(`tts:${postKey}:idx`);
+            } catch {
+              // localStorage may be unavailable
             }
             setCanResume(false);
             setStatus("idle");
+            setCurrentIdx(0);
           }
         };
-        u.onerror = () => {};
+        u.onerror = (event) => {
+          setError(`การอ่านออกเสียงล้มเหลว: ${event.error}`);
+          setStatus("idle");
+        };
         return u;
       });
 
@@ -156,24 +161,26 @@ export default function ReaderThaiFree({
   );
 
   const playFromStart = useCallback(() => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window))
-      return alert("อุปกรณ์นี้ไม่รองรับการอ่านออกเสียง");
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+      setError("อุปกรณ์นี้ไม่รองรับการอ่านออกเสียง");
+      return;
+    }
     if (!chunks.length) return;
     stopAll();
     buildQueue(0);
   }, [chunks.length, stopAll, buildQueue]);
 
   const playFromSaved = useCallback(() => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window))
-      return alert("อุปกรณ์นี้ไม่รองรับการอ่านออกเสียง");
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+      setError("อุปกรณ์นี้ไม่รองรับการอ่านออกเสียง");
+      return;
+    }
 
     let saved = 0;
-    if (typeof window !== "undefined") {
-      try {
-        saved = Number(localStorage.getItem(`tts:${postKey}:idx`) || 0);
-      } catch (error) {
-        console.warn("Failed to read TTS progress:", error);
-      }
+    try {
+      saved = Number(localStorage.getItem(`tts:${postKey}:idx`) || 0);
+    } catch {
+      // ignore
     }
 
     const start = Number.isFinite(saved)
@@ -201,19 +208,47 @@ export default function ReaderThaiFree({
     }
   }, []);
 
-  function changeRate(v: number) {
-    setRate(v);
-    for (let i = currentIdxRef.current; i < queueRef.current.length; i++) {
-      queueRef.current[i].rate = v;
-    }
-  }
+  const changeRate = useCallback(
+    (v: number) => {
+      setRate(v);
+      // If currently playing, stop and rebuild from current position with new rate
+      if (status === "playing" || status === "paused") {
+        const resumeFrom = currentIdxRef.current;
+        if (typeof window !== "undefined" && "speechSynthesis" in window) {
+          window.speechSynthesis.cancel();
+        }
+        queueRef.current = [];
+        // Rebuild will use the new rate via closure on next render
+        // We use a small timeout to let state update
+        setTimeout(() => {
+          buildQueue(resumeFrom);
+        }, 0);
+      }
+    },
+    [status, buildQueue]
+  );
 
   const hasThai = voices.some((v) => v.lang?.toLowerCase().startsWith("th"));
 
   return (
     <div role="region" aria-label="เครื่องมืออ่านบทความออกเสียง" id="tts-player">
+      {/* Error Banner */}
+      {error && (
+        <div className="mb-3 px-3 py-2 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 flex items-center gap-2">
+          <span aria-hidden="true">⚠️</span>
+          <span>{error}</span>
+          <button
+            onClick={() => setError(null)}
+            className="ml-auto text-red-500 hover:text-red-700"
+            aria-label="ปิดข้อความเตือน"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       {/* Main Controls */}
-      <div className="flex items-center text-gray-600 text-sm gap-4">
+      <div className="flex flex-wrap items-center text-gray-600 text-sm gap-4">
         <div className="flex items-center gap-2">
           <FaVolumeUp size={14} aria-hidden="true" />
           <span className="font-medium">ฟังบทความ</span>
@@ -222,14 +257,16 @@ export default function ReaderThaiFree({
         <div className="flex items-center gap-2" role="toolbar" aria-label="ควบคุมการเล่น">
           <button
             onClick={playFromStart}
+            disabled={!chunks.length}
             aria-label="เริ่มอ่านบทความตั้งแต่ต้น"
-            className="inline-flex items-center gap-1.5 bg-brand-600 text-white text-xs font-medium px-3 py-1 rounded-full hover:bg-brand-700 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+            className="inline-flex items-center gap-1.5 bg-brand-600 text-white text-xs font-medium px-3 py-1 rounded-full hover:bg-brand-700 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            title={!chunks.length ? "ไม่พบเนื้อหาสำหรับอ่านออกเสียง" : undefined}
           >
             <FaPlay size={12} aria-hidden="true" />
             เริ่มอ่าน
           </button>
 
-          {canResume && (
+          {canResume && status === "idle" && (
             <button
               onClick={playFromSaved}
               aria-label="อ่านต่อจากตำแหน่งเดิม"
@@ -284,10 +321,25 @@ export default function ReaderThaiFree({
         </div>
       </div>
 
+      {/* Progress */}
+      {status !== "idle" && chunks.length > 0 && (
+        <div className="mt-2 flex items-center gap-3">
+          <progress
+            value={currentIdx + 1}
+            max={chunks.length}
+            className="flex-1 h-1.5 accent-brand-600"
+            aria-label="ความคืบหน้าการอ่านออกเสียง"
+          />
+          <span className="text-xs text-gray-500">
+            {currentIdx + 1} / {chunks.length}
+          </span>
+        </div>
+      )}
+
       {/* Collapsible Settings */}
       {showSettings && (
         <div className="mt-3 pt-3 border-t border-gray-200" role="group" aria-label="ตั้งค่าการอ่านออกเสียง">
-          <div className="flex items-center gap-4 text-sm">
+          <div className="flex flex-wrap items-center gap-4 text-sm">
             <div>
               <label htmlFor="tts-rate" className="mb-1 font-medium text-gray-700 block">ความเร็ว</label>
               <select

@@ -97,7 +97,7 @@ export default function HomePageClient({
       </div>
 
       {/* ═══ Featured News ═══ */}
-      <SectionWrapper bg="white">
+      <SectionWrapper bg="bg-white dark:bg-gray-950">
         <PageHeader
           overline="ข่าวสาร"
           title="ข่าวเด่นประจำสัปดาห์"
@@ -112,7 +112,7 @@ export default function HomePageClient({
           </div>
         ) : (
           <div className="text-center py-8">
-            <p className="text-gray-400">ไม่พบข่าวเด่นในขณะนี้</p>
+            <p className="text-gray-400 dark:text-gray-500">ไม่พบข่าวเด่นในขณะนี้</p>
           </div>
         )}
 
@@ -137,14 +137,14 @@ export default function HomePageClient({
       </div>
 
       {/* ═══ Mission Section ═══ */}
-      <SectionWrapper bg="gray.50">
+      <SectionWrapper bg="bg-gray-50 dark:bg-gray-900">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           <div className="flex flex-col items-start gap-6">
             <p className="text-xs font-semibold tracking-widest uppercase text-brand-600">ABOUT US</p>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-brand-700">
               ภารกิจของเรา
             </h2>
-            <p className="text-gray-600 text-lg leading-relaxed">
+            <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
               เราเชื่อว่าการเปลี่ยนแปลงที่ยั่งยืนเกิดขึ้นได้เมื่อชุมชนมีเสียง
               มีพื้นที่ในการเล่าเรื่องราวของตัวเอง
               และมีเครื่องมือในการสื่อสารกับสังคมที่กว้างขึ้น
@@ -172,7 +172,7 @@ export default function HomePageClient({
       </SectionWrapper>
 
       {/* ═══ Latest Projects ═══ */}
-      <SectionWrapper bg="white">
+      <SectionWrapper bg="bg-white dark:bg-gray-950">
         <PageHeader
           overline="ผลงาน"
           title="โครงการล่าสุด"
@@ -187,7 +187,7 @@ export default function HomePageClient({
           </div>
         ) : (
           <div className="text-center py-8">
-            <p className="text-gray-400">ไม่พบโครงการในขณะนี้</p>
+            <p className="text-gray-400 dark:text-gray-500">ไม่พบโครงการในขณะนี้</p>
           </div>
         )}
 
@@ -233,12 +233,12 @@ export default function HomePageClient({
       </div>
 
       {/* ═══ Call to Action ═══ */}
-      <SectionWrapper bg="white" narrow>
+      <SectionWrapper bg="bg-white dark:bg-gray-950" narrow>
         <div className="flex flex-col gap-8 text-center">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-brand-700">
             ร่วมเป็นส่วนหนึ่งกับเรา
           </h2>
-          <p className="text-gray-600 text-lg leading-relaxed max-w-lg mx-auto">
+          <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed max-w-lg mx-auto">
             หากคุณมีเรื่องราวที่ต้องการเล่า หรือต้องการสนับสนุนงานของเรา
             เรายินดีต้อนรับทุกคน
           </p>

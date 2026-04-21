@@ -13,6 +13,13 @@ export const metadata: Metadata = {
       "ค้นพบโครงการและกิจกรรมต่างๆ ของมูลนิธิประชาธรรม ที่มุ่งเน้นการพัฒนาสังคมและชุมชนอย่างยั่งยืน",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "โครงการของเรา | มูลนิธิประชาธรรม",
+    description:
+      "ค้นพบโครงการและกิจกรรมต่างๆ ของมูลนิธิประชาธรรม ที่มุ่งเน้นการพัฒนาสังคมและชุมชนอย่างยั่งยืน",
+    images: ["/images/hero-1-page-1.jpg"],
+  },
 };
 
 export default async function CausesPage() {

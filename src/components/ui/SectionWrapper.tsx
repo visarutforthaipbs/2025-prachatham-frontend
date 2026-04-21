@@ -23,7 +23,7 @@ const paddingMap = {
  */
 export default function SectionWrapper({
   children,
-  bg = "bg-white",
+  bg = "bg-white dark:bg-gray-950",
   size = "md",
   narrow = false,
   id,

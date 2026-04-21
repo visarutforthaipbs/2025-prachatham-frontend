@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { wpRestRoute } from "@/lib/wp-config";
+import { rateLimit, getClientIP, rateLimitedResponse } from "@/lib/rate-limit";
 
 // WordPress API base URL
 const WORDPRESS_API_URL = wpRestRoute("").replace(/\/$/, "");
@@ -11,6 +12,11 @@ const ALLOWED_PARAMS = new Set([
 ]);
 
 export async function GET(request: NextRequest) {
+  // Rate limit: 60 requests per IP per minute
+  const ip = getClientIP(request);
+  const { limited, resetAt } = rateLimit(`projects:${ip}`, 60, 60_000);
+  if (limited) return rateLimitedResponse(resetAt);
+
   const { searchParams } = new URL(request.url);
 
   try {
@@ -26,8 +32,6 @@ export async function GET(request: NextRequest) {
 
     // Build the correct URL for the custom post type
     const url = `${WORDPRESS_API_URL}/projects&${projectSearchParams.toString()}`;
-
-    console.log("Fetching projects from custom post type:", url);
 
     const response = await fetch(url, {
       headers: {

@@ -17,9 +17,11 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleObserver = useCallback((entries: IntersectionObserverEntry[]) => {
-    const visibleEntries = entries.filter((e) => e.isIntersecting);
-    if (visibleEntries.length > 0) {
-      setActiveId(visibleEntries[0].target.id);
+    const visible = entries
+      .filter((e) => e.isIntersecting)
+      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    if (visible.length > 0) {
+      setActiveId(visible[0].target.id);
     }
   }, []);
 
@@ -37,16 +39,6 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
     return () => observer.disconnect();
   }, [headings, handleObserver]);
 
-  const handleClick = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      const y = el.getBoundingClientRect().top + window.scrollY - 80;
-      window.scrollTo({ top: y, behavior: "smooth" });
-      setActiveId(id);
-      setIsOpen(false);
-    }
-  };
-
   if (headings.length === 0) return null;
 
   const minLevel = Math.min(...headings.map((h) => h.level));
@@ -58,40 +50,41 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
         className="hidden xl:block fixed top-[100px] w-[240px] max-h-[calc(100vh-140px)] overflow-y-auto"
         style={{ left: "max(1rem, calc((100vw - 56rem) / 2 - 280px))" }}
       >
-        <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">
+        <p className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
           สารบัญ
         </p>
-        <div className="flex flex-col">
-          {headings.map((heading) => {
-            const indent = (heading.level - minLevel) * 12;
-            const isActive = activeId === heading.id;
-            return (
-              <a
-                key={heading.id}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleClick(heading.id);
-                }}
-                href={`#${heading.id}`}
-                style={{ paddingLeft: `${indent + 12}px` }}
-                className={`py-1.5 text-[13px] leading-snug border-l-2 block line-clamp-2 transition-all duration-150 hover:text-brand-600 hover:no-underline hover:bg-gray-50 ${
-                  isActive
-                    ? "text-brand-700 font-semibold border-brand-500 bg-brand-50"
-                    : "text-gray-500 font-normal border-gray-200 bg-transparent"
-                }`}
-              >
-                {heading.text}
-              </a>
-            );
-          })}
-        </div>
+        <nav aria-label="สารบัญ">
+          <div className="flex flex-col">
+            {headings.map((heading) => {
+              const indent = (heading.level - minLevel) * 12;
+              const isActive = activeId === heading.id;
+              return (
+                <a
+                  key={heading.id}
+                  href={`#${heading.id}`}
+                  style={{ paddingLeft: `${indent + 12}px` }}
+                  className={`py-1.5 text-[13px] leading-snug border-l-2 block line-clamp-2 transition-all duration-150 hover:text-brand-600 dark:hover:text-brand-400 hover:no-underline hover:bg-gray-50 dark:hover:bg-gray-800/50 ${
+                    isActive
+                      ? "text-brand-700 dark:text-brand-400 font-semibold border-brand-500 bg-brand-50 dark:bg-brand-900/20"
+                      : "text-gray-500 dark:text-gray-400 font-normal border-gray-200 dark:border-gray-700 bg-transparent"
+                  }`}
+                  aria-current={isActive ? "true" : undefined}
+                >
+                  {heading.text}
+                </a>
+              );
+            })}
+          </div>
+        </nav>
       </div>
 
       {/* Mobile floating TOC button */}
       <div className="block xl:hidden">
         <button
-          className="fixed bottom-[80px] left-5 bg-white border border-gray-200 rounded-full px-4 py-2 shadow-lg z-[999] flex items-center gap-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+          className="fixed bottom-[80px] left-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full px-4 py-2 shadow-lg z-[999] flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
           onClick={() => setIsOpen(!isOpen)}
+          aria-expanded={isOpen}
+          aria-controls="mobile-toc-panel"
         >
           <span
             className="w-4 h-4 inline-block"
@@ -110,43 +103,48 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
             <div
               className="fixed inset-0 bg-black/30 z-[1000]"
               onClick={() => setIsOpen(false)}
+              aria-hidden="true"
             />
-            <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-xl shadow-2xl z-[1001] max-h-[60vh] overflow-y-auto p-5">
+            <div
+              id="mobile-toc-panel"
+              className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-xl shadow-2xl z-[1001] max-h-[60vh] overflow-y-auto p-5"
+            >
               <div className="flex justify-between items-center mb-3">
-                <p className="text-sm font-bold uppercase tracking-wider text-gray-500">
+                <p className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                   สารบัญ
                 </p>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-1 rounded-full hover:bg-gray-100 text-gray-400 text-lg"
+                  className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-400 dark:text-gray-500 text-lg"
+                  aria-label="ปิดสารบัญ"
                 >
                   ✕
                 </button>
               </div>
-              <div className="flex flex-col">
-                {headings.map((heading) => {
-                  const indent = (heading.level - minLevel) * 12;
-                  const isActive = activeId === heading.id;
-                  return (
-                    <a
-                      key={heading.id}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleClick(heading.id);
-                      }}
-                      href={`#${heading.id}`}
-                      style={{ paddingLeft: `${indent + 12}px` }}
-                      className={`py-2 text-sm leading-snug border-l-2 block hover:text-brand-600 hover:no-underline ${
-                        isActive
-                          ? "text-brand-700 font-semibold border-brand-500"
-                          : "text-gray-600 font-normal border-gray-200"
-                      }`}
-                    >
-                      {heading.text}
-                    </a>
-                  );
-                })}
-              </div>
+              <nav aria-label="สารบัญ">
+                <div className="flex flex-col">
+                  {headings.map((heading) => {
+                    const indent = (heading.level - minLevel) * 12;
+                    const isActive = activeId === heading.id;
+                    return (
+                      <a
+                        key={heading.id}
+                        href={`#${heading.id}`}
+                        onClick={() => setIsOpen(false)}
+                        style={{ paddingLeft: `${indent + 12}px` }}
+                        className={`py-2 text-sm leading-snug border-l-2 block hover:text-brand-600 dark:hover:text-brand-400 hover:no-underline ${
+                          isActive
+                            ? "text-brand-700 dark:text-brand-400 font-semibold border-brand-500"
+                            : "text-gray-600 dark:text-gray-400 font-normal border-gray-200 dark:border-gray-700"
+                        }`}
+                        aria-current={isActive ? "true" : undefined}
+                      >
+                        {heading.text}
+                      </a>
+                    );
+                  })}
+                </div>
+              </nav>
             </div>
           </>
         )}

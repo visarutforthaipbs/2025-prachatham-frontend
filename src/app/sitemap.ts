@@ -11,6 +11,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Fetch up to 50 latest projects for dynamic sitemap routing
     const { projects } = await wordpressApi.getProjects({ perPage: 50 });
 
+    // Fetch categories for dynamic sitemap routing
+    const categories = await wordpressApi.getCategories();
+
     const postUrls: MetadataRoute.Sitemap = posts.map((post) => ({
       url: `${baseUrl}/posts/${post.slug}`,
       lastModified: new Date(post.modified || post.date),
@@ -23,6 +26,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(project.date),
       changeFrequency: "monthly",
       priority: 0.7,
+    }));
+
+    const categoryUrls: MetadataRoute.Sitemap = categories.map((cat) => ({
+      url: `${baseUrl}/category/${cat.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.6,
     }));
 
     const staticUrls: MetadataRoute.Sitemap = [
@@ -76,7 +86,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
     ];
 
-    return [...staticUrls, ...postUrls, ...projectUrls];
+    return [...staticUrls, ...postUrls, ...projectUrls, ...categoryUrls];
   } catch (error) {
     console.error("Failed to generate dynamic sitemap, returning static nodes only:", error);
     return [

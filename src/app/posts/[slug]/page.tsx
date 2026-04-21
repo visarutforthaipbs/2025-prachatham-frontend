@@ -240,11 +240,11 @@ export default async function PostPage({ params }: PostPageProps) {
 
     return (
       <>
-        {/* JSON-LD Structured Data */}
+        {/* JSON-LD Structured Data — escaped to prevent XSS */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData),
+            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
           }}
         />
         <PostViewTracker postId={post.id} />
@@ -252,7 +252,7 @@ export default async function PostPage({ params }: PostPageProps) {
         <div className="max-w-4xl mx-auto px-4 md:px-6 lg:px-8 py-8">
           <div className="flex flex-col gap-8">
             {/* Breadcrumb */}
-            <div className="flex items-center gap-2 text-sm text-gray-500">
+            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
               <Link
                 href="/"
                 className="hover:text-brand-600 transition-colors"
@@ -267,7 +267,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 บทความ
               </Link>
               <span>/</span>
-              <span className="text-gray-700 font-medium line-clamp-1">
+              <span className="text-gray-700 dark:text-gray-200 font-medium line-clamp-1">
                 {post.title.rendered}
               </span>
             </div>
@@ -292,19 +292,19 @@ export default async function PostPage({ params }: PostPageProps) {
               )}
 
               {/* Title */}
-              <h1 className="text-3xl md:text-4xl leading-tight text-gray-800 mb-6 font-bold">
+              <h1 className="text-3xl md:text-4xl leading-tight text-gray-800 dark:text-gray-100 mb-6 font-bold">
                 {post.title.rendered}
               </h1>
 
               {/* Meta Information with TTS */}
-              <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
+              <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
                 <div className="flex flex-col gap-4">
                   {/* Meta Info Row */}
                   <div className="flex justify-between flex-wrap gap-4">
                     <div className="flex gap-6 flex-wrap">
                       {/* Author */}
                       {post.acf?.authornamepost && (
-                        <div className="flex items-center gap-1.5 text-gray-600 text-sm">
+                        <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 text-sm">
                           <FaUser size={14} />
                           <span className="font-medium">
                             {post.acf.authornamepost}
@@ -323,7 +323,7 @@ export default async function PostPage({ params }: PostPageProps) {
                     </div>
                   </div>
                   {/* TTS Reader */}
-                  <hr className="border-gray-200" />
+                  <hr className="border-gray-200 dark:border-gray-700" />
                   <ReaderThaiFree
                     postKey={post.slug || String(post.id)}
                     articleSelector=".wordpress-content"
@@ -338,7 +338,7 @@ export default async function PostPage({ params }: PostPageProps) {
               dangerouslySetInnerHTML={{ __html: processedContent }}
             />
 
-            <hr className="border-gray-200" />
+            <hr className="border-gray-200 dark:border-gray-700" />
 
             {/* Small ad after article — non-intrusive */}
             <AdSense
