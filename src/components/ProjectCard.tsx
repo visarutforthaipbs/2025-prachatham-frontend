@@ -21,7 +21,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           ?.source_url || project._embedded["wp:featuredmedia"][0].source_url
       );
     }
-    return "/images/placeholder-project.jpg";
+    return "/images/prachathamweb-3.jpg";
   };
 
   const getImageAlt = () => {

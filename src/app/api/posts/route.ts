@@ -9,6 +9,7 @@ const ALLOWED_PARAMS = new Set([
   "page", "per_page", "search", "categories", "tags",
   "slug", "_embed", "_fields", "acf", "orderby", "order",
   "after", "before", "offset", "exclude", "include",
+  "categories_exclude",
 ]);
 
 export async function GET(request: NextRequest) {
@@ -52,12 +53,14 @@ export async function GET(request: NextRequest) {
 
     // Forward headers from WordPress API
     const totalPages = response.headers.get("X-WP-TotalPages") || "1";
+    const total = response.headers.get("X-WP-Total") || String(data.length);
 
     return NextResponse.json(data, {
       status: 200,
       headers: {
         "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
         "X-WP-TotalPages": totalPages,
+        "X-WP-Total": total,
       },
     });
   } catch (error) {

@@ -18,6 +18,10 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
+function isTheme(value: string | null): value is Theme {
+  return value === "light" || value === "dark" || value === "system";
+}
+
 function getSystemTheme(): "light" | "dark" {
   if (typeof window === "undefined") return "light";
   return window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -27,21 +31,21 @@ function getSystemTheme(): "light" | "dark" {
 
 export function ThemeProvider({
   children,
-  defaultTheme = "system",
+  defaultTheme = "light",
 }: {
   children: React.ReactNode;
   defaultTheme?: Theme;
 }) {
   const [theme, setThemeState] = useState<Theme>(defaultTheme);
   const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">(
-    getSystemTheme()
+    defaultTheme === "system" ? getSystemTheme() : defaultTheme
   );
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    const saved = localStorage.getItem("prachatham-theme") as Theme | null;
-    if (saved) {
+    const saved = localStorage.getItem("prachatham-theme");
+    if (isTheme(saved)) {
       setThemeState(saved);
     }
   }, []);

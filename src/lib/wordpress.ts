@@ -1,16 +1,23 @@
+import { wpRestRoute } from "./wp-config";
+
 // Types for WordPress API responses
 
-// Helper function to get the base API URL based on environment
-function getApiBaseUrl() {
+// Helper function to build API URLs based on environment.
+// Browser requests go through local proxy routes; server requests can hit
+// WordPress directly, which keeps builds from depending on a running Next app.
+function buildApiUrl(resource: string, params?: URLSearchParams) {
+  const queryString = params?.toString();
+
   if (typeof window !== "undefined") {
-    // Client-side: use relative URLs
-    return "/api";
-  } else {
-    // Server-side: use absolute URLs
-    const baseUrl =
-      process.env.NEXT_PUBLIC_SITE_URL || "https://www.prachatham.com";
-    return `${baseUrl}/api`;
+    return `/api/${resource}${queryString ? `?${queryString}` : ""}`;
   }
+
+  const url = new URL(wpRestRoute(resource));
+  params?.forEach((value, key) => {
+    url.searchParams.set(key, value);
+  });
+
+  return url.toString();
 }
 export interface WordPressPost {
   id: number;
@@ -158,8 +165,7 @@ export class WordPressAPI {
         ...(params.search && { search: params.search }),
       });
 
-      const apiUrl = getApiBaseUrl();
-      const url = `${apiUrl}/posts?${searchParams.toString()}`;
+      const url = buildApiUrl("posts", searchParams);
 
       const response = await fetch(url, {
         next: { revalidate: 60 },
@@ -189,8 +195,13 @@ export class WordPressAPI {
   // Get a single post by slug
   async getPostBySlug(slug: string): Promise<WordPressPost | null> {
     try {
-      const apiUrl = getApiBaseUrl();
-      const response = await fetch(`${apiUrl}/posts/${slug}`, {
+      const searchParams = new URLSearchParams({
+        slug,
+        _embed: "true",
+        acf: "true",
+      });
+
+      const response = await fetch(buildApiUrl("posts", searchParams), {
         next: { revalidate: 60 },
       });
 
@@ -198,10 +209,9 @@ export class WordPressAPI {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const post = await response.json();
+      const data = await response.json();
 
-      // The API route returns a single post object or null
-      return post;
+      return Array.isArray(data) ? data[0] || null : data;
     } catch (error) {
       console.error("Error fetching post by slug:", error);
       return null;
@@ -216,8 +226,7 @@ export class WordPressAPI {
         hide_empty: "true",
       });
 
-      const apiUrl = getApiBaseUrl();
-      const url = `${apiUrl}/categories?${searchParams.toString()}`;
+      const url = buildApiUrl("categories", searchParams);
 
       const response = await fetch(url, {
         next: { revalidate: 300 },
@@ -247,8 +256,7 @@ export class WordPressAPI {
         page: page.toString(),
       });
 
-      const apiUrl = getApiBaseUrl();
-      const url = `${apiUrl}/posts?${searchParams.toString()}`;
+      const url = buildApiUrl("posts", searchParams);
 
       const response = await fetch(url, {
         next: { revalidate: 60 },
@@ -281,10 +289,8 @@ export class WordPressAPI {
     try {
       // First get the category ID
       const categoriesParams = new URLSearchParams({ slug: categorySlug });
-      const apiUrl = getApiBaseUrl();
-
       const categoriesResponse = await fetch(
-        `${apiUrl}/categories?${categoriesParams.toString()}`,
+        buildApiUrl("categories", categoriesParams),
         {
           next: { revalidate: 300 },
         }
@@ -309,7 +315,7 @@ export class WordPressAPI {
       });
 
       const response = await fetch(
-        `${apiUrl}/posts?${postsParams.toString()}`,
+        buildApiUrl("posts", postsParams),
         {
           next: { revalidate: 60 },
         }
@@ -346,13 +352,12 @@ export class WordPressAPI {
     try {
       // First get the category IDs for the excluded categories
       const excludeCategoryIds: number[] = [];
-      const apiUrl = getApiBaseUrl();
 
       for (const slug of excludeCategorySlugs) {
         try {
           const categoriesParams = new URLSearchParams({ slug: slug });
           const categoriesResponse = await fetch(
-            `${apiUrl}/categories?${categoriesParams.toString()}`,
+            buildApiUrl("categories", categoriesParams),
             {
               next: { revalidate: 300 },
             }
@@ -380,7 +385,7 @@ export class WordPressAPI {
       });
 
       const response = await fetch(
-        `${apiUrl}/posts?${searchParams.toString()}`,
+        buildApiUrl("posts", searchParams),
         {
           next: { revalidate: 60 },
         }
@@ -423,8 +428,7 @@ export class WordPressAPI {
         status: "publish",
       });
 
-      const apiUrl = getApiBaseUrl();
-      const url = `${apiUrl}/projects?${searchParams.toString()}`;
+      const url = buildApiUrl("projects", searchParams);
 
       const response = await fetch(url, {
         next: { revalidate: 60 },
@@ -452,8 +456,13 @@ export class WordPressAPI {
   // Get a single project by slug
   async getProjectBySlug(slug: string): Promise<WordPressProject | null> {
     try {
-      const apiUrl = getApiBaseUrl();
-      const response = await fetch(`${apiUrl}/projects/${slug}`, {
+      const searchParams = new URLSearchParams({
+        slug,
+        _embed: "true",
+        acf: "true",
+      });
+
+      const response = await fetch(buildApiUrl("projects", searchParams), {
         next: { revalidate: 60 },
       });
 
@@ -461,10 +470,9 @@ export class WordPressAPI {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const project = await response.json();
+      const data = await response.json();
 
-      // API route returns a single project or null, not an array
-      return project;
+      return Array.isArray(data) ? data[0] || null : data;
     } catch (error) {
       console.error("Error fetching project by slug:", error);
       return null;
