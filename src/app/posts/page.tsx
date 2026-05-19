@@ -59,14 +59,18 @@ export default async function PostsPage() {
         </nav>
 
         {/* Header */}
-        <div className="text-center mb-4">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-brand-700 dark:text-brand-400 mb-3 tracking-tight">
-            บทความทั้งหมด
-          </h1>
-          <p className="text-base md:text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
-            ข่าวสารและบทความ
-          </p>
-          <div className="w-[60px] h-[3px] bg-brand-500 rounded-full mx-auto mt-4" />
+        <div className="border-b border-gray-200 dark:border-gray-800 pb-8">
+          <div className="max-w-3xl">
+            <p className="text-xs font-semibold tracking-[0.12em] uppercase text-brand-700 dark:text-brand-300 mb-3">
+              คลังบทความ
+            </p>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-950 dark:text-gray-50 leading-tight">
+              บทความทั้งหมด
+            </h1>
+            <p className="mt-4 text-base md:text-lg text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl">
+              ข่าวสาร บทความ และเรื่องเล่าจากชุมชนที่ชวนมองการเปลี่ยนแปลงผ่านสายตาของคนในพื้นที่
+            </p>
+          </div>
         </div>
 
         {error ? (

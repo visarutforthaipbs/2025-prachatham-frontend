@@ -62,10 +62,15 @@ export default function PaginatedPostGrid({
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {posts.map((post) => (
-          <PostCard key={post.id} post={post} />
+    <div className="flex flex-col gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+        {posts.map((post, index) => (
+          <div
+            key={post.id}
+            className={index === 0 ? "md:col-span-2 lg:col-span-3" : undefined}
+          >
+            <PostCard post={post} variant={index === 0 ? "featured" : "default"} />
+          </div>
         ))}
         {loadingMore &&
           Array.from({ length: 6 }).map((_, i) => (
@@ -78,7 +83,7 @@ export default function PaginatedPostGrid({
           <button
             onClick={handleLoadMore}
             disabled={loadingMore}
-            className="btn-outline-green rounded-full px-8 border-2 hover:bg-brand-50 hover:-translate-y-px transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-outline-green px-8 hover:bg-brand-50 hover:-translate-y-px transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loadingMore ? "กำลังโหลด..." : "โหลดเพิ่มเติม"}
           </button>

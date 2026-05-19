@@ -44,7 +44,7 @@ export default function SearchResults({
       {/* Results header */}
       {query && posts.length > 0 && (
         <div>
-          <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+          <p className="text-base sm:text-lg font-semibold text-gray-700 dark:text-gray-200 break-words">
             ผลการค้นหาสำหรับ &ldquo;{query}&rdquo; ({posts.length} รายการ)
           </p>
         </div>

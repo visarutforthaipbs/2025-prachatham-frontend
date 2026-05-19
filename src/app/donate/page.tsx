@@ -36,10 +36,10 @@ export default function DonatePage() {
 
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-brand-700 dark:text-brand-400 mb-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-brand-700 dark:text-brand-400 mb-4">
             ร่วมทำงานกับเรา
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
             มาร่วมเป็นส่วนหนึ่งของการสร้างการเปลี่ยนแปลงด้านสิ่งแวดล้อม
           </p>
         </div>
@@ -51,7 +51,7 @@ export default function DonatePage() {
             <div className="p-6">
               <div className="flex flex-col gap-4">
                 <div className="text-center">
-                  <h2 className="text-2xl font-bold text-brand-700 mb-2">
+                  <h2 className="text-xl sm:text-2xl font-bold text-brand-700 mb-2">
                     สนับสนุนงานของเรา
                   </h2>
                   <span className="badge-brand text-sm px-3 py-1">
@@ -87,7 +87,7 @@ export default function DonatePage() {
             <div className="p-6">
               <div className="flex flex-col gap-4">
                 <div className="text-center">
-                  <h2 className="text-2xl font-bold text-brand-700 mb-2">
+                  <h2 className="text-xl sm:text-2xl font-bold text-brand-700 mb-2">
                     ร่วมทีมกับเรา
                   </h2>
                   <span className="inline-block bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full font-medium">
@@ -117,7 +117,7 @@ export default function DonatePage() {
         {/* Our Projects */}
         <div className="card">
           <div className="p-6">
-            <h2 className="text-2xl font-bold text-brand-700 mb-6 text-center">
+            <h2 className="text-xl sm:text-2xl font-bold text-brand-700 mb-6 text-center">
               โครงการที่คุณจะได้ร่วมสนับสนุน
             </h2>
 
@@ -158,24 +158,24 @@ export default function DonatePage() {
         </div>
 
         {/* Call to Action */}
-        <div className="bg-brand-50 rounded-lg p-8 text-center border border-brand-200">
-          <h3 className="text-2xl font-bold mb-4 text-brand-700">
+        <div className="bg-brand-50 rounded-lg p-5 sm:p-8 text-center border border-brand-200">
+          <h3 className="text-xl sm:text-2xl font-bold mb-4 text-brand-700">
             พร้อมร่วมทำงานกับเราแล้วหรือยัง?
           </h3>
           <p className="text-gray-600 mb-6 max-w-2xl mx-auto leading-relaxed">
             เราเชื่อว่าการสื่อสารที่ดีสามารถสร้างการเปลี่ยนแปลงได้
             มาร่วมเป็นส่วนหนึ่งของการเปลี่ยนแปลงนี้
           </p>
-          <div className="flex items-center justify-center gap-4 flex-wrap">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
             <a
               href="mailto:info@prachatham.com"
-              className="btn-primary text-lg px-6 py-3"
+              className="btn-primary text-base sm:text-lg px-6 py-3 w-full sm:w-auto"
             >
               ติดต่อเรา
             </a>
             <Link
               href="/about"
-              className="btn-outline-green text-lg px-6 py-3"
+              className="btn-outline-green text-base sm:text-lg px-6 py-3 w-full sm:w-auto"
             >
               เรียนรู้เพิ่มเติม
             </Link>

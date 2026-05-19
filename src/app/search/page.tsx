@@ -39,23 +39,23 @@ function SearchContent() {
     <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
       <div className="flex flex-col gap-8">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-gray-400">
+        <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500">
           <Link href="/" className="hover:text-brand-600 transition-colors">
             หน้าแรก
           </Link>
-          <span className="text-gray-300">/</span>
-          <span className="text-gray-700 font-medium">
+          <span className="text-gray-300 dark:text-gray-600">/</span>
+          <span className="text-gray-700 dark:text-gray-200 font-medium">
             ผลการค้นหา
           </span>
         </div>
 
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-2xl md:text-3xl font-bold text-brand-700 mb-4">
+          <h1 className="text-2xl md:text-3xl font-bold text-brand-700 dark:text-brand-400 mb-4">
             ผลการค้นหา
           </h1>
           {query && (
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto break-words">
               ค้นหาด้วยคำว่า &ldquo;{query}&rdquo;
             </p>
           )}
@@ -73,8 +73,8 @@ function SearchContent() {
             onLoadMore={handleLoadMore}
           />
         ) : (
-          <div className="text-center py-12 bg-gray-50 rounded-md">
-            <p className="text-gray-500 text-lg">
+          <div className="text-center py-12 bg-gray-50 dark:bg-gray-900 rounded-md">
+            <p className="text-gray-500 dark:text-gray-400 text-lg">
               กรุณาพิมพ์คำที่ต้องการค้นหา
             </p>
           </div>

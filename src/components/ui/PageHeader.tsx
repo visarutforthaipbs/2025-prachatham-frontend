@@ -24,12 +24,12 @@ export default function PageHeader({
   return (
     <div className={`flex flex-col gap-3 ${alignClass} mb-8 md:mb-12`}>
       {overline && (
-        <span className="badge-brand text-sm px-4 py-1.5 rounded-full">
+        <span className="text-xs font-semibold tracking-[0.18em] uppercase text-brand-700 dark:text-brand-300">
           {overline}
         </span>
       )}
       <h1
-        className={`text-2xl md:text-3xl lg:text-4xl font-bold ${titleColor} tracking-tight`}
+        className={`text-3xl md:text-4xl lg:text-5xl font-bold ${titleColor} tracking-normal leading-none`}
       >
         {title}
       </h1>
@@ -38,7 +38,7 @@ export default function PageHeader({
           {subtitle}
         </p>
       )}
-      <div className="w-[60px] h-[3px] bg-brand-500 rounded-full mt-2" />
+      <div className="w-[72px] h-px bg-brand-500 mt-2" />
     </div>
   );
 }

@@ -339,14 +339,14 @@ export default function ReaderThaiFree({
       {/* Collapsible Settings */}
       {showSettings && (
         <div className="mt-3 pt-3 border-t border-gray-200" role="group" aria-label="ตั้งค่าการอ่านออกเสียง">
-          <div className="flex flex-wrap items-center gap-4 text-sm">
-            <div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div className="min-w-0">
               <label htmlFor="tts-rate" className="mb-1 font-medium text-gray-700 block">ความเร็ว</label>
               <select
                 id="tts-rate"
                 value={rate}
                 onChange={(e) => changeRate(parseFloat(e.target.value))}
-                className="w-[120px] text-sm border border-gray-300 rounded-lg px-2 py-1 bg-white focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="w-full sm:w-[120px] text-sm border border-gray-300 rounded-lg px-2 py-1 bg-white focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
               >
                 <option value={0.75}>ช้า (0.75x)</option>
                 <option value={1}>ปกติ (1.0x)</option>
@@ -355,7 +355,7 @@ export default function ReaderThaiFree({
               </select>
             </div>
 
-            <div>
+            <div className="min-w-0">
               <label htmlFor="tts-voice" className="mb-1 font-medium text-gray-700 block">เสียง</label>
               <select
                 id="tts-voice"
@@ -365,7 +365,7 @@ export default function ReaderThaiFree({
                     voices.find((v) => v.name === e.target.value) || null
                   )
                 }
-                className="w-[200px] text-sm border border-gray-300 rounded-lg px-2 py-1 bg-white focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="w-full sm:w-[200px] text-sm border border-gray-300 rounded-lg px-2 py-1 bg-white focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
               >
                 {(hasThai
                   ? voices.filter((v) => v.lang?.toLowerCase().startsWith("th"))

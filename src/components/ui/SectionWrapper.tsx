@@ -29,7 +29,7 @@ export default function SectionWrapper({
   id,
 }: SectionWrapperProps) {
   return (
-    <section className={`${bg} ${paddingMap[size]}`} id={id}>
+    <section className={`${bg} ${paddingMap[size]} border-t border-black/[0.04] dark:border-white/[0.06]`} id={id}>
       <div className={`mx-auto px-4 sm:px-6 lg:px-8 ${narrow ? "max-w-4xl" : "max-w-7xl"}`}>
         {children}
       </div>

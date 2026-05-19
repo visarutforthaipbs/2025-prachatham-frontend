@@ -47,10 +47,10 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
     <>
       {/* Desktop sidebar */}
       <div
-        className="hidden xl:block fixed top-[100px] w-[240px] max-h-[calc(100vh-140px)] overflow-y-auto"
-        style={{ left: "max(1rem, calc((100vw - 56rem) / 2 - 280px))" }}
+        className="hidden 2xl:block fixed top-[104px] w-[240px] max-h-[calc(100vh-140px)] overflow-y-auto border-l border-gray-200 dark:border-gray-800 pl-4"
+        style={{ right: "max(1rem, calc((100vw - 72rem) / 2 - 280px))" }}
       >
-        <p className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 mb-3">
           สารบัญ
         </p>
         <nav aria-label="สารบัญ">
@@ -63,10 +63,10 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
                   key={heading.id}
                   href={`#${heading.id}`}
                   style={{ paddingLeft: `${indent + 12}px` }}
-                  className={`py-1.5 text-[13px] leading-snug border-l-2 block line-clamp-2 transition-all duration-150 hover:text-brand-600 dark:hover:text-brand-400 hover:no-underline hover:bg-gray-50 dark:hover:bg-gray-800/50 ${
+                  className={`py-1.5 text-[13px] leading-snug border-l block line-clamp-2 transition-all duration-150 hover:text-brand-700 dark:hover:text-brand-300 hover:no-underline ${
                     isActive
-                      ? "text-brand-700 dark:text-brand-400 font-semibold border-brand-500 bg-brand-50 dark:bg-brand-900/20"
-                      : "text-gray-500 dark:text-gray-400 font-normal border-gray-200 dark:border-gray-700 bg-transparent"
+                      ? "text-brand-700 dark:text-brand-300 font-semibold border-brand-500"
+                      : "text-gray-500 dark:text-gray-400 font-normal border-transparent bg-transparent"
                   }`}
                   aria-current={isActive ? "true" : undefined}
                 >
@@ -79,7 +79,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
       </div>
 
       {/* Mobile floating TOC button */}
-      <div className="block xl:hidden">
+      <div className="block 2xl:hidden">
         <button
           className="fixed bottom-[80px] left-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full px-4 py-2 shadow-lg z-[999] flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
           onClick={() => setIsOpen(!isOpen)}

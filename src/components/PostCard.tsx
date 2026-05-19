@@ -14,6 +14,7 @@ const BLUR_DATA_URL =
 interface PostCardProps {
   post: WordPressPost;
   highlightQuery?: string;
+  variant?: "default" | "featured";
 }
 
 interface Category {
@@ -23,16 +24,31 @@ interface Category {
   taxonomy: string;
 }
 
-export default function PostCard({ post, highlightQuery }: PostCardProps) {
+export default function PostCard({
+  post,
+  highlightQuery,
+  variant = "default",
+}: PostCardProps) {
   const featuredImage = post._embedded?.["wp:featuredmedia"]?.[0];
   const categories = (post._embedded?.["wp:term"]?.[0] || []) as Category[];
+  const isFeatured = variant === "featured";
+  const hasSplitLayout = isFeatured && Boolean(featuredImage);
 
   return (
-    <article className="card h-full flex flex-col bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+    <article
+      className={`card group h-full bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 ${
+        hasSplitLayout ? "flex flex-col md:grid md:grid-cols-[1.15fr_0.85fr]" : "flex flex-col"
+      }`}
+    >
       {/* Featured Image */}
       {featuredImage && (
-        <Link href={`/posts/${post.slug}`} className="hover:no-underline" tabIndex={-1} aria-hidden="true">
-          <div className="relative h-[220px] overflow-hidden">
+        <Link
+          href={`/posts/${post.slug}`}
+          className="block h-full hover:no-underline"
+          tabIndex={-1}
+          aria-hidden="true"
+        >
+          <div className={`relative overflow-hidden bg-gray-100 dark:bg-gray-800 ${isFeatured ? "h-40 sm:h-52 md:h-full md:min-h-[320px]" : "h-40 sm:h-auto sm:aspect-[16/10]"}`}>
             <NextImage
               src={featuredImage.source_url}
               alt={featuredImage.alt_text || post.title.rendered}
@@ -43,6 +59,7 @@ export default function PostCard({ post, highlightQuery }: PostCardProps) {
                 objectFit: "cover",
                 transition: "transform 0.4s ease",
               }}
+              className="group-hover:scale-[1.03]"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
             {/* Subtle gradient for readability */}
@@ -51,10 +68,10 @@ export default function PostCard({ post, highlightQuery }: PostCardProps) {
         </Link>
       )}
 
-      <div className="flex-1 flex flex-col p-5">
+      <div className={`flex-1 flex flex-col ${isFeatured ? "p-5 md:p-8" : "p-5"}`}>
         {/* Categories */}
         {categories.length > 0 && (
-          <div className="flex items-center mb-3 flex-wrap gap-1.5">
+          <div className="flex items-center mb-4 flex-wrap gap-1.5">
             {categories.slice(0, 2).map((category) => (
               <Link
                 key={category.id}
@@ -74,18 +91,18 @@ export default function PostCard({ post, highlightQuery }: PostCardProps) {
           href={`/posts/${post.slug}`}
           className="hover:no-underline flex-1"
         >
-          <h3 className="text-3xl font-bold text-gray-800 dark:text-gray-100 hover:text-brand-600 dark:hover:text-brand-400 transition-colors duration-200 mb-3 line-clamp-3 leading-tight">
+          <h3 className={`${isFeatured ? "text-[1.7rem] md:text-4xl" : "text-[1.7rem] md:text-[1.85rem]"} font-bold text-gray-900 dark:text-gray-100 group-hover:text-brand-700 dark:group-hover:text-brand-300 transition-colors duration-200 mb-3 line-clamp-3 leading-tight`}>
             <Highlight text={post.title.rendered} query={highlightQuery || ""} />
           </h3>
         </Link>
 
         {/* Excerpt */}
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-1 line-clamp-2">
+        <p className={`${isFeatured ? "text-sm line-clamp-2 md:text-base md:line-clamp-3" : "text-sm line-clamp-2"} text-gray-600 dark:text-gray-400 mb-5 flex-1 leading-relaxed`}>
           <Highlight text={getExcerpt(post.excerpt.rendered, 120)} query={highlightQuery || ""} />
         </p>
 
         {/* Date, Author & Read More */}
-        <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-100 dark:border-gray-700">
+        <div className="flex justify-between items-end gap-4 mt-auto pt-4 border-t border-gray-100 dark:border-gray-800">
           <div className="flex flex-col text-xs text-gray-400 dark:text-gray-500 gap-1">
             <span>{formatThaiDate(post.date)}</span>
             <div className="flex items-center gap-3">

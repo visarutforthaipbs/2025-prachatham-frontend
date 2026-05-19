@@ -29,7 +29,7 @@ export default function HomePageClient({
   return (
     <div>
       {/* ═══ Hero Section ═══ */}
-      <div className="min-h-[85vh] md:min-h-screen relative flex items-center justify-center overflow-hidden">
+      <div className="min-h-[78vh] md:min-h-[86vh] relative flex items-center overflow-hidden">
         {/* Background image */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -46,38 +46,37 @@ export default function HomePageClient({
           className="absolute inset-0 z-[1]"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(4,75,65,0.82), rgba(3,61,53,0.88))",
+              "linear-gradient(90deg, rgba(1,33,29,0.88) 0%, rgba(4,75,65,0.72) 48%, rgba(4,75,65,0.28) 100%)",
           }}
         />
 
-        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 relative z-[2] text-center">
-          <div className="flex flex-col gap-8 max-w-4xl mx-auto text-white">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 relative z-[2] w-full">
+          <div className="flex flex-col gap-8 max-w-3xl text-white">
             {/* Overline */}
-            <span className="inline-block self-center bg-white/20 backdrop-blur-sm text-white px-5 py-2 rounded-full text-sm font-semibold tracking-widest">
+            <span className="inline-block self-start border-l-2 border-accent-300 pl-4 text-white/90 text-sm font-semibold tracking-normal">
               มูลนิธิสื่อประชาธรรม
             </span>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-              เราสนับสนุนการเปลี่ยนแปลง
-              <br />
-              ผ่านสื่อชุมชน
+            <h1 className="text-[clamp(1.5rem,7.4vw,4.5rem)] font-bold leading-[1.22] overflow-visible">
+              <span className="block whitespace-nowrap">เราสนับสนุนการเปลี่ยนแปลง</span>
+              <span className="block whitespace-nowrap">ผ่านสื่อชุมชน</span>
             </h1>
 
-            <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl text-white/88 max-w-2xl">
               มูลนิธิประชาธรรม เป็นองค์กรที่มุ่งหวังสร้างการเปลี่ยนแปลงเชิงบวก
               ผ่านการเสริมสร้างพลังของชุมชนในการสื่อสารและเล่าเรื่องราวของตัวเอง
             </p>
 
-            <div className="flex items-center gap-4 flex-wrap justify-center pt-2">
+            <div className="flex items-center gap-4 flex-wrap pt-2">
               <Link
                 href="/about"
-                className="btn-secondary bg-white border-none hover:bg-gray-50 hover:-translate-y-0.5 hover:shadow-xl transition-all text-lg px-8 py-3 rounded-full"
+                className="btn-secondary bg-white border-none hover:bg-gray-50 hover:-translate-y-0.5 hover:shadow-xl transition-all text-lg px-8 py-3"
               >
                 เรียนรู้เพิ่มเติม
               </Link>
               <Link
                 href="/causes"
-                className="text-white border border-white/50 rounded-full px-8 py-3 text-lg hover:bg-white/20 hover:border-white hover:-translate-y-0.5 transition-all"
+                className="text-white border border-white/50 rounded-md px-8 py-3 text-lg hover:bg-white/15 hover:border-white hover:-translate-y-0.5 transition-all"
               >
                 ดูโครงการ
               </Link>
@@ -85,19 +84,10 @@ export default function HomePageClient({
           </div>
         </div>
 
-        {/* Scroll indicator */}
-        <div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[2]"
-          aria-hidden="true"
-        >
-          <div className="w-7 h-11 border-2 border-white/50 rounded-full flex justify-center pt-2">
-            <div className="w-[3px] h-2.5 bg-white rounded-full animate-bounce" />
-          </div>
-        </div>
       </div>
 
       {/* ═══ Featured News ═══ */}
-      <SectionWrapper bg="bg-white dark:bg-gray-950">
+      <SectionWrapper bg="bg-[#fbfcf7] dark:bg-gray-950">
         <PageHeader
           overline="ข่าวสาร"
           title="ข่าวเด่นประจำสัปดาห์"
@@ -105,7 +95,7 @@ export default function HomePageClient({
         />
 
         {featuredPosts && featuredPosts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 mb-12">
             {featuredPosts.map((post) => (
               <PostCard key={post.id} post={post} />
             ))}
@@ -119,7 +109,7 @@ export default function HomePageClient({
         <div className="flex justify-center">
           <Link
             href="/posts"
-            className="btn-secondary rounded-full px-8 py-3 text-lg inline-flex items-center gap-2"
+            className="btn-secondary px-8 py-3 text-lg inline-flex items-center gap-2"
           >
             ดูข่าวทั้งหมด
             <FaArrowRight className="w-3 h-3" />
@@ -137,7 +127,7 @@ export default function HomePageClient({
       </div>
 
       {/* ═══ Mission Section ═══ */}
-      <SectionWrapper bg="bg-gray-50 dark:bg-gray-900">
+      <SectionWrapper bg="bg-white dark:bg-gray-900">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           <div className="flex flex-col items-start gap-6">
             <p className="text-xs font-semibold tracking-widest uppercase text-brand-600">ABOUT US</p>
@@ -154,7 +144,7 @@ export default function HomePageClient({
             </Link>
           </div>
 
-          <div className="rounded-2xl overflow-hidden shadow-xl">
+          <div className="rounded-lg overflow-hidden shadow-xl">
             <Image
               src="/images/about-1.jpg"
               alt="ภารกิจของมูลนิธิประชาธรรม"
@@ -172,7 +162,7 @@ export default function HomePageClient({
       </SectionWrapper>
 
       {/* ═══ Latest Projects ═══ */}
-      <SectionWrapper bg="bg-white dark:bg-gray-950">
+      <SectionWrapper bg="bg-[#fbfcf7] dark:bg-gray-950">
         <PageHeader
           overline="ผลงาน"
           title="โครงการล่าสุด"
@@ -180,7 +170,7 @@ export default function HomePageClient({
         />
 
         {latestProjects && latestProjects.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 mb-12">
             {latestProjects.slice(0, 3).map((project) => (
               <ProjectCard key={project.id} project={project} />
             ))}
@@ -194,7 +184,7 @@ export default function HomePageClient({
         <div className="flex justify-center">
           <Link
             href="/causes"
-            className="btn-secondary rounded-full px-8 py-3 text-lg inline-flex items-center gap-2"
+            className="btn-secondary px-8 py-3 text-lg inline-flex items-center gap-2"
           >
             ดูโครงการทั้งหมด
             <FaArrowRight className="w-3 h-3" />
@@ -210,10 +200,6 @@ export default function HomePageClient({
             "linear-gradient(135deg, var(--color-brand-600), var(--color-brand-700), var(--color-gray-900))",
         }}
       >
-        {/* Decorative circles */}
-        <div className="absolute -top-20 -right-20 w-[300px] h-[300px] rounded-full bg-white/5" />
-        <div className="absolute -bottom-15 -left-15 w-[200px] h-[200px] rounded-full bg-white/5" />
-
         <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 relative z-[1]">
           <div className="flex flex-col gap-4 text-center mb-12">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold">

@@ -14,7 +14,7 @@ export default function LoadingSkeleton({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
       {Array.from({ length: count }).map((_, index) =>
         type === "project" ? (
           <ProjectCardSkeleton key={`skeleton-${index}`} />
@@ -28,9 +28,9 @@ export default function LoadingSkeleton({
 
 function PostCardSkeleton() {
   return (
-    <div className="max-w-sm overflow-hidden rounded-lg shadow-sm bg-white dark:bg-gray-800 h-full flex flex-col">
+    <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm bg-white dark:bg-gray-900 h-full flex flex-col">
       {/* Image Skeleton */}
-      <div className="skeleton h-[200px]" />
+      <div className="skeleton aspect-[16/10]" />
 
       <div className="flex-1 flex flex-col p-6">
         {/* Category Skeleton */}
@@ -65,8 +65,8 @@ function PostCardSkeleton() {
 
 function ProjectCardSkeleton() {
   return (
-    <div className="overflow-hidden rounded-lg shadow-sm bg-white dark:bg-gray-800 h-full flex flex-col">
-      <div className="skeleton h-[200px]" />
+    <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm bg-white dark:bg-gray-900 h-full flex flex-col">
+      <div className="skeleton aspect-[16/10]" />
       <div className="p-6">
         <div className="skeleton h-6 w-4/5 mb-3" />
         <div className="flex flex-col items-start gap-2">

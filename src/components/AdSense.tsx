@@ -37,35 +37,58 @@ export default function AdSense({
   }, [slot]);
 
   useEffect(() => {
-    if (!isAdPushed.current && adRef.current) {
-      // Use rAF instead of setTimeout for faster, smoother initialization
-      const raf = requestAnimationFrame(() => {
-        const container = adRef.current?.parentElement;
-        if (!container || container.clientWidth < 250) {
-          // Container too narrow for any ad — skip to avoid AdSense error
-          return;
-        }
-        try {
-          (window.adsbygoogle = window.adsbygoogle || []).push({});
-          isAdPushed.current = true;
-        } catch {
-          // AdSense may not be loaded yet or ad blocker is active
-        }
-      });
-      return () => cancelAnimationFrame(raf);
-    }
+    const adElement = adRef.current;
+    const container = adElement?.parentElement;
+    if (!adElement || !container || isAdPushed.current) return;
+
+    let raf = 0;
+    let timeout: ReturnType<typeof setTimeout> | null = null;
+
+    const pushAd = () => {
+      if (isAdPushed.current) return;
+
+      const containerWidth = container.getBoundingClientRect().width;
+      const adWidth = adElement.getBoundingClientRect().width;
+      const availableWidth = Math.max(containerWidth, adWidth);
+
+      if (availableWidth < 250) return;
+
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        isAdPushed.current = true;
+      } catch {
+        // AdSense may not be loaded yet or ad blocker is active
+      }
+    };
+
+    const schedulePush = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(pushAd);
+    };
+
+    const observer = new ResizeObserver(schedulePush);
+    observer.observe(container);
+    observer.observe(adElement);
+    schedulePush();
+    timeout = setTimeout(schedulePush, 500);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      if (timeout) clearTimeout(timeout);
+      observer.disconnect();
+    };
   }, [slot]);
 
   const publisherId = process.env.NEXT_PUBLIC_ADSENSE_ID;
 
   // Don't render anything if no publisher ID is configured
-  if (!publisherId) return null;
+  if (!publisherId || !slot) return null;
 
   return (
     <aside
       aria-label="โฆษณา"
-      className="ad-container my-4 mx-auto text-center opacity-85 hover:opacity-100 transition-opacity duration-200 print:hidden overflow-hidden"
-      style={{ maxHeight, minHeight: maxHeight, minWidth: "250px" }}
+      className="ad-container my-4 mx-auto w-full text-center opacity-85 hover:opacity-100 transition-opacity duration-200 print:hidden overflow-hidden"
+      style={{ maxHeight, minHeight: maxHeight }}
     >
       <span className="text-[10px] text-gray-400 mb-1 block tracking-wider uppercase">
         โฆษณา
@@ -75,6 +98,7 @@ export default function AdSense({
         className="adsbygoogle"
         style={{
           display: "block",
+          width: "100%",
           textAlign: layout === "in-article" ? "center" as const : undefined,
           maxHeight,
           overflow: "hidden",

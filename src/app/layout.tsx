@@ -113,7 +113,7 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <Providers>
           <SkipLink />
-          <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col">
+          <div className="min-h-screen bg-[#f7f8f3] dark:bg-gray-950 flex flex-col">
             <Navigation />
             <main id="main-content" className="flex-1" tabIndex={-1}>
               <ErrorBoundaryWrapper>

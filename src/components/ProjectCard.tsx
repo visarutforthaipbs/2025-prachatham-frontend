@@ -33,13 +33,13 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   };
 
   return (
-    <article className="card h-full bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+    <article className="card h-full bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 group">
       <Link
         href={`/projects/${project.slug}`}
         className="hover:no-underline h-full flex flex-col group"
       >
         {/* Project Image */}
-        <div className="relative h-[220px] overflow-hidden">
+        <div className="relative aspect-[16/10] overflow-hidden bg-gray-100 dark:bg-gray-800">
           <Image
             src={getImageUrl()}
             alt={getImageAlt()}
@@ -50,13 +50,14 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               objectFit: "cover",
               transition: "transform 0.4s ease",
             }}
+            className="group-hover:scale-[1.03]"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
 
           {/* Status Badge */}
           {project.acf?.projectStatus && (
             <span
-              className={`absolute top-3 right-3 text-xs px-3 py-1 rounded-full font-medium ${
+              className={`absolute top-3 right-3 text-xs px-3 py-1 rounded-md font-medium ${
                 project.acf.projectStatus === "active"
                   ? "badge-brand"
                   : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
@@ -69,7 +70,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
         {/* Project Content */}
         <div className="p-5 flex-grow flex flex-col">
-          <h3 className="text-3xl font-bold text-brand-700 dark:text-brand-400 mb-3 group-hover:text-brand-600 dark:group-hover:text-brand-300 line-clamp-2 transition-colors duration-200 leading-tight">
+          <h3 className="text-[1.7rem] md:text-[1.85rem] font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:text-brand-700 dark:group-hover:text-brand-300 line-clamp-2 transition-colors duration-200 leading-tight">
             {project.title.rendered}
           </h3>
 
@@ -90,7 +91,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           </div>
 
           {/* Read More */}
-          <div className="flex items-center gap-1 mt-auto pt-4 border-t border-gray-100 dark:border-gray-700 text-brand-600 dark:text-brand-400 text-sm font-medium hover:gap-2 transition-all duration-200">
+          <div className="flex items-center gap-1 mt-auto pt-4 border-t border-gray-100 dark:border-gray-800 text-brand-700 dark:text-brand-300 text-sm font-medium hover:gap-2 transition-all duration-200">
             อ่านเพิ่มเติม
             <FaArrowRight className="w-2.5 h-2.5" />
           </div>

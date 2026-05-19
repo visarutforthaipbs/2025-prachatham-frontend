@@ -94,12 +94,12 @@ export default function ContactPageClient() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 dark:text-gray-400">
+              <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500">
                 <Link href="/" className="hover:text-brand-600 transition-colors">
                   หน้าแรก
                 </Link>
-                <span className="text-gray-300 dark:text-gray-600 dark:text-gray-400">/</span>
-                <span className="text-gray-700 font-medium">
+                <span className="text-gray-300 dark:text-gray-600">/</span>
+                <span className="text-gray-700 dark:text-gray-200 font-medium">
                   ช่องทางติดต่อเรา
                 </span>
               </div>
@@ -112,10 +112,10 @@ export default function ContactPageClient() {
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               <div className="text-center">
-                <h1 className="text-2xl md:text-3xl font-bold text-brand-700 mb-4">
+                <h1 className="text-2xl md:text-3xl font-bold text-brand-700 dark:text-brand-400 mb-4">
                   ช่องทางติดต่อเรา
                 </h1>
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
                   เรายินดีรับฟังความคิดเห็น คำแนะนำ และข้อเสนอแนะจากทุกท่าน
                 </p>
               </div>
@@ -128,10 +128,7 @@ export default function ContactPageClient() {
             >
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Contact Information */}
-                <motion.div
-                  whileHover={{ y: -5, scale: 1.02 }}
-                  transition={{ duration: 0.3 }}
-                >
+                <motion.div>
                   <div className="card h-full">
                     <div className="p-6">
                       <h2 className="text-xl md:text-2xl font-bold text-brand-700 mb-6">
@@ -146,7 +143,7 @@ export default function ContactPageClient() {
                               ที่อยู่
                             </span>
                           </div>
-                          <p className="text-gray-600 leading-relaxed">
+                          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
                             77/1 หมู่ 5 ต.สุเทพ อ.เมืองจ.เชียงใหม่ 50200
                           </p>
                         </div>
@@ -158,8 +155,8 @@ export default function ContactPageClient() {
                               ติดตามเราได้ที่
                             </span>
                           </div>
-                          <div className="grid grid-cols-2 gap-3">
-                            <motion.div whileHover={{ scale: 1.1 }}>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <motion.div>
                               <a
                                 href="https://www.facebook.com/prachatham"
                                 target="_blank"
@@ -170,7 +167,7 @@ export default function ContactPageClient() {
                                 Facebook
                               </a>
                             </motion.div>
-                            <motion.div whileHover={{ scale: 1.1 }}>
+                            <motion.div>
                               <a
                                 href="https://twitter.com/PrachathamF"
                                 target="_blank"
@@ -181,7 +178,7 @@ export default function ContactPageClient() {
                                 Twitter
                               </a>
                             </motion.div>
-                            <motion.div whileHover={{ scale: 1.1 }}>
+                            <motion.div>
                               <a
                                 href="https://www.instagram.com/prachathammedia/"
                                 target="_blank"
@@ -192,7 +189,7 @@ export default function ContactPageClient() {
                                 Instagram
                               </a>
                             </motion.div>
-                            <motion.div whileHover={{ scale: 1.1 }}>
+                            <motion.div>
                               <a
                                 href="https://www.tiktok.com/@prachathammedia"
                                 target="_blank"
@@ -203,7 +200,7 @@ export default function ContactPageClient() {
                                 TikTok
                               </a>
                             </motion.div>
-                            <motion.div whileHover={{ scale: 1.1 }}>
+                            <motion.div>
                               <a
                                 href="https://www.youtube.com/@pnnontv"
                                 target="_blank"
@@ -222,10 +219,7 @@ export default function ContactPageClient() {
                 </motion.div>
 
                 {/* Contact Form */}
-                <motion.div
-                  whileHover={{ y: -5, scale: 1.02 }}
-                  transition={{ duration: 0.3 }}
-                >
+                <motion.div>
                   <div className="card h-full">
                     <div className="p-6">
                       <h2 className="text-xl md:text-2xl font-bold text-brand-700 mb-6">
@@ -235,13 +229,13 @@ export default function ContactPageClient() {
                       <div className="flex flex-col gap-6 py-8">
                         <div className="text-center">
                           <FaEnvelope className="text-brand-600 text-5xl mx-auto mb-4" />
-                          <p className="text-lg text-gray-700 font-semibold mb-2">
+                          <p className="text-lg text-gray-700 dark:text-gray-200 font-semibold mb-2">
                             ติดต่อเราผ่านอีเมล
                           </p>
-                          <motion.div whileHover={{ scale: 1.05 }}>
+                          <motion.div>
                             <a
                               href="mailto:pnn.thailand@gmail.com"
-                              className="text-xl text-brand-600 font-bold hover:text-brand-700 hover:underline"
+                              className="text-base sm:text-xl text-brand-600 font-bold hover:text-brand-700 hover:underline break-all"
                             >
                               pnn.thailand@gmail.com
                             </a>
@@ -260,7 +254,7 @@ export default function ContactPageClient() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <motion.div whileHover={{ y: -3 }} transition={{ duration: 0.3 }}>
+              <motion.div>
                 <div className="card">
                   <div className="p-6">
                     <h2 className="text-xl md:text-2xl font-bold text-brand-700 mb-6 text-center">
@@ -268,10 +262,7 @@ export default function ContactPageClient() {
                     </h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
+                      <motion.div>
                         <Link
                           href="/about"
                           className="btn-outline-green w-full text-center block py-4"
@@ -280,10 +271,7 @@ export default function ContactPageClient() {
                         </Link>
                       </motion.div>
 
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
+                      <motion.div>
                         <Link
                           href="/causes"
                           className="btn-outline-green w-full text-center block py-4"
@@ -292,10 +280,7 @@ export default function ContactPageClient() {
                         </Link>
                       </motion.div>
 
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
+                      <motion.div>
                         <Link
                           href="/posts"
                           className="btn-outline-green w-full text-center block py-4"
@@ -315,11 +300,8 @@ export default function ContactPageClient() {
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.5 }}
             >
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3 }}
-              >
-                <div className="bg-brand-50 rounded-lg p-8 text-center border border-brand-200">
+              <motion.div>
+                <div className="bg-brand-50 rounded-lg p-5 sm:p-8 text-center border border-brand-200">
                   <h3 className="text-xl md:text-2xl font-bold text-brand-700 mb-4">
                     เราสนับสนุนให้ผู้คนบอกเล่าเรื่องด้วยตัวเอง
                   </h3>

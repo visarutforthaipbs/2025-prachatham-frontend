@@ -249,10 +249,10 @@ export default async function PostPage({ params }: PostPageProps) {
         />
         <PostViewTracker postId={post.id} />
 
-        <div className="max-w-4xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+        <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12">
           <div className="flex flex-col gap-8">
             {/* Breadcrumb */}
-            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 max-w-3xl mx-auto w-full">
               <Link
                 href="/"
                 className="hover:text-brand-600 transition-colors"
@@ -273,7 +273,7 @@ export default async function PostPage({ params }: PostPageProps) {
             </div>
 
             {/* Article Header */}
-            <div>
+            <header className="max-w-3xl mx-auto w-full border-b border-gray-200 dark:border-gray-800 pb-8">
               {/* Categories */}
               {categories.length > 0 && (
                 <div className="flex flex-wrap items-center gap-2 mb-4">
@@ -283,7 +283,7 @@ export default async function PostPage({ params }: PostPageProps) {
                       key={category.id}
                       href={`/category/${category.slug}`}
                     >
-                      <span className="badge-brand text-xs px-2 py-1 rounded-full hover:bg-brand-200 hover:scale-105 transition-all duration-200">
+                      <span className="badge-brand text-xs px-2 py-1 hover:bg-brand-200 transition-all duration-200">
                         {category.name}
                       </span>
                     </Link>
@@ -292,12 +292,12 @@ export default async function PostPage({ params }: PostPageProps) {
               )}
 
               {/* Title */}
-              <h1 className="text-3xl md:text-4xl leading-tight text-gray-800 dark:text-gray-100 mb-6 font-bold">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight text-gray-950 dark:text-gray-50 mb-6 font-bold">
                 {post.title.rendered}
               </h1>
 
               {/* Meta Information with TTS */}
-              <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
+              <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-5">
                 <div className="flex flex-col gap-4">
                   {/* Meta Info Row */}
                   <div className="flex justify-between flex-wrap gap-4">
@@ -311,11 +311,11 @@ export default async function PostPage({ params }: PostPageProps) {
                           </span>
                         </div>
                       )}
-                      <div className="flex items-center gap-1.5 text-gray-600 text-sm">
+                      <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 text-sm">
                         <FaCalendarAlt size={14} />
                         <span>{formatThaiDate(post.date)}</span>
                       </div>
-                      <div className="flex items-center gap-1.5 text-gray-600 text-sm">
+                      <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 text-sm">
                         <FaClock size={14} />
                         <span>อ่าน {readingTime} นาที</span>
                       </div>
@@ -330,26 +330,28 @@ export default async function PostPage({ params }: PostPageProps) {
                   />
                 </div>
               </div>
-            </div>
+            </header>
 
             {/* Content */}
-            <div
-              className="wordpress-content"
-              dangerouslySetInnerHTML={{ __html: processedContent }}
-            />
+            <article className="max-w-3xl mx-auto w-full">
+              <div
+                className="wordpress-content"
+                dangerouslySetInnerHTML={{ __html: processedContent }}
+              />
 
-            <hr className="border-gray-200 dark:border-gray-700" />
+              <hr className="border-gray-200 dark:border-gray-700" />
 
-            {/* Small ad after article — non-intrusive */}
-            <AdSense
-              slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE || ""}
-              format="fluid"
-              layout="in-article"
-              maxHeight="250px"
-            />
+              {/* Small ad after article — non-intrusive */}
+              <AdSense
+                slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE || ""}
+                format="fluid"
+                layout="in-article"
+                maxHeight="250px"
+              />
 
-            {/* Social Share */}
-            <SocialShare url={currentUrl} title={post.title.rendered} />
+              {/* Social Share */}
+              <SocialShare url={currentUrl} title={post.title.rendered} />
+            </article>
           </div>
 
         </div>

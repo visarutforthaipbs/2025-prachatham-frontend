@@ -54,7 +54,7 @@ export default async function PublicationsPage() {
           <h1 className="text-2xl md:text-3xl font-bold text-brand-700 dark:text-brand-400 mb-4">
             สิ่งพิมพ์
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
             รวบรวมสิ่งพิมพ์ คู่มือ และเอกสารต่างๆ ของประชาธรรม
           </p>
         </div>
@@ -83,11 +83,11 @@ export default async function PublicationsPage() {
             หากคุณต้องการสิ่งพิมพ์หรือเอกสารเพิ่มเติม
             กรุณาติดต่อเราผ่านช่องทางต่างๆ
           </p>
-          <div className="flex justify-center gap-4">
-            <Link href="/contact" className="btn-primary">
+          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
+            <Link href="/contact" className="btn-primary w-full sm:w-auto">
               ติดต่อเรา
             </Link>
-            <Link href="/posts" className="btn-outline-green">
+            <Link href="/posts" className="btn-outline-green w-full sm:w-auto">
               ดูข่าวสารทั้งหมด
             </Link>
           </div>

@@ -86,7 +86,7 @@ export default function Navigation() {
       {/* Top accent bar */}
       <div className="h-[3px] bg-gradient-to-r from-brand-600 via-brand-500 to-accent-500" />
 
-      <div className="flex text-gray-700 dark:text-gray-200 min-h-16 py-2 px-4 border-b border-gray-100 dark:border-gray-800 items-center shadow-sm backdrop-blur-[12px] backdrop-saturate-[180%] bg-white/92 dark:bg-gray-900/92">
+      <div className="flex text-gray-700 dark:text-gray-200 min-h-16 py-2 px-4 border-b border-black/5 dark:border-white/10 items-center shadow-sm backdrop-blur-[14px] backdrop-saturate-[160%] bg-[#fbfcf7]/94 dark:bg-gray-950/92">
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 w-full">
           <div className="flex items-center justify-between">
             {/* Mobile menu button */}
@@ -96,7 +96,7 @@ export default function Navigation() {
                 aria-label={isOpen ? "ปิดเมนู" : "เปิดเมนู"}
                 aria-expanded={isOpen}
                 aria-controls="mobile-nav"
-                className="p-2 rounded-md hover:bg-gray-100 transition-colors"
+                className="p-2 rounded-md hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   {isOpen ? (
@@ -134,8 +134,8 @@ export default function Navigation() {
                         href={navItem.href || "#"}
                         className={`px-4 py-2 text-sm font-medium rounded-md relative hover:no-underline transition-all duration-200 ${
                           active
-                            ? "text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-900/30"
-                            : "text-gray-600 dark:text-gray-300 hover:text-brand-700 dark:hover:text-brand-300 hover:bg-brand-50 dark:hover:bg-brand-900/20"
+                            ? "text-brand-800 dark:text-brand-200 bg-brand-50 dark:bg-brand-900/40"
+                            : "text-gray-600 dark:text-gray-300 hover:text-brand-800 dark:hover:text-brand-200 hover:bg-black/5 dark:hover:bg-white/10"
                         }`}
                         aria-current={active ? "page" : undefined}
                       >
@@ -179,7 +179,7 @@ export default function Navigation() {
       <div
         ref={mobileNavRef}
         id="mobile-nav"
-        className={`md:hidden bg-white border-b border-gray-100 shadow-lg overflow-hidden transition-all duration-300 ease-in-out ${
+        className={`md:hidden bg-[#fbfcf7] dark:bg-gray-950 border-b border-black/5 dark:border-white/10 shadow-lg overflow-hidden transition-all duration-300 ease-in-out ${
           isOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
         }`}
         aria-hidden={!isOpen}
@@ -193,8 +193,8 @@ export default function Navigation() {
                 href={navItem.href || "#"}
                 className={`w-full py-3 px-4 font-medium rounded-lg hover:no-underline transition-all duration-150 ${
                   active
-                    ? "text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-900/30"
-                    : "text-gray-700 dark:text-gray-300 hover:text-brand-700 dark:hover:text-brand-300 hover:bg-brand-50 dark:hover:bg-brand-900/20"
+                    ? "text-brand-800 dark:text-brand-200 bg-brand-50 dark:bg-brand-900/40"
+                    : "text-gray-700 dark:text-gray-300 hover:text-brand-800 dark:hover:text-brand-200 hover:bg-black/5 dark:hover:bg-white/10"
                 }`}
                 aria-current={active ? "page" : undefined}
                 onClick={() => setIsOpen(false)}
@@ -218,7 +218,7 @@ export default function Navigation() {
       {/* Search Box */}
       <div
         ref={searchRef}
-        className={`bg-white border-b border-gray-100 shadow-lg overflow-hidden transition-all duration-300 ease-in-out ${
+        className={`bg-[#fbfcf7] dark:bg-gray-950 border-b border-black/5 dark:border-white/10 shadow-lg overflow-hidden transition-all duration-300 ease-in-out ${
           isSearchOpen ? "max-h-[200px] opacity-100" : "max-h-0 opacity-0"
         }`}
         aria-hidden={!isSearchOpen}
@@ -231,13 +231,13 @@ export default function Navigation() {
               aria-label="ค้นหาบทความ"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-3 text-lg rounded-lg bg-gray-50 border border-gray-200 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-200 transition-colors"
+              className="w-full px-4 py-3 text-lg rounded-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-200 dark:focus:ring-brand-900 transition-colors"
             />
             <div className="flex justify-end mt-3 gap-2">
               <button
                 type="button"
                 onClick={() => setIsSearchOpen(false)}
-                className="px-4 py-2 text-sm rounded-md hover:bg-gray-100 transition-colors"
+                className="px-4 py-2 text-sm rounded-md hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
               >
                 ยกเลิก
               </button>
