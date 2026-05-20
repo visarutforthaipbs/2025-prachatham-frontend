@@ -26,7 +26,6 @@
   --color-brand-100: #C3F38D;
   --color-brand-200: #8AE0A0;
   --color-brand-300: #5CC882;
-  --color-brand-400: #38A96A;
   --color-brand-500: #038B71;
   --color-brand-600: #044B41;
   --color-brand-700: #033D35;
@@ -45,6 +44,19 @@
   --color-accent-800: #703608;
   --color-accent-900: #542806;
 
+  /* ─── Forest Slate Premium Dark Surfaces ─── */
+  --color-forest-50: #eaf6f4;
+  --color-forest-100: #d4ece9;
+  --color-forest-200: #a9d9d3;
+  --color-forest-300: #7ebfbd;
+  --color-forest-400: #52a2a6;
+  --color-forest-500: #038B71;
+  --color-forest-600: #044B41;
+  --color-forest-700: #033D35;
+  --color-forest-800: #153A35; /* border-like forest */
+  --color-forest-900: #0B201D; /* slate card surface */
+  --color-forest-950: #071513; /* deepest bg */
+
   /* ─── Surface ─── */
   --color-surface: #F0F1E9;
 
@@ -53,13 +65,19 @@
     Helvetica, Arial, sans-serif;
 
   /* ─── Shadows ─── */
-  --shadow-brand-glow: 0 8px 30px -4px rgba(196, 98, 17, 0.35);
+  --shadow-brand-glow: 0 10px 30px -5px rgba(3, 139, 113, 0.18);
+  --shadow-brand-glow-dark: 0 10px 30px -5px rgba(138, 224, 160, 0.08);
   --shadow-card-hover: 0 20px 40px -8px rgba(0, 0, 0, 0.12);
 
   /* ─── Animations ─── */
   --animate-bounce-scroll: bounce-scroll 2s infinite;
   --animate-fade-in-up: fadeInUp 0.6s ease forwards;
   --animate-pulse-soft: pulse-soft 2s infinite;
+  --animate-ken-burns: ken-burns 25s ease-in-out infinite alternate;
+  --animate-bounce-indicator: bounce-indicator 2.2s ease-in-out infinite;
+  --animate-audio-wave-1: audio-wave 0.8s ease-in-out infinite alternate;
+  --animate-audio-wave-2: audio-wave 0.8s ease-in-out infinite alternate 0.15s;
+  --animate-audio-wave-3: audio-wave 0.8s ease-in-out infinite alternate 0.3s;
 
   /* ─── Durations (Tailwind v4 compat) ─── */
   --transition-duration-400: 400ms;
@@ -77,6 +95,19 @@
     0% { opacity: 1; }
     50% { opacity: 0.5; }
     100% { opacity: 1; }
+  }
+  @keyframes ken-burns {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.08); }
+  }
+  @keyframes bounce-indicator {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-6px); }
+    60% { transform: translateY(-3px); }
+  }
+  @keyframes audio-wave {
+    0% { height: 4px; }
+    100% { height: 16px; }
   }
 }
 
@@ -98,8 +129,8 @@ body {
 }
 
 .dark body {
-  color: #d1d5db;
-  background-color: #0f172a;
+  color: #cbd5e1;
+  background-color: var(--color-forest-950);
 }
 
 ::selection {
@@ -364,13 +395,18 @@ textarea:focus-visible {
   background-color: #022F29;
 }
 
-/* Card — background is set by the element's own utilities, not here */
+/* Card styling with premium borders, backgrounds, transitions and hover states */
 .card {
-  @apply rounded-lg overflow-hidden border shadow-sm transition-all duration-200;
+  @apply rounded-xl overflow-hidden border shadow-sm transition-all duration-300 bg-white dark:bg-forest-900 border-black/5 dark:border-forest-800/80;
 }
 .card:hover {
-  @apply shadow-md;
-  transform: translateY(-3px);
+  @apply shadow-brand-glow;
+  border-color: color-mix(in srgb, var(--color-brand-500) 20%, transparent);
+  transform: translateY(-4px);
+}
+.dark .card:hover {
+  @apply shadow-brand-glow-dark;
+  border-color: color-mix(in srgb, var(--color-brand-400) 30%, transparent);
 }
 
 /* Badge */

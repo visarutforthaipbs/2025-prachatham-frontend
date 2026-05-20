@@ -36,7 +36,7 @@ export default function PostCard({
 
   return (
     <article
-      className={`card group h-full bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 ${
+      className={`card group h-full ${
         hasSplitLayout ? "flex flex-col md:grid md:grid-cols-[1.15fr_0.85fr]" : "flex flex-col"
       }`}
     >
@@ -57,9 +57,9 @@ export default function PostCard({
               blurDataURL={BLUR_DATA_URL}
               style={{
                 objectFit: "cover",
-                transition: "transform 0.4s ease",
+                transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
               }}
-              className="group-hover:scale-[1.03]"
+              className="group-hover:scale-[1.04]"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
             {/* Subtle gradient for readability */}

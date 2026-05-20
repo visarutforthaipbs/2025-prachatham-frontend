@@ -31,9 +31,8 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       "Project image"
     );
   };
-
   return (
-    <article className="card h-full bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 group">
+    <article className="card h-full group">
       <Link
         href={`/projects/${project.slug}`}
         className="hover:no-underline h-full flex flex-col group"
@@ -48,9 +47,9 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             blurDataURL={BLUR_DATA_URL}
             style={{
               objectFit: "cover",
-              transition: "transform 0.4s ease",
+              transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
-            className="group-hover:scale-[1.03]"
+            className="group-hover:scale-[1.04]"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
 

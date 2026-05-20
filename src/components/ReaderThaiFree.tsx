@@ -208,6 +208,50 @@ export default function ReaderThaiFree({
     }
   }, []);
 
+  // Dispatch TTS status events for the floating player overlay
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("tts-state-change", {
+        detail: { status, currentIdx, totalChunks: chunks.length, postKey }
+      }));
+    }
+  }, [status, currentIdx, chunks.length, postKey]);
+
+  // Listen to control actions sent from the floating player overlay
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleControl = (e: Event) => {
+      const customEvent = e as CustomEvent<{ action: string; key: string }>;
+      if (customEvent.detail.key !== postKey) return;
+
+      switch (customEvent.detail.action) {
+        case "play":
+          if (status === "paused") {
+            resume();
+          } else if (status === "idle") {
+            playFromStart();
+          }
+          break;
+        case "pause":
+          if (status === "playing") {
+            pause();
+          }
+          break;
+        case "stop":
+          stopAll();
+          break;
+        default:
+          break;
+      }
+    };
+
+    window.addEventListener("tts-control-action", handleControl);
+    return () => {
+      window.removeEventListener("tts-control-action", handleControl);
+    };
+  }, [postKey, status, resume, playFromStart, pause, stopAll]);
+
   const changeRate = useCallback(
     (v: number) => {
       setRate(v);

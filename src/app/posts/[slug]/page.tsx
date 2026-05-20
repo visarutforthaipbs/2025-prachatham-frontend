@@ -8,9 +8,12 @@ import { SocialShare } from "@/components/SocialShare";
 import { PostViewTracker } from "@/components/PostViewTracker";
 import { PostViewCount } from "@/components/PostViewCount";
 import { TableOfContents } from "@/components/TableOfContents";
+import ReadingProgressBar from "@/components/ReadingProgressBar";
 import dynamic from "next/dynamic";
 const AdSense = dynamic(() => import("@/components/AdSense"));
 const ReaderThaiFree = dynamic(() => import("@/components/ReaderThaiFree"));
+import ReaderFloatingOverlay from "@/components/ReaderFloatingOverlay";
+import QuoteCardManager from "@/components/QuoteCardManager";
 
 interface PostPageProps {
   params: Promise<{
@@ -240,6 +243,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
     return (
       <>
+        <ReadingProgressBar />
         {/* JSON-LD Structured Data — escaped to prevent XSS */}
         <script
           type="application/ld+json"
@@ -328,6 +332,13 @@ export default async function PostPage({ params }: PostPageProps) {
                     postKey={post.slug || String(post.id)}
                     articleSelector=".wordpress-content"
                   />
+                  <QuoteCardManager
+                    attribution={{
+                      title: stripHtml(post.title.rendered).trim(),
+                      author: post.acf?.authornamepost || "ประชาธรรม",
+                      date: formatThaiDate(post.date),
+                    }}
+                  />
                 </div>
               </div>
             </header>
@@ -358,6 +369,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
         {/* Table of Contents */}
         {tocHeadings.length > 0 && <TableOfContents headings={tocHeadings} />}
+        <ReaderFloatingOverlay currentPostKey={post.slug || String(post.id)} />
       </>
     );
   } catch (error) {
