@@ -254,11 +254,17 @@ export default function QuoteShareModal({
       lastDrawY += 48;
 
       ctx.font = `italic 32px "DB Helvethaica X", sans-serif`;
-      // Limit article title length on card
-      const articleTitle = attribution.title.length > 70 
-        ? `${attribution.title.substring(0, 70)}...` 
+      // Limit article title length on card to 100 characters before wrapping
+      const displayTitle = attribution.title.length > 100 
+        ? `${attribution.title.substring(0, 100)}...` 
         : attribution.title;
-      ctx.fillText(`จาก: ${articleTitle}`, 100, lastDrawY);
+      const fullTitleText = `จาก: ${displayTitle}`;
+      const wrappedTitleLines = wrapThaiText(ctx, fullTitleText, contentWidth);
+      
+      wrappedTitleLines.forEach((line) => {
+        ctx.fillText(line, 100, lastDrawY);
+        lastDrawY += 42;
+      });
     }
 
     // 6. Draw Branding Watermark at the Bottom
@@ -306,12 +312,21 @@ export default function QuoteShareModal({
   };
 
   return (
-    <div className="fixed inset-0 z-[2100] flex items-center justify-center p-4 backdrop-blur-md bg-black/60 overflow-y-auto animate-fade-in">
-      <div className="bg-[#fbfcf7] dark:bg-forest-950 border border-black/10 dark:border-forest-800/80 shadow-2xl rounded-3xl w-full max-w-4xl max-h-[90vh] md:max-h-none overflow-hidden flex flex-col md:grid md:grid-cols-[1.1fr_0.9fr]">
+    <div className="fixed inset-0 z-[2100] flex items-center justify-center p-3 sm:p-4 backdrop-blur-md bg-black/60 overflow-y-auto animate-fade-in">
+      <div className="relative bg-[#fbfcf7] dark:bg-forest-950 border border-black/10 dark:border-forest-800/80 shadow-2xl rounded-3xl w-full max-w-4xl max-h-[95vh] md:max-h-none overflow-hidden flex flex-col md:grid md:grid-cols-[1.1fr_0.9fr]">
         
+        {/* Close Button: Absolute positioned for easy touch access on all screens */}
+        <button 
+          onClick={onClose}
+          className="absolute top-3 right-3 md:top-4 md:right-4 z-[2200] p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full text-gray-500 dark:text-gray-400 cursor-pointer bg-white/85 dark:bg-forest-900/85 backdrop-blur-sm border border-black/10 dark:border-forest-800/40 shadow-sm transition-all active:scale-95"
+          aria-label="ปิดกล่อง"
+        >
+          <FaTimes size={16} />
+        </button>
+
         {/* Left Column: Live Canvas Preview */}
-        <div className="p-6 bg-gray-100/50 dark:bg-forest-900/40 flex items-center justify-center border-b md:border-b-0 md:border-r border-black/5 dark:border-forest-800/60 overflow-hidden">
-          <div className="w-full max-w-[340px] md:max-w-[400px] aspect-[4/5] relative rounded-2xl overflow-hidden shadow-xl border border-black/10 dark:border-forest-800 bg-white">
+        <div className="p-4 md:p-6 bg-gray-100/50 dark:bg-forest-900/40 flex items-center justify-center border-b md:border-b-0 md:border-r border-black/5 dark:border-forest-800/60 overflow-hidden">
+          <div className="w-full max-w-[280px] sm:max-w-[340px] md:max-w-[400px] aspect-[4/5] relative rounded-2xl overflow-hidden shadow-xl border border-black/10 dark:border-forest-800 bg-white">
             <canvas 
               ref={canvasRef} 
               className="w-full h-full object-contain"
@@ -320,34 +335,27 @@ export default function QuoteShareModal({
         </div>
 
         {/* Right Column: Settings & Actions */}
-        <div className="p-6 md:p-8 flex flex-col justify-between overflow-y-auto max-h-[50vh] md:max-h-[80vh]">
+        <div className="p-4 md:p-8 flex flex-col justify-between overflow-y-auto max-h-[50vh] md:max-h-[80vh]">
           {/* Header */}
-          <div className="flex justify-between items-start mb-6">
+          <div className="flex justify-between items-start mb-4 md:mb-6 pr-8 md:pr-0">
             <div>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">การ์ดโควทคำคม</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">ตกแต่งและดาวน์โหลดคำคมเพื่อแชร์ในโซเชียลมีเดีย</p>
+              <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">การ์ดโควทคำคม</h3>
+              <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400">ตกแต่งและดาวน์โหลดคำคมเพื่อแชร์ในโซเชียลมีเดีย</p>
             </div>
-            <button 
-              onClick={onClose}
-              className="p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full text-gray-500 dark:text-gray-400 cursor-pointer"
-              aria-label="ปิดกล่อง"
-            >
-              <FaTimes size={16} />
-            </button>
           </div>
 
           {/* Configuration Options */}
-          <div className="flex flex-col gap-6 flex-grow">
+          <div className="flex flex-col gap-4 md:gap-6 flex-grow">
             
             {/* Theme selection */}
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-550 block mb-3">ธีมภาพพื้นหลัง</span>
-              <div className="grid grid-cols-4 gap-2.5">
+              <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 block mb-2">ธีมภาพพื้นหลัง</span>
+              <div className="grid grid-cols-4 gap-2">
                 {(Object.keys(THEMES) as ThemeName[]).map((themeName) => (
                   <button
                     key={themeName}
                     onClick={() => setSelectedTheme(themeName)}
-                    className={`h-11 rounded-xl flex items-center justify-center capitalize font-semibold border-2 transition-all cursor-pointer text-xs
+                    className={`h-9 md:h-11 rounded-xl flex items-center justify-center capitalize font-semibold border-2 transition-all cursor-pointer text-xs
                       ${themeName === "forest" ? "bg-[#04564c] text-white" : ""}
                       ${themeName === "slate" ? "bg-[#1f302d] text-white" : ""}
                       ${themeName === "cream" ? "bg-[#fbfcf7] border-black/10 text-[#011e1b]" : ""}
@@ -369,8 +377,8 @@ export default function QuoteShareModal({
 
             {/* Font Sizing */}
             <div>
-              <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-550 mb-2.5">
-                <span className="flex items-center gap-1.5"><FaFont size={11} /> ขนาดตัวหนังสือ</span>
+              <div className="flex justify-between text-[10px] md:text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-2">
+                <span className="flex items-center gap-1.5"><FaFont size={10} /> ขนาดตัวหนังสือ</span>
                 <span className="text-brand-600 dark:text-brand-400">{fontSize}px</span>
               </div>
               <input
@@ -385,11 +393,11 @@ export default function QuoteShareModal({
             </div>
 
             {/* Layout Toggles */}
-            <div className="flex flex-col gap-3 pt-2">
-              <label className="flex items-center justify-between p-3 rounded-xl border border-black/5 dark:border-forest-800 cursor-pointer select-none">
+            <div className="flex flex-col gap-2.5 pt-1">
+              <label className="flex items-center justify-between p-2.5 md:p-3 rounded-xl border border-black/5 dark:border-forest-800 cursor-pointer select-none">
                 <div className="flex flex-col">
-                  <span className="text-sm font-semibold text-gray-900 dark:text-gray-150">เครดิตบทความ</span>
-                  <span className="text-[11px] text-gray-400">แสดงชื่อบทความและผู้แต่ง</span>
+                  <span className="text-xs md:text-sm font-semibold text-gray-900 dark:text-gray-150">เครดิตบทความ</span>
+                  <span className="text-[10px] text-gray-400">แสดงชื่อบทความและผู้แต่ง</span>
                 </div>
                 <input
                   type="checkbox"
@@ -399,10 +407,10 @@ export default function QuoteShareModal({
                 />
               </label>
 
-              <label className="flex items-center justify-between p-3 rounded-xl border border-black/5 dark:border-forest-800 cursor-pointer select-none">
+              <label className="flex items-center justify-between p-2.5 md:p-3 rounded-xl border border-black/5 dark:border-forest-800 cursor-pointer select-none">
                 <div className="flex flex-col">
-                  <span className="text-sm font-semibold text-gray-900 dark:text-gray-150">ลายน้ำสื่อประชาธรรม</span>
-                  <span className="text-[11px] text-gray-400">แสดงตราสัญลักษณ์ที่ขอบล่าง</span>
+                  <span className="text-xs md:text-sm font-semibold text-gray-900 dark:text-gray-150">ลายน้ำสื่อประชาธรรม</span>
+                  <span className="text-[10px] text-gray-400">แสดงตราสัญลักษณ์ที่ขอบล่าง</span>
                 </div>
                 <input
                   type="checkbox"
@@ -416,16 +424,16 @@ export default function QuoteShareModal({
           </div>
 
           {/* Action buttons */}
-          <div className="flex items-center gap-3.5 mt-8 border-t border-black/5 dark:border-forest-800/80 pt-5">
+          <div className="flex items-center gap-3 mt-4 md:mt-8 border-t border-black/5 dark:border-forest-800/80 pt-4 md:pt-5">
             <button
               onClick={onClose}
-              className="flex-1 btn-secondary text-center py-2.5 rounded-xl transition-all cursor-pointer font-medium"
+              className="flex-1 btn-secondary text-center py-2 md:py-2.5 rounded-xl transition-all cursor-pointer font-medium text-sm md:text-base"
             >
               ยกเลิก
             </button>
             <button
               onClick={handleDownload}
-              className="flex-[1.5] btn-primary flex items-center justify-center gap-2 py-2.5 rounded-xl transition-all cursor-pointer shadow-lg hover:shadow-brand-glow font-medium"
+              className="flex-[1.5] btn-primary flex items-center justify-center gap-2 py-2 md:py-2.5 rounded-xl transition-all cursor-pointer shadow-lg hover:shadow-brand-glow font-medium text-sm md:text-base"
             >
               <FaDownload size={13} />
               ดาวน์โหลดภาพ
