@@ -1,7 +1,12 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { wordpressApi, formatThaiDate } from "@/lib/wordpress";
+import {
+  wordpressApi,
+  decodeHtmlEntities,
+  formatThaiDate,
+  stripHtml,
+} from "@/lib/wordpress";
 import { sanitizeHtml } from "@/lib/sanitize";
 import Link from "next/link";
 
@@ -23,20 +28,24 @@ export async function generateMetadata({
     };
   }
 
+  const title = decodeHtmlEntities(project.title.rendered);
+  const description = stripHtml(project.excerpt.rendered) || "โครงการของมูลนิธิประชาธรรม";
+
   return {
-    title: `${project.title.rendered} | ประชาธรรม`,
-    description: project.excerpt.rendered || "โครงการของมูลนิธิประชาธรรม",
+    title: `${title} | ประชาธรรม`,
+    description,
     openGraph: {
-      title: `${project.title.rendered} | ประชาธรรม`,
-      description: project.excerpt.rendered || "โครงการของมูลนิธิประชาธรรม",
+      title: `${title} | ประชาธรรม`,
+      description,
       type: "article",
       images: project._embedded?.["wp:featuredmedia"]?.[0]?.source_url
         ? [
             {
               url: project._embedded["wp:featuredmedia"][0].source_url,
               alt:
-                project._embedded["wp:featuredmedia"][0].alt_text ||
-                project.title.rendered,
+                decodeHtmlEntities(
+                  project._embedded["wp:featuredmedia"][0].alt_text || title
+                ),
             },
           ]
         : [],
@@ -52,6 +61,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     notFound();
   }
 
+  const title = decodeHtmlEntities(project.title.rendered);
+
   return (
     <div className="max-w-4xl mx-auto px-4 md:px-6 lg:px-8 py-8">
       <div className="flex flex-col gap-8">
@@ -66,7 +77,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </Link>
           <span className="text-gray-300 dark:text-gray-600">/</span>
           <span className="text-gray-700 dark:text-gray-200 font-medium line-clamp-1 min-w-0">
-            {project.title.rendered}
+            {title}
           </span>
         </div>
 
@@ -76,7 +87,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             โครงการ
           </span>
           <h1 className="text-2xl md:text-3xl font-bold text-brand-700 dark:text-brand-400 mb-4 leading-tight">
-            {project.title.rendered}
+            {title}
           </h1>
           <p className="text-gray-500 dark:text-gray-400 text-sm">
             {formatThaiDate(project.date)}
@@ -89,8 +100,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <Image
               src={project._embedded["wp:featuredmedia"][0].source_url}
               alt={
-                project._embedded["wp:featuredmedia"][0].alt_text ||
-                project.title.rendered
+                decodeHtmlEntities(
+                  project._embedded["wp:featuredmedia"][0].alt_text || title
+                )
               }
               fill
               sizes="(max-width: 768px) 100vw, 800px"

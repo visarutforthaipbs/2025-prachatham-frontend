@@ -254,6 +254,7 @@ export class WordPressAPI {
         _embed: "true",
         per_page: "12",
         page: page.toString(),
+        _fields: "id,date,slug,title,excerpt,featured_media,categories,acf,_links,_embedded",
       });
 
       const url = buildApiUrl("posts", searchParams);
@@ -312,6 +313,7 @@ export class WordPressAPI {
         _embed: "true",
         per_page: "12",
         page: page.toString(),
+        _fields: "id,date,slug,title,excerpt,featured_media,categories,acf,_links,_embedded",
       });
 
       const response = await fetch(
@@ -350,29 +352,33 @@ export class WordPressAPI {
     } = {}
   ): Promise<{ posts: WordPressPost[]; totalPages: number; total: number }> {
     try {
-      // First get the category IDs for the excluded categories
-      const excludeCategoryIds: number[] = [];
+      // First get the category IDs for the excluded categories (in parallel)
+      const resolvedIds = await Promise.all(
+        excludeCategorySlugs.map(async (slug) => {
+          try {
+            const categoriesParams = new URLSearchParams({ slug: slug });
+            const categoriesResponse = await fetch(
+              buildApiUrl("categories", categoriesParams),
+              {
+                next: { revalidate: 300 },
+              }
+            );
 
-      for (const slug of excludeCategorySlugs) {
-        try {
-          const categoriesParams = new URLSearchParams({ slug: slug });
-          const categoriesResponse = await fetch(
-            buildApiUrl("categories", categoriesParams),
-            {
-              next: { revalidate: 300 },
+            if (categoriesResponse.ok) {
+              const categories = await categoriesResponse.json();
+              if (categories.length > 0) {
+                return categories[0].id as number;
+              }
             }
-          );
-
-          if (categoriesResponse.ok) {
-            const categories = await categoriesResponse.json();
-            if (categories.length > 0) {
-              excludeCategoryIds.push(categories[0].id);
-            }
+          } catch {
+            console.warn(`Category ${slug} not found, skipping...`);
           }
-        } catch {
-          console.warn(`Category ${slug} not found, skipping...`);
-        }
-      }
+          return null;
+        })
+      );
+      const excludeCategoryIds = resolvedIds.filter(
+        (id): id is number => id !== null
+      );
 
       const searchParams = new URLSearchParams({
         _embed: "true",
@@ -507,10 +513,47 @@ export const formatThaiDate = (dateString: string): string => {
   return `${day} ${month} ${year}`;
 };
 
+const HTML_ENTITIES: Record<string, string> = {
+  amp: "&",
+  gt: ">",
+  lt: "<",
+  quot: '"',
+  apos: "'",
+  nbsp: " ",
+  ndash: "-",
+  mdash: "-",
+  hellip: "...",
+  laquo: "«",
+  raquo: "»",
+  lsquo: "'",
+  rsquo: "'",
+  ldquo: '"',
+  rdquo: '"',
+};
+
+export const decodeHtmlEntities = (text: string): string => {
+  return text.replace(/&(#x[\da-f]+|#\d+|[a-z]+);/gi, (match, entity) => {
+    const normalized = entity.toLowerCase();
+
+    if (normalized.startsWith("#x")) {
+      const codePoint = parseInt(normalized.slice(2), 16);
+      return Number.isFinite(codePoint) ? String.fromCodePoint(codePoint) : match;
+    }
+
+    if (normalized.startsWith("#")) {
+      const codePoint = parseInt(normalized.slice(1), 10);
+      return Number.isFinite(codePoint) ? String.fromCodePoint(codePoint) : match;
+    }
+
+    return HTML_ENTITIES[normalized] ?? match;
+  });
+};
+
 export const stripHtml = (html: string): string => {
-  return html
-    .replace(/<[^>]*>/g, "")
-    .replace(/&[^;]+;/g, " ")
+  // Strip tags before decoding entities, so encoded angle brackets in the
+  // text itself (e.g. "ค่าฝุ่น &lt; 50") aren't mistaken for tags and deleted.
+  return decodeHtmlEntities(html.replace(/<[^>]*>/g, " "))
+    .replace(/\s+/g, " ")
     .trim();
 };
 

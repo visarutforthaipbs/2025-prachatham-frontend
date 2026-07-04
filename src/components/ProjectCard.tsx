@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FaArrowRight, FaMapMarkerAlt, FaClock } from "react-icons/fa";
-import type { WordPressProject } from "@/lib/wordpress";
+import { decodeHtmlEntities, type WordPressProject } from "@/lib/wordpress";
 
 // Tiny gray SVG to prevent layout shift while images load
 const BLUR_DATA_URL =
@@ -14,6 +14,8 @@ interface ProjectCardProps {
 }
 
 export default function ProjectCard({ project }: ProjectCardProps) {
+  const title = decodeHtmlEntities(project.title.rendered);
+
   const getImageUrl = () => {
     if (project._embedded?.["wp:featuredmedia"]?.[0]) {
       return (
@@ -25,10 +27,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   };
 
   const getImageAlt = () => {
-    return (
+    return decodeHtmlEntities(
       project._embedded?.["wp:featuredmedia"]?.[0]?.alt_text ||
-      project.title.rendered ||
-      "Project image"
+        title ||
+        "Project image"
     );
   };
   return (
@@ -70,7 +72,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         {/* Project Content */}
         <div className="p-5 flex-grow flex flex-col">
           <h3 className="text-[1.7rem] md:text-[1.85rem] font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:text-brand-700 dark:group-hover:text-brand-300 line-clamp-2 transition-colors duration-200 leading-tight">
-            {project.title.rendered}
+            {title}
           </h3>
 
           {/* Project Details */}

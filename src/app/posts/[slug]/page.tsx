@@ -1,7 +1,12 @@
 import { FaClock, FaCalendarAlt, FaTags, FaUser } from "react-icons/fa";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { wordpressApi, formatThaiDate, stripHtml } from "@/lib/wordpress";
+import {
+  wordpressApi,
+  decodeHtmlEntities,
+  formatThaiDate,
+  stripHtml,
+} from "@/lib/wordpress";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { Metadata } from "next";
 import { SocialShare } from "@/components/SocialShare";
@@ -61,8 +66,10 @@ function extractAndInjectHeadingIds(html: string): { html: string; headings: Toc
     (match, tag: string, attrs: string, inner: string) => {
       const level = parseInt(tag[1]);
 
-      // Extract text content (strip HTML tags)
-      const text = inner.replace(/<[^>]+>/g, "").trim();
+      // Extract readable text: strip tags and decode entities so headings
+      // like &#8220;ป่าชุมชน&#8221; show real quotes in the TOC, and
+      // entity-only headings (e.g. &nbsp;) are skipped entirely.
+      const text = stripHtml(inner);
       if (!text) return match;
 
       // Check if heading already has an id attribute
@@ -123,6 +130,7 @@ export async function generateMetadata({
     }
 
     const featuredImage = post._embedded?.["wp:featuredmedia"]?.[0];
+    const title = decodeHtmlEntities(post.title.rendered);
     const description =
       stripHtml(post.excerpt.rendered).substring(0, 160) ||
       stripHtml(post.content.rendered).substring(0, 160);
@@ -130,15 +138,15 @@ export async function generateMetadata({
     const authorName = post.acf?.authornamepost || "Prachatham";
 
     return {
-      title: `${post.title.rendered} | ประชาธรรม`,
+      title: `${title} | ประชาธรรม`,
       description,
-      keywords: `${post.title.rendered}, ประชาธรรม, สิ่งแวดล้อม, สื่อชุมชน`,
+      keywords: `${title}, ประชาธรรม, สิ่งแวดล้อม, สื่อชุมชน`,
       authors: [{ name: authorName }],
       alternates: {
         canonical: `/posts/${slug}`,
       },
       openGraph: {
-        title: post.title.rendered,
+        title,
         description,
         type: "article",
         publishedTime: post.date,
@@ -158,7 +166,7 @@ export async function generateMetadata({
               url: featuredImage.source_url,
               width: featuredImage.media_details?.width || 1200,
               height: featuredImage.media_details?.height || 630,
-              alt: featuredImage.alt_text || post.title.rendered,
+              alt: decodeHtmlEntities(featuredImage.alt_text || title),
               type: featuredImage.mime_type || "image/jpeg",
             },
           ]
@@ -167,13 +175,13 @@ export async function generateMetadata({
               url: "/images/hero-1-page-1.jpg",
               width: 1200,
               height: 630,
-              alt: post.title.rendered,
+              alt: title,
             },
           ],
       },
       twitter: {
         card: "summary_large_image",
-        title: post.title.rendered,
+        title,
         description,
         images: featuredImage?.source_url || "/images/hero-1-page-1.jpg",
         creator: "@prachatham",
@@ -198,6 +206,7 @@ export default async function PostPage({ params }: PostPageProps) {
     }
 
     const categories = (post._embedded?.["wp:term"]?.[0] || []) as Category[];
+    const title = decodeHtmlEntities(post.title.rendered);
     const readingTime = calculateReadingTime(post.content.rendered);
     const currentUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
       }/posts/${slug}`;
@@ -210,7 +219,7 @@ export default async function PostPage({ params }: PostPageProps) {
     const structuredData = {
       "@context": "https://schema.org",
       "@type": "Article",
-      headline: post.title.rendered,
+      headline: title,
       description: stripHtml(post.excerpt.rendered).substring(0, 160),
       image:
         post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
@@ -272,7 +281,7 @@ export default async function PostPage({ params }: PostPageProps) {
               </Link>
               <span>/</span>
               <span className="text-gray-700 dark:text-gray-200 font-medium line-clamp-1">
-                {post.title.rendered}
+                {title}
               </span>
             </div>
 
@@ -297,7 +306,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
               {/* Title */}
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight text-gray-950 dark:text-gray-50 mb-6 font-bold">
-                {post.title.rendered}
+                {title}
               </h1>
 
               {/* Meta Information with TTS */}
@@ -334,7 +343,7 @@ export default async function PostPage({ params }: PostPageProps) {
                   />
                   <QuoteCardManager
                     attribution={{
-                      title: stripHtml(post.title.rendered).trim(),
+                      title,
                       author: post.acf?.authornamepost || "ประชาธรรม",
                       date: formatThaiDate(post.date),
                     }}
@@ -361,7 +370,7 @@ export default async function PostPage({ params }: PostPageProps) {
               />
 
               {/* Social Share */}
-              <SocialShare url={currentUrl} title={post.title.rendered} />
+              <SocialShare url={currentUrl} title={title} />
             </article>
           </div>
 

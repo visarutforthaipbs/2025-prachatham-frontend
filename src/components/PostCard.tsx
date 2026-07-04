@@ -3,7 +3,12 @@
 import { FaUser, FaArrowRight } from "react-icons/fa";
 import Link from "next/link";
 import NextImage from "next/image";
-import { WordPressPost, formatThaiDate, getExcerpt } from "@/lib/wordpress";
+import {
+  WordPressPost,
+  decodeHtmlEntities,
+  formatThaiDate,
+  getExcerpt,
+} from "@/lib/wordpress";
 import { PostViewCount } from "@/components/PostViewCount";
 import { Highlight } from "@/components/Highlight";
 
@@ -33,6 +38,8 @@ export default function PostCard({
   const categories = (post._embedded?.["wp:term"]?.[0] || []) as Category[];
   const isFeatured = variant === "featured";
   const hasSplitLayout = isFeatured && Boolean(featuredImage);
+  const title = decodeHtmlEntities(post.title.rendered);
+  const excerpt = getExcerpt(post.excerpt.rendered, 120);
 
   return (
     <article
@@ -51,7 +58,7 @@ export default function PostCard({
           <div className={`relative overflow-hidden bg-gray-100 dark:bg-gray-800 ${isFeatured ? "h-40 sm:h-52 md:h-full md:min-h-[320px]" : "h-40 sm:h-auto sm:aspect-[16/10]"}`}>
             <NextImage
               src={featuredImage.source_url}
-              alt={featuredImage.alt_text || post.title.rendered}
+              alt={decodeHtmlEntities(featuredImage.alt_text || title)}
               fill
               placeholder="blur"
               blurDataURL={BLUR_DATA_URL}
@@ -92,13 +99,13 @@ export default function PostCard({
           className="hover:no-underline flex-1"
         >
           <h3 className={`${isFeatured ? "text-[1.7rem] md:text-4xl" : "text-[1.7rem] md:text-[1.85rem]"} font-bold text-gray-900 dark:text-gray-100 group-hover:text-brand-700 dark:group-hover:text-brand-300 transition-colors duration-200 mb-3 line-clamp-3 leading-tight`}>
-            <Highlight text={post.title.rendered} query={highlightQuery || ""} />
+            <Highlight text={title} query={highlightQuery || ""} />
           </h3>
         </Link>
 
         {/* Excerpt */}
         <p className={`${isFeatured ? "text-sm line-clamp-2 md:text-base md:line-clamp-3" : "text-sm line-clamp-2"} text-gray-600 dark:text-gray-400 mb-5 flex-1 leading-relaxed`}>
-          <Highlight text={getExcerpt(post.excerpt.rendered, 120)} query={highlightQuery || ""} />
+          <Highlight text={excerpt} query={highlightQuery || ""} />
         </p>
 
         {/* Date, Author & Read More */}

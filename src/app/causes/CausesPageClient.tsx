@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { WordPressProject } from "@/lib/wordpress";
+import { decodeHtmlEntities, WordPressProject } from "@/lib/wordpress";
 
 interface CausesPageClientProps {
   projects: WordPressProject[];
@@ -52,14 +52,17 @@ export default function CausesPageClient({ projects }: CausesPageClientProps) {
             transition={{ duration: 0.6, delay: 0.3 }}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-              {projects.map((project, index) => (
-                <motion.div
-                  key={project.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.1 * index }}
-                  className="card overflow-hidden bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow"
-                >
+              {projects.map((project, index) => {
+                const title = decodeHtmlEntities(project.title.rendered);
+
+                return (
+                  <motion.div
+                    key={project.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.1 * index }}
+                    className="card overflow-hidden bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow"
+                  >
                   {/* Project Image */}
                   {project._embedded?.["wp:featuredmedia"]?.[0] && (
                     <div className="relative aspect-[16/10] overflow-hidden">
@@ -70,8 +73,10 @@ export default function CausesPageClient({ projects }: CausesPageClientProps) {
                           project._embedded["wp:featuredmedia"][0].source_url
                         }
                         alt={
-                          project._embedded["wp:featuredmedia"][0].alt_text ||
-                          project.title.rendered
+                          decodeHtmlEntities(
+                            project._embedded["wp:featuredmedia"][0].alt_text ||
+                              title
+                          )
                         }
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -100,7 +105,7 @@ export default function CausesPageClient({ projects }: CausesPageClientProps) {
                     <div className="flex flex-col gap-4 items-start">
                       {/* Title */}
                       <h3 className="text-lg font-bold text-brand-700 dark:text-brand-300 leading-snug line-clamp-2">
-                        {project.title.rendered}
+                        {title}
                       </h3>
 
                       {/* Project Details */}
@@ -159,8 +164,9 @@ export default function CausesPageClient({ projects }: CausesPageClientProps) {
                       </Link>
                     </div>
                   </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                );
+              })}
             </div>
           </motion.div>
         ) : (
