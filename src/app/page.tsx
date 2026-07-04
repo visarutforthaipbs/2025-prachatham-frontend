@@ -30,7 +30,10 @@ async function getFeaturedNews() {
     // First, get the "ข่าวเด่น" category
     const categories = await wordpressApi.getCategories();
     const featuredCategory = categories.find(
-      (cat) => cat.name === "ข่าวเด่น" || cat.slug === "featured-news"
+      (cat) =>
+        cat.name === "ข่าวเด่น" ||
+        cat.slug === "featured-news" ||
+        cat.slug === "featured"
     );
 
     if (featuredCategory) {
@@ -71,12 +74,30 @@ async function getLatestProjects() {
   }
 }
 
-export default async function HomePage() {
-  // Fetch featured posts
-  const { posts: featuredPosts } = await getFeaturedNews();
+async function getTopCategories() {
+  try {
+    const categories = await wordpressApi.getCategories();
+    // Hide the "featured news" bucket — it's already the home hero feed.
+    return categories.filter(
+      (cat) =>
+        cat.name !== "ข่าวเด่น" &&
+        cat.slug !== "featured-news" &&
+        cat.slug !== "featured"
+    );
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return [];
+  }
+}
 
-  // Fetch latest projects
-  const { projects: latestProjects } = await getLatestProjects();
+export default async function HomePage() {
+  // Fetch featured posts, latest projects, and categories in parallel
+  const [{ posts: featuredPosts }, { projects: latestProjects }, categories] =
+    await Promise.all([
+      getFeaturedNews(),
+      getLatestProjects(),
+      getTopCategories(),
+    ]);
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -103,6 +124,7 @@ export default async function HomePage() {
       <HomePageClient
         featuredPosts={featuredPosts}
         latestProjects={latestProjects}
+        categories={categories}
       />
     </>
   );

@@ -114,14 +114,14 @@ export default function ReaderThaiFree({
   }, []);
 
   const buildQueue = useCallback(
-    (startIndex = 0) => {
+    (startIndex = 0, queueRate = rate) => {
       setCurrentIdx(startIndex);
       currentIdxRef.current = startIndex;
       queueRef.current = chunks.map((text, idx) => {
         const u = new SpeechSynthesisUtterance(text);
         u.lang = selectedVoice?.lang || "th-TH";
         if (selectedVoice) u.voice = selectedVoice;
-        u.rate = rate;
+        u.rate = queueRate;
         u.onstart = () => {
           currentIdxRef.current = idx;
           setCurrentIdx(idx);
@@ -262,10 +262,8 @@ export default function ReaderThaiFree({
           window.speechSynthesis.cancel();
         }
         queueRef.current = [];
-        // Rebuild will use the new rate via closure on next render
-        // We use a small timeout to let state update
         setTimeout(() => {
-          buildQueue(resumeFrom);
+          buildQueue(resumeFrom, v);
         }, 0);
       }
     },

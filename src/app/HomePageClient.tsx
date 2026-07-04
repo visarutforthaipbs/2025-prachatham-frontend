@@ -5,15 +5,17 @@ import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa";
 import PostCard from "@/components/PostCard";
 import ProjectCard from "@/components/ProjectCard";
+import CategoryChips from "@/components/CategoryChips";
 import { SectionWrapper, PageHeader, StatCard } from "@/components/ui";
 import dynamic from "next/dynamic";
 const AdSense = dynamic(() => import("@/components/AdSense"), { ssr: false });
-import type { WordPressPost, WordPressProject } from "@/lib/wordpress";
+import type { WordPressPost, WordPressProject, WordPressCategory } from "@/lib/wordpress";
 import { motion } from "framer-motion";
 
 interface HomePageClientProps {
   featuredPosts: WordPressPost[];
   latestProjects: WordPressProject[];
+  categories: WordPressCategory[];
 }
 
 const fadeInUp = {
@@ -34,6 +36,7 @@ const staggerContainer = {
 export default function HomePageClient({
   featuredPosts,
   latestProjects,
+  categories,
 }: HomePageClientProps) {
   const stats = [
     { label: "โครงการที่ดำเนินการ", value: "30+" },
@@ -130,6 +133,18 @@ export default function HomePageClient({
           </div>
         </div>
       </div>
+
+      {/* ═══ Browse by topic ═══ */}
+      {categories && categories.length > 0 && (
+        <div className="bg-[#fbfcf7] dark:bg-forest-950 border-b border-black/5 dark:border-white/5">
+          <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-4 md:py-5 flex flex-col gap-3 md:flex-row md:items-center">
+            <span className="shrink-0 text-sm font-semibold text-gray-500 dark:text-gray-400">
+              เลือกอ่านตามหัวข้อ
+            </span>
+            <CategoryChips categories={categories} />
+          </div>
+        </div>
+      )}
 
       {/* ═══ Featured News ═══ */}
       <SectionWrapper bg="bg-[#fbfcf7] dark:bg-forest-950">

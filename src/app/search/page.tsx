@@ -11,6 +11,8 @@ function SearchContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const query = searchParams.get("q") || "";
+  const pageParam = Number(searchParams.get("page") || "1");
+  const initialPage = Number.isFinite(pageParam) ? pageParam : 1;
 
   const {
     posts,
@@ -22,6 +24,7 @@ function SearchContent() {
   } = usePaginatedPosts({
     searchQuery: query || undefined,
     perPage: 12,
+    initialPage,
   });
 
   // Sync pagination to URL for shareable deep-links
