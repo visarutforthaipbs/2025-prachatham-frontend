@@ -351,6 +351,24 @@ body {
 .wordpress-content .wp-block-embed__wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
 .wordpress-content .wp-block-embed__wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
+/* ─── WordPress Content: local videos ────────────────── */
+.wordpress-content video {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  max-height: 80vh; /* Keep vertical videos from taking over the entire screen height */
+  margin: 0 auto;
+  border-radius: 0.75rem;
+  background-color: #000; /* Prevent visual flash / layout shifts */
+}
+.wordpress-content .wp-block-video {
+  margin: 2rem auto;
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
+}
+
 /* ─── WordPress Content: Separator blocks ────────────── */
 .wordpress-content .wp-block-separator { border: none; border-top: 2px solid #e2e8f0; margin: 2.5rem auto; max-width: 100px; }
 .dark .wordpress-content .wp-block-separator { border-top-color: #334155; }
