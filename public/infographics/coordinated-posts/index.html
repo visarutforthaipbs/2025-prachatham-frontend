@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coordinated Posts – Cluster Timeline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── Brand palette ── */
+  :root {
+    --green-1: #5A0D06;
+    --green-2: #FF1D0F;
+    --green-3: #FF9990;
+    --green-4: #FFE1DE;
+    --gray-50:  #F8FAFC;
+    --gray-100: #F1F5F9;
+    --gray-200: #E2E8F0;
+    --gray-300: #CBD5E1;
+    --gray-400: #94A3B8;
+    --gray-500: #64748B;
+    --gray-600: #475569;
+    --border:   #E2E8F0;
+    --card-bg:  #FFFFFF;
+  }
+
+  body {
+    font-family: 'IBM Plex Sans Thai', 'Inter', system-ui, sans-serif;
+    background: var(--gray-100);
+    color: var(--green-1);
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Outer container — full width, hidden until data loads */
+  #app {
+    display: none;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Inner stack — max width, centered, vertical flex */
+  #app-inner {
+    max-width: 960px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 600px) {
+    #app-inner {
+      padding: 16px 10px 32px;
+    }
+  }
+
+  /* ── Chart wrappers ── */
+  .chart-wrap {
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 18px 12px;
+  }
+
+  /* Bar section: header text + chart SVG stacked, not overlapping */
+  .bar-section {
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  /* Bar wrap: only contains the SVG, fixed height for the chart area */
+  .chart-wrap.bar-wrap {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    height: 20vh;
+    min-height: 130px;
+    max-height: 220px;
+    display: block;
+    padding: 0;
+    overflow: visible;   /* lets date labels paint below without affecting layout flow */
+    position: relative;
+  }
+
+  /* Bar SVG fills the wrap, labels can overflow downward into the gap */
+  #bar-chart {
+    display: block;
+    overflow: visible;
+    width: 100%;
+    height: 100%;
+  }
+
+  .bar-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    flex-shrink: 0;
+    margin-bottom: 6px;
+  }
+
+  .bar-totals {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--green-2);
+    text-align: right;
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding-top: 2px;
+    line-height: 1.6;
+  }
+
+  /* Timeline: 60vh, flex column */
+  .chart-wrap.tl-wrap {
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: 60vh;
+  }
+
+  .tl-header { padding: 14px 18px 4px; flex-shrink: 0; }
+
+  .tl-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2px;
+  }
+
+  /* Date nav: chevron < date > chevron inline */
+  .date-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .chevron-btn {
+    background: none;
+    border: 2px solid var(--green-3);
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+    color: var(--green-2);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.12s, color 0.12s, border-color 0.12s;
+    user-select: none;
+  }
+  .chevron-btn:hover  { background: var(--green-4); color: var(--green-1); border-color: transparent; }
+  .chevron-btn:active { background: var(--green-3); border-color: transparent; }
+  .chevron-btn:disabled { opacity: 0.25; cursor: default; }
+  .chevron-btn:disabled:hover { background: none; border-color: var(--green-3); }
+
+  /* Cluster timeline subtitle — top-right, 2 lines */
+  .tl-subtitle {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--green-2);
+    text-align: right;
+    white-space: nowrap;
+    flex-shrink: 0;
+    line-height: 1.6;
+  }
+  .tl-xaxis-sticky {
+    flex-shrink: 0;
+    overflow: hidden;
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border);
+    z-index: 2;
+  }
+
+  /* Scrollable body */
+  .tl-scroll {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gray-300) transparent;
+  }
+  .tl-scroll::-webkit-scrollbar { width: 5px; }
+  .tl-scroll::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
+
+  /* ── Header text ── */
+  .section-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--green-1);
+    margin-bottom: 3px;
+  }
+  .section-desc {
+    font-size: 0.78rem;
+    color: var(--gray-500);
+    line-height: 1.5;
+    margin-bottom: 2px;
+  }
+  .section-hint {
+    font-size: 0.7rem;
+    color: var(--gray-400);
+    margin-bottom: 10px;
+  }
+
+  /* Legend */
+  .tl-legend {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: var(--gray-400);
+    margin-top: 6px;
+    margin-bottom: 2px;
+  }
+  .legend-sq {
+    width: 8px; height: 8px;
+    border-radius: 1.5px;
+    background: var(--green-2);
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  /* SVG text font */
+  svg text { font-family: 'IBM Plex Sans Thai', 'Inter', system-ui, sans-serif; }
+
+  /* Bar chart */
+  .bar-axis path, .bar-axis line { stroke: var(--gray-200); }
+  .bar-axis text { fill: var(--gray-500); font-size: 11px; }
+  .bar-rect { fill: var(--gray-300); cursor: pointer; transition: fill 0.15s; }
+  .bar-rect:hover { fill: var(--gray-400); }
+  .bar-rect.selected { fill: var(--green-2); }
+  .bar-rect.selected:hover { fill: var(--green-1); }
+
+  /* Timeline axes */
+  .tl-axis path, .tl-axis line { stroke: var(--gray-200); }
+  .tl-axis text { fill: var(--gray-500); font-size: 10px; }
+  .grid-line { stroke: var(--gray-200); stroke-width: 1; }
+  .hour-line { stroke: var(--gray-200); stroke-width: 1; stroke-dasharray: 4 3; }
+
+  /* ── Shared card styles ── */
+  .card-time-pill {
+    display: inline-block;
+    background: var(--green-4);
+    color: var(--green-1);
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+    letter-spacing: 0.01em;
+  }
+
+  .card-content {
+    color: var(--green-1); font-size: 0.82rem; line-height: 1.55;
+    word-break: break-word; margin-bottom: 10px;
+    max-height: 110px; overflow-y: auto;
+    scrollbar-width: thin; scrollbar-color: var(--gray-300) transparent;
+  }
+  .card-meta { display: flex; flex-direction: column; gap: 4px; }
+  .card-row  { display: flex; gap: 8px; font-size: 0.72rem; line-height: 1.5; }
+  .card-label { color: var(--gray-500); white-space: nowrap; flex-shrink: 0; min-width: 90px; }
+  .card-val   { color: var(--green-2); word-break: break-word; font-weight: 500; }
+  .card-url { margin-top: 6px; }
+  .card-url a {
+    color: var(--green-2); text-decoration: none; font-size: 0.75rem;
+    font-weight: 500; border-bottom: 1px solid var(--green-3);
+    padding-bottom: 1px;
+  }
+  .card-url a:hover { color: var(--green-1); border-color: var(--green-2); }
+
+  /* Hover tooltip */
+  #tooltip {
+    position: fixed; pointer-events: none;
+    z-index: 9998;
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 14px;
+    max-width: 300px;
+    font-family: 'IBM Plex Sans Thai', 'Inter', system-ui, sans-serif;
+    font-size: 0.78rem; line-height: 1.6;
+    box-shadow: 0 4px 20px rgba(3,61,53,0.12);
+    opacity: 0; transition: opacity 0.08s;
+  }
+  #tooltip.visible { opacity: 1; }
+
+  /* Click modal */
+  #modal {
+    position: fixed; z-index: 9999;
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 16px;
+    max-width: 320px;
+    font-family: 'IBM Plex Sans Thai', 'Inter', system-ui, sans-serif;
+    font-size: 0.78rem; line-height: 1.6;
+    box-shadow: 0 8px 32px rgba(3,61,53,0.15);
+    display: none;
+  }
+  #modal.visible { display: block; }
+  #modal-close {
+    position: absolute; top: 8px; right: 10px;
+    background: none; border: none;
+    color: var(--gray-400); font-size: 1.1rem;
+    cursor: pointer; line-height: 1; padding: 2px 4px;
+    font-family: inherit; transition: color 0.12s;
+  }
+  #modal-close:hover { color: var(--green-1); }
+  #modal .card-content { margin-right: 18px; }
+
+  .bar-section .section-title { color: var(--gray-600); }
+  .bar-section .section-desc  { color: var(--gray-400); }
+  .bar-section .bar-totals    { color: var(--gray-500); }
+
+  #loading { color: var(--gray-500); font-size: 0.85rem; padding: 60px; text-align: center; }
+</style>
+</head>
+<body>
+
+<div id="loading">กำลังโหลดข้อมูล…</div>
+
+<div id="app">
+  <div id="app-inner">
+
+  <!-- Bar chart section: header above, chart below -->
+  <div class="bar-section">
+    <div class="bar-header-row">
+      <div>
+        <div class="section-title">ภาพรวม</div>
+        <div class="section-desc">จำนวนโพสต์รายวันของ 38 เพจที่มีเนื้อหาเดียวกัน และโพสต์ห่างกันไม่เกิน 5 นาที</div>
+      </div>
+      <div class="bar-totals" id="bar-totals">—</div>
+    </div>
+    <div class="chart-wrap bar-wrap">
+      <svg id="bar-chart"></svg>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="chart-wrap tl-wrap">
+    <div class="tl-header">
+      <div class="tl-header-row">
+        <div class="date-nav">
+          <button class="chevron-btn" id="btn-prev" title="วันก่อนหน้า">&#8249;</button>
+          <div class="section-title" id="tl-date-label">—</div>
+          <button class="chevron-btn" id="btn-next" title="วันถัดไป">&#8250;</button>
+        </div>
+        <div class="tl-subtitle" id="tl-subtitle">—</div>
+      </div>
+      <div class="tl-legend">
+        <span>แต่ละ</span>
+        <span class="legend-sq"></span>
+        <span>= 1 โพสต์ (คลิกเพื่อดูรายละเอียด)</span>
+      </div>
+    </div>
+    <div class="tl-xaxis-sticky">
+      <svg id="xaxis-svg"></svg>
+    </div>
+    <div class="tl-scroll">
+      <svg id="timeline-chart"></svg>
+    </div>
+  </div>
+
+  </div><!-- /app-inner -->
+</div>
+
+<div id="tooltip"></div>
+<div id="modal">
+  <button id="modal-close" title="ปิด">×</button>
+  <div id="modal-body"></div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+//  CONSTANTS & BRAND COLORS
+// ════════════════════════════════════════════════════════════
+const DATA_URL    = "data.json";
+const DEFAULT_DAY = "2026-03-01";
+
+const GREEN1 = "#5A0D06";
+const GREEN2 = "#FF1D0F";
+const GREEN3 = "#FF9990";
+const GREEN4 = "#FFE1DE";
+const GRAY3  = "#CBD5E1";   // default post color
+const GRAY4  = "#94A3B8";   // alternating
+
+const ROW_H            = 10;
+const ROW_GAP          = 1;
+const CLUSTER_GAP_ROWS = 1;
+const RECT_H           = ROW_H - ROW_GAP * 2;   // 8px — also the width (square)
+
+const xAxisH   = 56;   // tall enough for axis label + ticks + "เวลาที่โพสต์"
+const tlMargin = { top: 4, right: 40, bottom: 4, left: 86 };  // right:40 prevents last post from clipping
+const barMargin = { top: 16, right: 16, bottom: 52, left: 36 }; // left:36 for y-axis tick labels
+
+let allData     = [];
+let selectedDay = DEFAULT_DAY;
+
+// Track which rect is "selected" (last clicked)
+let selectedRect = null;
+
+// ════════════════════════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════════════════════════
+const THAI_MONTHS = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+
+function parseTimeTo24h(t) {
+  if (!t) return 0;
+  const m = t.match(/(\d+):(\d+):(\d+)\s*(AM|PM)/i);
+  if (!m) return 0;
+  let [, h, min, s, ap] = m;
+  h = +h; min = +min; s = +s;
+  if (ap.toUpperCase() === "PM" && h !== 12) h += 12;
+  if (ap.toUpperCase() === "AM" && h === 12) h = 0;
+  return h * 60 + min + s / 60;
+}
+
+function parseTimeToDate(t) {
+  if (!t) return new Date(2000, 0, 1, 0, 0, 0);
+  const m = t.match(/(\d+):(\d+):(\d+)\s*(AM|PM)/i);
+  if (!m) return new Date(2000, 0, 1, 0, 0, 0);
+  let [, h, min, s, ap] = m;
+  h = +h; min = +min; s = +s;
+  if (ap.toUpperCase() === "PM" && h !== 12) h += 12;
+  if (ap.toUpperCase() === "AM" && h === 12) h = 0;
+  return new Date(2000, 0, 1, h, min, s);
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+function getWidth() {
+  // Measure the bar-wrap or tl-wrap directly — these are the actual chart containers
+  // and their clientWidth already excludes any ancestor padding.
+  const barWrap = document.querySelector(".bar-wrap");
+  if (barWrap && barWrap.clientWidth > 0) return barWrap.clientWidth;
+  const tlWrap = document.querySelector(".tl-wrap");
+  if (tlWrap && tlWrap.clientWidth > 0) return tlWrap.clientWidth;
+  // Fallback: app-inner minus its own horizontal padding (16px × 2)
+  const inner = document.getElementById("app-inner");
+  return inner ? Math.max(100, inner.clientWidth - 32) : Math.min(window.innerWidth - 32, 928);
+}
+
+function formatDateThai(dateStr) {
+  // "2026-03-01" → "1 มี.ค. 2026"
+  const [y, m, d] = dateStr.split("-").map(Number);
+  return `${d} ${THAI_MONTHS[m - 1]} ${y}`;
+}
+
+function formatMonthYearThai(dateStr) {
+  // "2026-03-01" → "มี.ค. 2026"
+  const [y, m] = dateStr.split("-").map(Number);
+  return `${THAI_MONTHS[m - 1]} ${y}`;
+}
+
+// ════════════════════════════════════════════════════════════
+//  DATA LOAD
+// ════════════════════════════════════════════════════════════
+fetch(DATA_URL)
+  .then(r => r.json())
+  .then(raw => {
+    allData = raw.map(d => ({
+      content:          d.content || "",
+      user:             d.username || d.user || "",
+      date_post:        d.date_post,
+      time_post:        d.time_post || "",
+      cluster_id:       String(+d.cluster_id),
+      cluster_size:     +d.cluster_size,
+      order_in_cluster: +d.order_in_cluster,
+      url:              d.url || "",
+      _minutes:         parseTimeTo24h(d.time_post),
+    }));
+
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("app").style.display     = "block";
+
+    // rAF ensures the browser has done its first layout before we measure/draw
+    requestAnimationFrame(() => {
+      buildBarChart();
+      buildTimeline();
+      setupModal();
+      setupDateNav();
+    });
+
+    let rTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(rTimer);
+      rTimer = setTimeout(() => { buildBarChart(); updateBarSelection(); buildTimeline(); }, 220);
+    });
+  })
+  .catch(err => {
+    document.getElementById("loading").textContent = "ไม่สามารถโหลดข้อมูลได้: " + err.message;
+  });
+
+// ════════════════════════════════════════════════════════════
+//  BAR CHART
+// ════════════════════════════════════════════════════════════
+function buildBarChart() {
+  // bar-wrap now only contains the SVG (header moved outside).
+  // Use its clientHeight directly — it's set by CSS to 20vh.
+  const container = document.querySelector(".bar-wrap");
+  const svgH = container
+    ? Math.max(barMargin.top + barMargin.bottom + 30, container.clientHeight)
+    : Math.max(barMargin.top + barMargin.bottom + 30, Math.round(window.innerHeight * 0.20));
+
+  const W      = getWidth();
+  const innerW = W - barMargin.left - barMargin.right;
+  const innerH = svgH - barMargin.top - barMargin.bottom;
+
+  const svg = d3.select("#bar-chart").attr("width", W).attr("height", svgH);
+  svg.selectAll("*").remove();
+
+  const dayMap = d3.rollup(allData, v => v.length, d => d.date_post);
+  const days   = Array.from(dayMap, ([date, count]) => ({ date, count }))
+                      .sort((a, b) => a.date.localeCompare(b.date));
+
+  // Totals for all data — 2 lines
+  const totalPosts    = allData.length;
+  const totalClusters = new Set(allData.map(d => d.cluster_id)).size;
+  document.getElementById("bar-totals").innerHTML =
+    `<div>ทั้งหมด <strong>${totalPosts.toLocaleString()}</strong> โพสต์</div>` +
+    `<div>แบ่งออกเป็น <strong>${totalClusters.toLocaleString()}</strong> กลุ่ม</div>`;
+
+  const x = d3.scaleBand().domain(days.map(d => d.date)).range([0, innerW]).padding(0.2);
+  const y = d3.scaleLinear().domain([0, d3.max(days, d => d.count) * 1.12]).range([innerH, 0]);
+  const g = svg.append("g").attr("transform", `translate(${barMargin.left},${barMargin.top})`);
+
+  // Y gridlines
+  g.append("g").selectAll("line").data(y.ticks(3)).join("line")
+    .attr("class", "grid-line")
+    .attr("x1", 0).attr("x2", innerW)
+    .attr("y1", d => y(d)).attr("y2", d => y(d));
+
+  // X axis — Thai date format, responsive tick density
+  const isMobile = W < 600;
+  const isTablet = W < 900;
+  // Desktop: every 7 days; tablet: every 10 days; mobile: every 14 days
+  const step = isMobile ? 14 : isTablet ? 10 : 7;
+  const tickDates = x.domain().filter((_, i) =>
+    i === 0 || i === x.domain().length - 1 || i % step === 0
+  );
+  g.append("g").attr("class", "bar-axis")
+    .attr("transform", `translate(0,${innerH})`)
+    .call(d3.axisBottom(x)
+      .tickValues(tickDates)
+      .tickFormat(d => {
+        // On mobile show shorter "d ม.ค." without year; desktop full "d ม.ค. yyyy"
+        const [y, m, day] = d.split("-").map(Number);
+        return isMobile
+          ? `${day} ${THAI_MONTHS[m - 1]}`
+          : `${day} ${THAI_MONTHS[m - 1]} ${y}`;
+      })
+      .tickSize(4))
+    .call(a => a.select(".domain").remove());
+
+  // No y-axis labels — left margin is 0, gridlines give context
+
+  // Y axis labels
+  g.append("g").attr("class", "bar-axis")
+    .call(d3.axisLeft(y).ticks(3).tickSize(3))
+    .call(a => a.select(".domain").remove());
+
+  // Bars
+  g.selectAll(".bar-rect").data(days).join("rect")
+    .attr("class", d => `bar-rect${d.date === selectedDay ? " selected" : ""}`)
+    .attr("x", d => x(d.date)).attr("y", d => y(d.count))
+    .attr("width", x.bandwidth()).attr("height", d => innerH - y(d.count))
+    .attr("rx", 2)
+    .on("click", (_, d) => { selectedDay = d.date; updateBarSelection(); buildTimeline(); });
+}
+
+function updateBarSelection() {
+  d3.selectAll(".bar-rect").classed("selected", d => d.date === selectedDay);
+}
+
+// ════════════════════════════════════════════════════════════
+//  CLUSTER TIMELINE
+// ════════════════════════════════════════════════════════════
+function buildTimeline() {
+  selectedRect = null; // reset selected post on day change
+
+  const W      = getWidth();
+  const innerW = W - tlMargin.left - tlMargin.right;
+
+  const dayData = allData.filter(d => d.date_post === selectedDay);
+  dayData.forEach(d => { d._dt = parseTimeToDate(d.time_post); });
+
+  const nClusters = new Set(dayData.map(d => d.cluster_id)).size;
+
+  // ── Header text (Thai) ───────────────────────────────────
+  document.getElementById("tl-date-label").textContent = formatDateThai(selectedDay);
+  document.getElementById("tl-subtitle").innerHTML =
+    `<div>ทั้งหมด <strong>${dayData.length}</strong> โพสต์</div>` +
+    `<div>แบ่งออกเป็น <strong>${nClusters}</strong> กลุ่ม</div>`;
+
+  const svgBody = d3.select("#timeline-chart");
+  const svgXax  = d3.select("#xaxis-svg");
+  svgBody.selectAll("*").remove();
+  svgXax.selectAll("*").remove();
+
+  if (dayData.length === 0) {
+    svgBody.attr("width", W).attr("height", 80);
+    svgXax.attr("width", W).attr("height", xAxisH);
+    svgBody.append("text").attr("x", W / 2).attr("y", 40)
+      .attr("text-anchor", "middle").attr("fill", GRAY4).attr("font-size", 12)
+      .text("ไม่มีข้อมูลในวันนี้");
+    return;
+  }
+
+  // ── Group & sort clusters ────────────────────────────────
+  const clusterMap = d3.group(dayData, d => d.cluster_id);
+  let clusters = Array.from(clusterMap, ([id, posts]) => {
+    posts.sort((a, b) => a.order_in_cluster - b.order_in_cluster || a._dt - b._dt);
+    return { id, posts, size: posts[0].cluster_size, minDt: posts[0]._dt };
+  });
+  clusters.sort((a, b) => a.minDt - b.minDt);
+  // Sequential Thai labels: กลุ่ม 1, กลุ่ม 2, ...
+  clusters.forEach((cl, ci) => { cl.label = `กลุ่ม ${ci + 1}`; });
+
+  // ── Row assignment ───────────────────────────────────────
+  let globalRow = 0;
+  const tsRowMap = new Map();
+  clusters.forEach(cl => {
+    cl.startRow = globalRow;
+    cl.posts.forEach(post => {
+      const tsKey = post._dt.getTime();
+      const occ   = tsRowMap.get(tsKey) ?? globalRow;
+      const row   = Math.max(globalRow, occ);
+      post._row   = row;
+      tsRowMap.set(tsKey, row + 1);
+      globalRow   = row + 1;
+    });
+    cl.endRow = globalRow - 1;
+    globalRow += CLUSTER_GAP_ROWS;
+  });
+
+  const totalRows = globalRow;
+  const innerH    = totalRows * ROW_H;
+
+  // ── Scales ───────────────────────────────────────────────
+  const allDts  = dayData.map(d => d._dt);
+  const xMin    = d3.min(allDts);
+  const xMax    = d3.max(allDts);
+  const PAD_MS  = 2 * 60 * 1000;   // 2 min left padding
+  // Right pad: ensure last square (RECT_H px wide) is never clipped.
+  // Compute how many ms = RECT_H px at this scale, then add that + 2 min.
+  const spanMs     = xMax - xMin + 2 * PAD_MS;
+  const msPerPx    = spanMs / innerW;
+  const rectPadMs  = Math.ceil(RECT_H * msPerPx) + PAD_MS;
+
+  const xBase = d3.scaleTime()
+    .domain([new Date(xMin - PAD_MS), new Date(xMax.getTime() + rectPadMs)])
+    .range([0, innerW]);
+
+  const y = d3.scaleLinear().domain([0, totalRows]).range([0, innerH]);
+
+  // ── SVG dimensions ───────────────────────────────────────
+  svgBody.attr("width", W).attr("height", innerH + tlMargin.top + tlMargin.bottom);
+  svgXax.attr("width", W).attr("height", xAxisH);
+
+  svgBody.append("defs").append("clipPath").attr("id", "tl-clip")
+    .append("rect").attr("x", 0).attr("y", -2)
+    .attr("width", innerW).attr("height", innerH + 4);
+
+  const gRoot = svgBody.append("g")
+    .attr("transform", `translate(${tlMargin.left},${tlMargin.top})`);
+  const gData = gRoot.append("g").attr("clip-path", "url(#tl-clip)");
+
+  // X-axis group in sticky SVG
+  const gXAxis = svgXax.append("g")
+    .attr("class", "tl-axis x-axis")
+    .attr("transform", `translate(${tlMargin.left}, 6)`);
+
+  // ── Background bands (very subtle) ───────────────────────
+  clusters.forEach((cl, ci) => {
+    const bandY = y(cl.startRow);
+    const bandH = y(cl.endRow + 1) - bandY;
+    gData.append("rect")
+      .attr("x", 0).attr("y", bandY)
+      .attr("width", innerW).attr("height", Math.max(bandH, 1))
+      .attr("fill", ci % 2 === 0 ? GREEN2 : GRAY4)
+      .attr("opacity", 0.04)
+      .attr("rx", 2);
+  });
+
+  // ── Hour gridlines ────────────────────────────────────────
+  const hourTicks = d3.timeHour.range(
+    d3.timeHour.floor(xMin), new Date(xMax.getTime() + 3600000)
+  );
+  const gHours = gData.append("g").attr("class", "hour-lines");
+  gHours.selectAll("line").data(hourTicks).join("line")
+    .attr("class", "hour-line").attr("y1", 0).attr("y2", innerH);
+
+  // ── Post rectangles ───────────────────────────────────────
+  const gMarks = gData.append("g").attr("class", "marks");
+
+  clusters.forEach((cl, ci) => {
+    const cg = gMarks.append("g")
+      .attr("class", "cluster-group")
+      .attr("data-cluster", cl.id);
+
+    cl.posts.forEach((post, pi) => {
+      const _post = post;
+      const _cl   = cl;
+
+      const rect = cg.append("rect")
+        .attr("class", "post-dot")
+        .attr("data-order", pi)
+        .attr("data-ts",    _post._dt.getTime())
+        .attr("y",          y(_post._row) + ROW_GAP)
+        .attr("height",     RECT_H)
+        .attr("rx",         1.5)
+        .attr("fill",       GREEN2)      // all posts green-2
+        .attr("stroke",     "none")
+        .attr("stroke-width", 1.5)
+        .attr("opacity",    0.82)
+        .style("cursor",    "pointer")
+        .on("mouseenter", function(event) {
+          if (document.getElementById("modal").classList.contains("visible")) return;
+          // Hover stroke: green-3
+          d3.select(this).attr("stroke", GREEN3).attr("opacity", 1);
+          showCard(event, _post, _cl, false);
+        })
+        .on("mousemove", function(event) {
+          if (document.getElementById("modal").classList.contains("visible")) return;
+          positionCard(event, false);
+        })
+        .on("mouseleave", function() {
+          // Restore: keep green-3 stroke if this is the selected rect, else remove
+          if (selectedRect !== this) {
+            d3.select(this).attr("stroke", "none").attr("opacity", 0.82);
+          }
+          hideHover();
+        })
+        .on("click", function(event) {
+          event.stopPropagation();
+          hideHover();
+          // Deselect previous
+          if (selectedRect && selectedRect !== this) {
+            d3.select(selectedRect).attr("stroke", "none").attr("opacity", 0.82);
+          }
+          selectedRect = this;
+          // Selected stroke: green-3
+          d3.select(this).attr("stroke", GREEN3).attr("stroke-width", 1.5).attr("opacity", 1);
+          showCard(event, _post, _cl, true);
+        });
+    });
+  });
+
+  // ── Y-axis: กลุ่ม N (main) + n โพสต์ (smaller sub-label) ─
+  const yAxisG = gRoot.append("g").attr("class", "tl-axis");
+  clusters.forEach((cl, ci) => {
+    const midY     = y((cl.startRow + cl.endRow) / 2 + 0.5);
+    const clrMain  = ci % 2 === 0 ? GREEN2 : GRAY4;
+
+    // Main label: กลุ่ม N
+    yAxisG.append("text")
+      .attr("x", -6).attr("y", midY - 5)
+      .attr("text-anchor", "end")
+      .attr("font-size", 9).attr("font-weight", "600")
+      .attr("fill", GREEN2)
+      .attr("font-family", "'IBM Plex Sans Thai','Inter',system-ui,sans-serif")
+      .text(cl.label);
+
+    // Sub-label: n โพสต์
+    yAxisG.append("text")
+      .attr("x", -6).attr("y", midY + 5)
+      .attr("text-anchor", "end")
+      .attr("font-size", 8).attr("font-weight", "400")
+      .attr("fill", GRAY4)
+      .attr("font-family", "'IBM Plex Sans Thai','Inter',system-ui,sans-serif")
+      .text(`${cl.size} โพสต์`);
+  });
+
+  // ── X-axis: ticks + "เวลาที่โพสต์" label ─────────────────
+  renderXAxis(xBase, gXAxis, gHours, gMarks, innerW, innerH);
+}
+
+// ════════════════════════════════════════════════════════════
+//  RENDER X-AXIS
+// ════════════════════════════════════════════════════════════
+function renderXAxis(xBase, gXAxis, gHours, gMarks, innerW, innerH) {
+  const xZ = xBase;
+  gXAxis.selectAll("*").remove();
+
+  // Responsive tick density based on available width
+  const isMobile = innerW < 400;
+  const isTablet = innerW < 650;
+  // Desktop: every hour; tablet: every 2h; mobile: every 4h
+  const hourStep  = isMobile ? 4 : isTablet ? 2 : 1;
+
+  // Domain line
+  const [x0, x1] = xZ.range();
+  gXAxis.append("line")
+    .attr("x1", x0).attr("x2", x1).attr("y1", 0).attr("y2", 0)
+    .attr("stroke", "#CBD5E1");
+
+  const allHours  = d3.timeHour.range(xZ.domain()[0], xZ.domain()[1]);
+  const hourTickData = allHours.filter(d => d.getHours() % hourStep === 0);
+  const halfTickData = hourStep === 1
+    ? d3.timeMinute.every(30).range(xZ.domain()[0], xZ.domain()[1])
+    : [];  // skip minor ticks on tablet/mobile to avoid clutter
+
+  // Half-hour minor ticks (desktop only)
+  if (halfTickData.length) {
+    gXAxis.selectAll(".tick-minor")
+      .data(halfTickData)
+      .join("line")
+      .attr("class", "tick-minor")
+      .attr("x1", d => xZ(d)).attr("x2", d => xZ(d))
+      .attr("y1", 0).attr("y2", 4)
+      .attr("stroke", "#CBD5E1");
+  }
+
+  // Hour tick lines
+  gXAxis.selectAll(".tick-hour-line")
+    .data(hourTickData)
+    .join("line")
+    .attr("class", "tick-hour-line")
+    .attr("x1", d => xZ(d)).attr("x2", d => xZ(d))
+    .attr("y1", 0).attr("y2", 9)
+    .attr("stroke", "#94A3B8");
+
+  // Hour labels
+  gXAxis.selectAll(".tick-hour-text")
+    .data(hourTickData)
+    .join("text")
+    .attr("class", "tick-hour-text")
+    .attr("x", d => xZ(d))
+    .attr("y", 22)
+    .attr("text-anchor", "middle")
+    .attr("font-size", isMobile ? 9 : 10)
+    .attr("font-weight", "600")
+    .attr("fill", GREEN2)
+    .attr("font-family", "'IBM Plex Sans Thai','Inter',system-ui,sans-serif")
+    .text(d => `${d.getHours()}:00`);
+
+  // "เวลาที่โพสต์" axis label
+  gXAxis.append("text")
+    .attr("x", innerW / 2)
+    .attr("y", 40)
+    .attr("text-anchor", "middle")
+    .attr("font-size", 10)
+    .attr("font-weight", "500")
+    .attr("fill", "#94A3B8")
+    .attr("font-family", "'IBM Plex Sans Thai','Inter',system-ui,sans-serif")
+    .text("เวลาที่โพสต์");
+
+  // Gridlines (draw at every hour regardless of label density)
+  gHours.selectAll("line")
+    .attr("x1", d => xZ(d))
+    .attr("x2", d => xZ(d));
+
+  // Position post rects (square)
+  gMarks.selectAll(".post-dot").each(function() {
+    const el = d3.select(this);
+    const ts = +el.attr("data-ts");
+    el.attr("x", xZ(new Date(ts))).attr("width", RECT_H);
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+//  UNIFIED CARD (hover & click modal)
+// ════════════════════════════════════════════════════════════
+function buildCardHTML(post, cl) {
+  return [
+    // Time pill — above the content, left-aligned, green-4 background
+    `<div class="card-time-pill">${escHtml(post.time_post)}</div>`,
+    `<div class="card-content">${escHtml(post.content)}</div>`,
+    `<div class="card-meta">`,
+    `<div class="card-row"><span class="card-label">เพจ</span><span class="card-val">${escHtml(post.user)}</span></div>`,
+    `<div class="card-row"><span class="card-label">วันที่โพสต์</span><span class="card-val">${formatDateThai(post.date_post)}</span></div>`,
+    post.url
+      ? `<div class="card-row card-url"><a href="${escHtml(post.url)}" target="_blank" rel="noopener">ดูโพสต์ต้นทาง ↗</a></div>`
+      : "",
+    `</div>`,
+  ].join("");
+}
+
+function showCard(event, post, cl, pinned) {
+  if (pinned) {
+    hideHover();
+    document.getElementById("modal-body").innerHTML = buildCardHTML(post, cl);
+    document.getElementById("modal").classList.add("visible");
+  } else {
+    const el = document.getElementById("tooltip");
+    el.innerHTML = buildCardHTML(post, cl);
+    el.classList.add("visible");
+  }
+  positionCard(event, pinned);
+}
+
+function positionCard(event, pinned) {
+  const el  = document.getElementById(pinned ? "modal" : "tooltip");
+  const vw  = window.innerWidth;
+  const vh  = window.innerHeight;
+  const ew  = el.offsetWidth  || (pinned ? 300 : 260);
+  const eh  = el.offsetHeight || (pinned ? 200 : 140);
+  const cx  = event.clientX ?? vw / 2;
+  const cy  = event.clientY ?? vh / 2;
+  let left  = cx + 14;
+  let top   = cy - eh / 2;
+  if (left + ew > vw - 8) left = cx - ew - 14;
+  if (left < 8) left = 8;
+  if (top  < 8) top  = 8;
+  if (top + eh > vh - 8) top = vh - eh - 8;
+  el.style.left = left + "px";
+  el.style.top  = top  + "px";
+}
+
+function hideHover() {
+  document.getElementById("tooltip").classList.remove("visible");
+}
+
+// ════════════════════════════════════════════════════════════
+//  MODAL SETUP
+// ════════════════════════════════════════════════════════════
+function setupModal() {
+  document.getElementById("modal-close").addEventListener("click", () => {
+    document.getElementById("modal").classList.remove("visible");
+    // Deselect the highlighted rect
+    if (selectedRect) {
+      d3.select(selectedRect).attr("stroke", "none").attr("opacity", 0.82);
+      selectedRect = null;
+    }
+  });
+  document.addEventListener("click", (e) => {
+    const modal = document.getElementById("modal");
+    if (modal.classList.contains("visible") && !modal.contains(e.target)) {
+      modal.classList.remove("visible");
+      if (selectedRect) {
+        d3.select(selectedRect).attr("stroke", "none").attr("opacity", 0.82);
+        selectedRect = null;
+      }
+    }
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      document.getElementById("modal").classList.remove("visible");
+      if (selectedRect) {
+        d3.select(selectedRect).attr("stroke", "none").attr("opacity", 0.82);
+        selectedRect = null;
+      }
+    }
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+//  DATE NAVIGATION (chevron buttons)
+// ════════════════════════════════════════════════════════════
+function setupDateNav() {
+  // Build sorted list of all available dates from the data
+  const allDates = Array.from(new Set(allData.map(d => d.date_post))).sort();
+
+  function navigate(delta) {
+    const idx = allDates.indexOf(selectedDay);
+    const newIdx = idx + delta;
+    if (newIdx < 0 || newIdx >= allDates.length) return;
+    selectedDay = allDates[newIdx];
+    updateChevronState(allDates);
+    updateBarSelection();
+    buildTimeline();
+  }
+
+  function updateChevronState(dates) {
+    const idx = dates.indexOf(selectedDay);
+    document.getElementById("btn-prev").disabled = idx <= 0;
+    document.getElementById("btn-next").disabled = idx >= dates.length - 1;
+  }
+
+  document.getElementById("btn-prev").addEventListener("click", () => navigate(-1));
+  document.getElementById("btn-next").addEventListener("click", () => navigate(+1));
+
+  // Keyboard arrow keys for convenience
+  document.addEventListener("keydown", (e) => {
+    if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+    if (e.key === "ArrowLeft")  navigate(-1);
+    if (e.key === "ArrowRight") navigate(+1);
+  });
+
+  updateChevronState(allDates);
+}
+</script>
+</body>
+</html>

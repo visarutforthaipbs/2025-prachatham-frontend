@@ -50,6 +50,8 @@ export function sanitizeHtml(dirty: string): string {
         "allowfullscreen",
         "scrolling",
         "title",
+        "loading",
+        "style",
       ],
       source: ["src", "srcset", "type", "media", "sizes"],
       video: [
@@ -86,6 +88,15 @@ export function sanitizeHtml(dirty: string): string {
         width: [/^\d+(?:\.\d+)?(?:px|em|rem|%)$/],
         "max-width": [/^\d+(?:\.\d+)?(?:px|em|rem|%)$/],
       },
+      // Interactive infographics are embedded as responsive iframes.
+      iframe: {
+        width: [/^\d+(?:\.\d+)?(?:px|em|rem|vw|%)$/],
+        height: [/^(?:auto|\d+(?:\.\d+)?(?:px|em|rem|vh|%))$/],
+        "max-width": [/^\d+(?:\.\d+)?(?:px|em|rem|vw|%)$/],
+        "aspect-ratio": [/^\d+(?:\.\d+)?(?:\s*\/\s*\d+(?:\.\d+)?)?$/],
+        border: [/^\d+(?:px|em|rem)?\s*(?:solid|dashed|dotted|none)?.*$/, /^none$/, /^0$/],
+        "border-radius": [/^\d+(?:\.\d+)?(?:px|em|rem|%)$/],
+      },
     },
     allowedIframeHostnames: [
       "www.youtube.com",
@@ -96,6 +107,10 @@ export function sanitizeHtml(dirty: string): string {
       "open.spotify.com",
       "www.google.com",
     ],
+    // Allow embedding self-hosted interactive infographics from /public
+    // (e.g. <iframe src="/infographics/my-chart.html">). These are served
+    // from our own origin, so relative URLs are safe.
+    allowIframeRelativeUrls: true,
     allowedSchemes: ["http", "https", "mailto", "tel"],
   });
 }

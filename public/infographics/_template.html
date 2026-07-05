@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Interactive Infographic Template</title>
+    <style>
+      /* Everything is scoped inside the iframe, so it won't clash with the site. */
+      :root {
+        color-scheme: light dark;
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+      body {
+        margin: 0;
+        padding: 24px;
+        background: #ffffff;
+        color: #111827;
+      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #0b0f17;
+          color: #e5e7eb;
+        }
+      }
+      .bar {
+        height: 28px;
+        margin: 8px 0;
+        background: #2563eb;
+        border-radius: 6px;
+        transition: width 0.4s ease;
+      }
+      button {
+        margin-top: 16px;
+        padding: 8px 16px;
+        border: 0;
+        border-radius: 6px;
+        background: #2563eb;
+        color: #fff;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>ตัวอย่างอินโฟกราฟิกแบบโต้ตอบ</h2>
+    <p>คลิกปุ่มเพื่อสุ่มค่าข้อมูล — สคริปต์ทำงานได้เพราะอยู่ใน iframe</p>
+
+    <div id="bars"></div>
+    <button id="randomize">สุ่มข้อมูลใหม่</button>
+
+    <script>
+      // Your bundled interactive JS goes here (D3, Chart.js, vanilla, etc.).
+      const container = document.getElementById("bars");
+      function render() {
+        container.innerHTML = "";
+        for (let i = 0; i < 5; i++) {
+          const bar = document.createElement("div");
+          bar.className = "bar";
+          bar.style.width = 20 + Math.random() * 80 + "%";
+          container.appendChild(bar);
+        }
+      }
+      document.getElementById("randomize").addEventListener("click", render);
+      render();
+
+      // Optional: auto-resize the parent iframe to match content height.
+      // Requires the wrapper snippet described in README.md.
+      function postHeight() {
+        parent.postMessage(
+          { type: "infographic-height", height: document.body.scrollHeight },
+          "*"
+        );
+      }
+      window.addEventListener("load", postHeight);
+      new ResizeObserver(postHeight).observe(document.body);
+    </script>
+  </body>
+</html>
