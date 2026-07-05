@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เนื้อหาแบ่งตามประเด็น</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-1: #033D35;
+    --red:     #FF1D0F;
+    --red-2:   #FF9990;
+    --red-3:   #FFE1DE;
+    --gray-50:  #F0F1E9;
+    --gray-100: #f7f8f3;
+    --gray-200: #E5E6DE;
+    --gray-300: #D0D1C8;
+    --gray-400: #8A8B82;
+    --gray-500: #64655E;
+    --gray-600: #494A44;
+    --border:   #E5E6DE;
+    --card-bg:  #FFFFFF;
+  }
+
+  body {
+    font-family: 'IBM Plex Sans Thai', system-ui, sans-serif;
+    background: var(--gray-100);
+    color: var(--green-1);
+    margin: 0;
+  }
+
+  #app { display: none; }
+  #app-inner { max-width: 960px; margin: 0 auto; padding: 24px 16px 48px; }
+  @media (max-width: 600px) { #app-inner { padding: 16px 10px 32px; } }
+
+  .head-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 4px; }
+  .section-title { font-size: 1.05rem; font-weight: 600; color: var(--green-1); margin-bottom: 3px; }
+  .section-desc  { font-size: 0.78rem; color: var(--gray-500); line-height: 1.5; }
+  .head-totals   { font-size: 0.75rem; font-weight: 500; color: var(--green-1); text-align: right; white-space: nowrap; line-height: 1.6; }
+
+  .chart-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 16px; margin-top: 14px;
+  }
+
+  svg text { font-family: 'IBM Plex Sans Thai', system-ui, sans-serif; }
+
+  /* Treemap tiles */
+  .tile { cursor: pointer; }
+  .tile rect { transition: opacity 0.15s; }
+  .tile:hover rect { opacity: 0.88; }
+  .tile.active rect { stroke: var(--green-1); stroke-width: 2px; }
+  .tile-name { font-weight: 600; pointer-events: none; }
+  .tile-count { pointer-events: none; opacity: 0.9; }
+
+  .hint { font-size: 0.72rem; color: var(--gray-400); margin-top: 10px; }
+
+  /* Detail panel */
+  #detail { margin-top: 14px; display: none; }
+  #detail.visible { display: block; }
+  .detail-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+  .detail-title { font-size: 0.95rem; font-weight: 600; color: var(--green-1); }
+  .detail-pill { background: var(--red-3); color: var(--red); font-size: 0.72rem; font-weight: 600; padding: 2px 10px; border-radius: 999px; }
+  .accts { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .acct-chip { background: var(--gray-50); border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px; font-size: 0.72rem; color: var(--gray-600); }
+  .acct-chip strong { color: var(--red); margin-left: 4px; }
+  .samples { display: grid; gap: 8px; }
+  .sample { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; background: var(--gray-50); }
+  .sample-content { font-size: 0.82rem; line-height: 1.55; color: var(--green-1); margin-bottom: 6px; word-break: break-word; }
+  .sample-meta { display: flex; justify-content: space-between; gap: 8px; font-size: 0.72rem; color: var(--gray-500); flex-wrap: wrap; }
+  .sample-meta a { color: var(--red); text-decoration: none; border-bottom: 1px solid var(--red-2); }
+  .sample-meta a:hover { color: var(--green-1); }
+  #loading { color: var(--gray-500); font-size: 0.85rem; padding: 60px; text-align: center; }
+</style>
+</head>
+<body>
+<div id="loading">กำลังโหลดข้อมูล…</div>
+<div id="app">
+  <div id="app-inner">
+    <div class="head-row">
+      <div>
+        <div class="section-title">เนื้อหาแบ่งตามประเด็น</div>
+        <div class="section-desc">สัดส่วนโพสต์ในแต่ละประเด็น จัดกลุ่มด้วยแบบจำลองหัวข้อ (BERTopic) — ขนาดกล่องยิ่งใหญ่ = ยิ่งมีโพสต์มาก</div>
+      </div>
+      <div class="head-totals" id="head-totals">—</div>
+    </div>
+    <div class="chart-card">
+      <svg id="chart"></svg>
+      <div class="hint">คลิกที่กล่องเพื่อดูเพจที่โพสต์มากที่สุด และตัวอย่างเนื้อหา</div>
+    </div>
+    <div class="chart-card" id="detail">
+      <div class="detail-head">
+        <div class="detail-title" id="detail-title">—</div>
+        <div class="detail-pill" id="detail-pill">—</div>
+      </div>
+      <div class="accts" id="detail-accts"></div>
+      <div class="samples" id="detail-samples"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let DATA = null;
+let selected = null;
+let colorScale = null;
+
+function escHtml(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function getWidth(){ const c = document.querySelector(".chart-card"); return c && c.clientWidth ? c.clientWidth - 32 : 880; }
+
+// Pick readable text color (white on strong tiles, dark teal on light ones)
+function textOn(fill){
+  const c = d3.color(fill).rgb();
+  const lum = (0.299*c.r + 0.587*c.g + 0.114*c.b) / 255;
+  return lum < 0.62 ? "#FFFFFF" : "#033D35";
+}
+
+fetch("data.json").then(r => r.json()).then(d => {
+  DATA = d;
+  const ext = d3.extent(d.themes, t => t.count);
+  colorScale = d3.scaleSequentialSqrt(ext, t => d3.interpolate("#FFD9D5", "#FF1D0F")(t));
+  document.getElementById("loading").style.display = "none";
+  document.getElementById("app").style.display = "block";
+  document.getElementById("head-totals").innerHTML =
+    `<div>ทั้งหมด <strong>${d.total.toLocaleString()}</strong> โพสต์</div>` +
+    `<div><strong>${d.themes.length}</strong> ประเด็น</div>`;
+  requestAnimationFrame(() => { draw(); selectTheme(d.themes[0].theme); });
+  let t; window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(draw, 200); });
+}).catch(e => { document.getElementById("loading").textContent = "โหลดข้อมูลไม่ได้: " + e.message; });
+
+function draw(){
+  const W = getWidth();
+  const H = Math.max(360, Math.min(560, Math.round(W * 0.62)));
+
+  const root = d3.hierarchy({ children: DATA.themes })
+    .sum(d => d.count)
+    .sort((a, b) => b.value - a.value);
+
+  d3.treemap().size([W, H]).paddingInner(3).round(true)(root);
+
+  const svg = d3.select("#chart").attr("width", W).attr("height", H);
+  svg.selectAll("*").remove();
+
+  const tiles = svg.selectAll(".tile").data(root.leaves()).join("g")
+    .attr("class", d => `tile${d.data.theme === selected ? " active" : ""}`)
+    .attr("transform", d => `translate(${d.x0},${d.y0})`)
+    .on("click", (_, d) => selectTheme(d.data.theme));
+
+  tiles.append("title").text(d => `${d.data.theme}\n${d.data.count.toLocaleString()} โพสต์`);
+
+  tiles.append("rect")
+    .attr("width", d => d.x1 - d.x0)
+    .attr("height", d => d.y1 - d.y0)
+    .attr("rx", 4)
+    .attr("fill", d => colorScale(d.data.count));
+
+  // Labels — only when the tile is large enough
+  tiles.each(function(d){
+    const w = d.x1 - d.x0, h = d.y1 - d.y0;
+    if (w < 54 || h < 30) return;
+    const fill = textOn(colorScale(d.data.count));
+    const g = d3.select(this);
+    const words = wrap(d.data.theme, Math.max(6, Math.floor(w / 8)));
+    const maxLines = Math.max(1, Math.min(words.length, Math.floor((h - 22) / 15)));
+    const lines = words.slice(0, maxLines);
+    lines.forEach((ln, i) => {
+      g.append("text").attr("class", "tile-name")
+        .attr("x", 8).attr("y", 18 + i * 15)
+        .attr("fill", fill).attr("font-size", 12)
+        .text(ln + (i === maxLines - 1 && maxLines < words.length ? "…" : ""));
+    });
+    g.append("text").attr("class", "tile-count")
+      .attr("x", 8).attr("y", 18 + lines.length * 15 + 2)
+      .attr("fill", fill).attr("font-size", 11).attr("font-weight", 600)
+      .text(d.data.count.toLocaleString());
+  });
+}
+
+// Simple greedy word wrap for Thai/Latin mixed labels by char budget
+function wrap(text, budget){
+  const parts = text.split(/(\s+|\/)/).filter(s => s && !/^\s+$/.test(s));
+  const lines = []; let cur = "";
+  for (const p of parts){
+    if ((cur + p).length > budget && cur){ lines.push(cur.trim()); cur = p; }
+    else cur += (cur ? " " : "") + p;
+  }
+  if (cur.trim()) lines.push(cur.trim());
+  return lines.length ? lines : [text];
+}
+
+function selectTheme(theme){
+  selected = theme;
+  draw();
+  const t = DATA.themes.find(x => x.theme === theme);
+  if (!t) return;
+  document.getElementById("detail").classList.add("visible");
+  document.getElementById("detail-title").textContent = t.theme;
+  document.getElementById("detail-pill").textContent = `${t.count.toLocaleString()} โพสต์ · ${t.accounts} เพจ`;
+  document.getElementById("detail-accts").innerHTML = t.topAccounts.map(a =>
+    `<span class="acct-chip">${escHtml(a.name)}<strong>${a.count}</strong></span>`).join("");
+  document.getElementById("detail-samples").innerHTML = t.samples.map(s =>
+    `<div class="sample">
+       <div class="sample-content">${escHtml(s.content) || "<em>(ไม่มีข้อความ)</em>"}</div>
+       <div class="sample-meta">
+         <span>${escHtml(s.page)}${s.date ? " · " + escHtml(s.date) : ""}</span>
+         ${s.url ? `<a href="${escHtml(s.url)}" target="_blank" rel="noopener">ดูโพสต์ ↗</a>` : ""}
+       </div>
+     </div>`).join("");
+}
+</script>
+</body>
+</html>

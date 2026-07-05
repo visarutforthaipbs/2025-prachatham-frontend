@@ -13,17 +13,17 @@
 
   /* ── Brand palette ── */
   :root {
-    --green-1: #5A0D06;
+    --green-1: #033D35;
     --green-2: #FF1D0F;
     --green-3: #FF9990;
     --green-4: #FFE1DE;
-    --gray-50:  #F8FAFC;
-    --gray-100: #F1F5F9;
-    --gray-200: #E2E8F0;
-    --gray-300: #CBD5E1;
-    --gray-400: #94A3B8;
-    --gray-500: #64748B;
-    --gray-600: #475569;
+    --gray-50:  #F0F1E9;
+    --gray-100: #f7f8f3;
+    --gray-200: #E5E6DE;
+    --gray-300: #D0D1C8;
+    --gray-400: #8A8B82;
+    --gray-500: #64655E;
+    --gray-600: #494A44;
     --border:   #E2E8F0;
     --card-bg:  #FFFFFF;
   }
@@ -244,7 +244,7 @@
   .bar-rect { fill: var(--gray-300); cursor: pointer; transition: fill 0.15s; }
   .bar-rect:hover { fill: var(--gray-400); }
   .bar-rect.selected { fill: var(--green-2); }
-  .bar-rect.selected:hover { fill: var(--green-1); }
+  .bar-rect.selected:hover { fill: #CC1509; }
 
   /* Timeline axes */
   .tl-axis path, .tl-axis line { stroke: var(--gray-200); }
@@ -388,12 +388,12 @@
 const DATA_URL    = "data.json";
 const DEFAULT_DAY = "2026-03-01";
 
-const GREEN1 = "#5A0D06";
+const GREEN1 = "#033D35";
 const GREEN2 = "#FF1D0F";
 const GREEN3 = "#FF9990";
 const GREEN4 = "#FFE1DE";
-const GRAY3  = "#CBD5E1";   // default post color
-const GRAY4  = "#94A3B8";   // alternating
+const GRAY3  = "#D0D1C8";   // default post color
+const GRAY4  = "#8A8B82";   // alternating
 
 const ROW_H            = 10;
 const ROW_GAP          = 1;
@@ -807,7 +807,7 @@ function renderXAxis(xBase, gXAxis, gHours, gMarks, innerW, innerH) {
   const [x0, x1] = xZ.range();
   gXAxis.append("line")
     .attr("x1", x0).attr("x2", x1).attr("y1", 0).attr("y2", 0)
-    .attr("stroke", "#CBD5E1");
+    .attr("stroke", "#D0D1C8");
 
   const allHours  = d3.timeHour.range(xZ.domain()[0], xZ.domain()[1]);
   const hourTickData = allHours.filter(d => d.getHours() % hourStep === 0);
@@ -823,7 +823,7 @@ function renderXAxis(xBase, gXAxis, gHours, gMarks, innerW, innerH) {
       .attr("class", "tick-minor")
       .attr("x1", d => xZ(d)).attr("x2", d => xZ(d))
       .attr("y1", 0).attr("y2", 4)
-      .attr("stroke", "#CBD5E1");
+      .attr("stroke", "#D0D1C8");
   }
 
   // Hour tick lines
@@ -833,7 +833,7 @@ function renderXAxis(xBase, gXAxis, gHours, gMarks, innerW, innerH) {
     .attr("class", "tick-hour-line")
     .attr("x1", d => xZ(d)).attr("x2", d => xZ(d))
     .attr("y1", 0).attr("y2", 9)
-    .attr("stroke", "#94A3B8");
+    .attr("stroke", "#8A8B82");
 
   // Hour labels
   gXAxis.selectAll(".tick-hour-text")
@@ -856,7 +856,7 @@ function renderXAxis(xBase, gXAxis, gHours, gMarks, innerW, innerH) {
     .attr("text-anchor", "middle")
     .attr("font-size", 10)
     .attr("font-weight", "500")
-    .attr("fill", "#94A3B8")
+    .attr("fill", "#8A8B82")
     .attr("font-family", "'IBM Plex Sans Thai','Inter',system-ui,sans-serif")
     .text("เวลาที่โพสต์");
 
