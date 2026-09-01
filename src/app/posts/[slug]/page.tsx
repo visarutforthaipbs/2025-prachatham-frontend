@@ -8,6 +8,7 @@ import {
   stripHtml,
 } from "@/lib/wordpress";
 import { sanitizeHtml } from "@/lib/sanitize";
+import { rewriteImageUrls } from "@/lib/image-urls";
 import { Metadata } from "next";
 import { SocialShare } from "@/components/SocialShare";
 import { PostViewTracker } from "@/components/PostViewTracker";
@@ -213,7 +214,10 @@ export default async function PostPage({ params }: PostPageProps) {
 
     // Extract headings and inject IDs for TOC navigation
     const { html: contentWithIds, headings: tocHeadings } = extractAndInjectHeadingIds(post.content.rendered);
-    const processedContent = sanitizeHtml(wrapFootnotesInDetails(contentWithIds));
+    // Older posts still contain media URLs from before the CMS moved to its
+    // current hostname. Normalize those URLs before sanitizing the HTML.
+    const contentWithNormalizedImages = rewriteImageUrls(wrapFootnotesInDetails(contentWithIds));
+    const processedContent = sanitizeHtml(contentWithNormalizedImages);
 
     // JSON-LD structured data for SEO
     const structuredData = {
