@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FaRss } from "react-icons/fa";
 import { Metadata } from "next";
 import { wordpressApi } from "@/lib/wordpress";
 import CategoryFilter from "@/components/CategoryFilter";
@@ -59,7 +60,7 @@ export default async function PostsPage() {
         </nav>
 
         {/* Header */}
-        <div className="border-b border-gray-200 dark:border-gray-800 pb-8">
+        <div className="border-b border-gray-200 dark:border-gray-800 pb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div className="max-w-3xl">
             <p className="text-xs font-semibold tracking-[0.12em] uppercase text-brand-700 dark:text-brand-300 mb-3">
               คลังบทความ
@@ -71,6 +72,13 @@ export default async function PostsPage() {
               ข่าวสาร บทความ และเรื่องเล่าจากชุมชนที่ชวนมองการเปลี่ยนแปลงผ่านสายตาของคนในพื้นที่
             </p>
           </div>
+          <a
+            href="/feed.xml"
+            className="inline-flex items-center gap-2 self-start md:self-auto shrink-0 rounded-full border border-brand-600 bg-white dark:bg-transparent px-5 py-2.5 text-sm font-semibold text-brand-700 dark:text-brand-300 dark:border-brand-300 hover:bg-brand-50 dark:hover:bg-brand-900/40 hover:shadow-[0_8px_30px_-4px_rgba(3,139,113,0.35)] hover:-translate-y-0.5 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
+          >
+            <FaRss className="w-4 h-4" aria-hidden="true" />
+            ติดตามผ่าน RSS
+          </a>
         </div>
 
         {error ? (

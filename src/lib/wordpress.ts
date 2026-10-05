@@ -153,6 +153,7 @@ export class WordPressAPI {
       per_page?: number;
       categories?: string;
       search?: string;
+      includeContent?: boolean;
     } = {}
   ): Promise<{ posts: WordPressPost[]; totalPages: number; total: number }> {
     try {
@@ -160,7 +161,9 @@ export class WordPressAPI {
         _embed: "true",
         per_page: (params.per_page || 12).toString(),
         page: (params.page || 1).toString(),
-        _fields: "id,date,slug,title,excerpt,featured_media,categories,acf,_links,_embedded",
+        _fields: params.includeContent
+          ? "id,date,modified,slug,title,content,excerpt,featured_media,categories,acf,_links,_embedded"
+          : "id,date,slug,title,excerpt,featured_media,categories,acf,_links,_embedded",
         ...(params.categories && { categories: params.categories }),
         ...(params.search && { search: params.search }),
       });

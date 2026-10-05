@@ -8,14 +8,21 @@ import {
   FaInstagram,
   FaTiktok,
   FaYoutube,
+  FaRss,
 } from "react-icons/fa";
 
-const socialLinks = [
+const socialLinks: {
+  label: string;
+  icon: typeof FaRss;
+  href: string;
+  external?: boolean;
+}[] = [
   { label: "Facebook", icon: FaFacebook, href: "https://www.facebook.com/prachatham" },
   { label: "Twitter", icon: FaTwitter, href: "https://twitter.com/PrachathamF" },
   { label: "Instagram", icon: FaInstagram, href: "https://www.instagram.com/prachathammedia/" },
   { label: "TikTok", icon: FaTiktok, href: "https://www.tiktok.com/@prachathammedia" },
   { label: "YouTube", icon: FaYoutube, href: "https://www.youtube.com/@pnnontv" },
+  { label: "RSS", icon: FaRss, href: "/feed.xml", external: false },
 ];
 
 export default function Footer() {
@@ -50,13 +57,12 @@ export default function Footer() {
           </nav>
 
           <div className="flex items-center justify-center gap-4">
-            {socialLinks.map(({ label, icon: IconComponent, href }) => (
+            {socialLinks.map(({ label, icon: IconComponent, href, external = true }) => (
               <a
                 key={label}
                 href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`ติดตามเราบน ${label}`}
+                {...(external && { target: "_blank", rel: "noopener noreferrer" })}
+                aria-label={label === "RSS" ? "ติดตามผ่าน RSS" : `ติดตามเราบน ${label}`}
                 className="text-gray-400 hover:text-brand-300 transition-colors duration-200"
               >
                 <IconComponent className="w-4 h-4" />
@@ -185,13 +191,12 @@ export default function Footer() {
           </p>
 
           <div className="flex items-center gap-4">
-            {socialLinks.map(({ label, icon: IconComponent, href }) => (
+            {socialLinks.map(({ label, icon: IconComponent, href, external = true }) => (
               <a
                 key={label}
                 href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`ติดตามเราบน ${label}`}
+                {...(external && { target: "_blank", rel: "noopener noreferrer" })}
+                aria-label={label === "RSS" ? "ติดตามผ่าน RSS" : `ติดตามเราบน ${label}`}
                 className="text-gray-400 hover:text-brand-300 hover:-translate-y-0.5 transition-all duration-200"
               >
                 <IconComponent className="w-5 h-5" />

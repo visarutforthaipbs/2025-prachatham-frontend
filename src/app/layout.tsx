@@ -59,6 +59,9 @@ export const metadata: Metadata = {
     description: "องค์กรสื่อสิ่งแวดล้อมไทย เพื่อการอนุรักษ์และพัฒนาที่ยั่งยืน",
     images: ["/images/hero-1-page-1.jpg"],
   },
+  alternates: {
+    types: { "application/rss+xml": "/feed.xml" },
+  },
   robots: {
     index: true,
     follow: true,
