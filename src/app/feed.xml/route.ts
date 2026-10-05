@@ -1,5 +1,6 @@
 import { decodeHtmlEntities, getExcerpt, wordpressApi } from "@/lib/wordpress";
 import { sanitizeHtml } from "@/lib/sanitize";
+import { normalizeWordPressMediaUrl, rewriteImageUrls } from "@/lib/image-urls";
 
 export const revalidate = 3600;
 
@@ -43,12 +44,17 @@ export async function GET() {
         .flat()
         .filter((term) => term.taxonomy === "category");
 
-      const image = media?.source_url
-        ? `<img src="${escapeXml(media.source_url)}" alt="${escapeXml(
-            media.alt_text || title
+      const imageUrl = media?.source_url
+        ? normalizeWordPressMediaUrl(media.source_url)
+        : "";
+      const image = imageUrl
+        ? `<img src="${escapeXml(imageUrl)}" alt="${escapeXml(
+            media?.alt_text || title
           )}" /><br />`
         : "";
-      const body = absolutizeUrls(sanitizeHtml(post.content?.rendered ?? ""));
+      const body = absolutizeUrls(
+        sanitizeHtml(rewriteImageUrls(post.content?.rendered ?? ""))
+      );
 
       return [
         "<item>",
@@ -60,8 +66,8 @@ export async function GET() {
         ...categories.map((c) => `<category>${cdata(decodeHtmlEntities(c.name))}</category>`),
         `<description>${cdata(getExcerpt(post.excerpt?.rendered ?? "", 300))}</description>`,
         `<content:encoded>${cdata(image + body)}</content:encoded>`,
-        media?.source_url
-          ? `<media:content url="${escapeXml(media.source_url)}" medium="image" />`
+        imageUrl
+          ? `<media:content url="${escapeXml(imageUrl)}" medium="image" />`
           : "",
         "</item>",
       ]
