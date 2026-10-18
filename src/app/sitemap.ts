@@ -2,15 +2,18 @@ import { MetadataRoute } from "next";
 import { wordpressApi } from "@/lib/wordpress";
 import { SITE_URL } from "@/lib/site-url";
 
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = SITE_URL;
 
   try {
-    // Fetch up to 50 latest posts for dynamic sitemap routing
-    const { posts } = await wordpressApi.getPosts({ per_page: 50 });
+    // Every published post (272+) — Google can only rank www URLs it has
+    // been told about; the old 50-post cap left ~80% of the archive on cms.
+    const posts = await wordpressApi.getAllPostSlugs();
 
-    // Fetch up to 50 latest projects for dynamic sitemap routing
-    const { projects } = await wordpressApi.getProjects({ perPage: 50 });
+    // Projects (small custom post type)
+    const { projects } = await wordpressApi.getProjects({ perPage: 100 });
 
     // Fetch categories for dynamic sitemap routing
     const categories = await wordpressApi.getCategories();
@@ -18,7 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const postUrls: MetadataRoute.Sitemap = posts.map((post) => ({
       url: `${baseUrl}/posts/${post.slug}`,
       lastModified: new Date(post.modified || post.date),
-      changeFrequency: "weekly",
+      changeFrequency: "monthly",
       priority: 0.8,
     }));
 
@@ -29,12 +32,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     }));
 
-    const categoryUrls: MetadataRoute.Sitemap = categories.map((cat) => ({
-      url: `${baseUrl}/category/${cat.slug}`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.6,
-    }));
+    const categoryUrls: MetadataRoute.Sitemap = categories
+      .filter((cat) => cat.count > 0)
+      .map((cat) => ({
+        url: `${baseUrl}/category/${cat.slug}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly",
+        priority: 0.6,
+      }));
 
     const staticUrls: MetadataRoute.Sitemap = [
       {
@@ -78,12 +83,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: new Date(),
         changeFrequency: "weekly",
         priority: 0.7,
-      },
-      {
-        url: `${baseUrl}/search`,
-        lastModified: new Date(),
-        changeFrequency: "monthly",
-        priority: 0.5,
       },
     ];
 

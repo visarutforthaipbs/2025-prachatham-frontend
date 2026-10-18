@@ -422,6 +422,32 @@ export class WordPressAPI {
   }
 
   // Fetch projects
+  /**
+   * Every published post as {slug, modified} — for the sitemap only.
+   * Walks the REST API 100 at a time (272+ posts), fetching no content/embeds.
+   */
+  async getAllPostSlugs(): Promise<Array<{ slug: string; date: string; modified: string }>> {
+    const out: Array<{ slug: string; date: string; modified: string }> = [];
+    let page = 1;
+    let totalPages = 1;
+    do {
+      const searchParams = new URLSearchParams({
+        per_page: "100",
+        page: page.toString(),
+        status: "publish",
+        _fields: "slug,date,modified",
+      });
+      const response = await fetch(buildApiUrl("posts", searchParams), {
+        next: { revalidate: 3600 },
+      });
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      out.push(...(await response.json()));
+      totalPages = parseInt(response.headers.get("X-WP-TotalPages") || "1");
+      page += 1;
+    } while (page <= totalPages && page <= 50);
+    return out;
+  }
+
   async getProjects(
     params: {
       perPage?: number;
