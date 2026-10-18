@@ -23,7 +23,7 @@ export default function CategoryFilter({
         {/* All Categories Button */}
         <Link href="/posts" className="hover:no-underline">
           <span
-            className={`inline-block whitespace-nowrap text-sm font-medium rounded-md px-4 py-2 cursor-pointer border transition-all duration-200 hover:-translate-y-px ${
+            className={`inline-flex items-center min-h-[44px] whitespace-nowrap text-base font-medium rounded-full px-4 py-1.5 cursor-pointer border transition-colors duration-200 hover:-translate-y-px ${
               allCategoriesActive
                 ? "bg-brand-600 text-white border-brand-600 hover:bg-brand-700"
                 : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-brand-50 dark:hover:bg-brand-900/30 hover:border-brand-300 dark:hover:border-brand-700"
@@ -43,7 +43,7 @@ export default function CategoryFilter({
               className="hover:no-underline"
             >
               <span
-                className={`inline-block whitespace-nowrap text-sm font-medium rounded-md px-4 py-2 cursor-pointer border transition-all duration-200 hover:-translate-y-px ${
+                className={`inline-flex items-center min-h-[44px] whitespace-nowrap text-base font-medium rounded-full px-4 py-1.5 cursor-pointer border transition-colors duration-200 hover:-translate-y-px ${
                   isActive
                     ? "bg-brand-600 text-white border-brand-600 hover:bg-brand-700"
                     : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:bg-brand-50 dark:hover:bg-brand-900/30 hover:border-brand-300 dark:hover:border-brand-700"
@@ -60,10 +60,10 @@ export default function CategoryFilter({
         <div className="flex gap-2 overflow-x-auto pb-1">
           <Link href="/posts" className="hover:no-underline">
             <span
-              className={`inline-block whitespace-nowrap text-sm font-medium rounded-md px-4 py-2 cursor-pointer border transition-all duration-200 ${
+              className={`inline-flex items-center min-h-[44px] whitespace-nowrap text-base font-medium rounded-full px-4 py-1.5 cursor-pointer border transition-colors duration-200 ${
                 allCategoriesActive
                   ? "bg-brand-600 text-white border-brand-600"
-                  : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700"
+                  : "bg-white dark:bg-forest-900 text-gray-700 dark:text-gray-200 border-black/10 dark:border-white/15 hover:border-brand-400 hover:bg-brand-50 dark:hover:bg-forest-800"
               }`}
             >
               ทั้งหมด
@@ -79,10 +79,10 @@ export default function CategoryFilter({
                 className="hover:no-underline"
               >
                 <span
-                  className={`inline-block whitespace-nowrap text-sm font-medium rounded-md px-4 py-2 cursor-pointer border transition-all duration-200 ${
+                  className={`inline-flex items-center min-h-[44px] whitespace-nowrap text-base font-medium rounded-full px-4 py-1.5 cursor-pointer border transition-colors duration-200 ${
                     isActive
                       ? "bg-brand-600 text-white border-brand-600"
-                      : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700"
+                      : "bg-white dark:bg-forest-900 text-gray-700 dark:text-gray-200 border-black/10 dark:border-white/15 hover:border-brand-400 hover:bg-brand-50 dark:hover:bg-forest-800"
                   }`}
                 >
                   {category.name}
@@ -94,7 +94,7 @@ export default function CategoryFilter({
 
         {secondaryCategories.length > 0 && (
           <details className="group">
-            <summary className="cursor-pointer text-sm font-medium text-brand-700 dark:text-brand-300 list-none">
+            <summary className="inline-flex items-center min-h-[44px] cursor-pointer text-base font-bold text-brand-700 dark:text-brand-200 list-none">
               หมวดหมู่เพิ่มเติม
             </summary>
             <div className="flex flex-wrap gap-2 pt-3">
@@ -107,10 +107,10 @@ export default function CategoryFilter({
                     className="hover:no-underline"
                   >
                     <span
-                      className={`inline-block text-sm font-medium rounded-md px-3 py-1.5 cursor-pointer border transition-all duration-200 ${
+                      className={`inline-flex items-center min-h-[44px] text-base font-medium rounded-full px-4 py-1.5 cursor-pointer border transition-colors duration-200 ${
                         isActive
                           ? "bg-brand-600 text-white border-brand-600"
-                          : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700"
+                          : "bg-white dark:bg-forest-900 text-gray-700 dark:text-gray-200 border-black/10 dark:border-white/15 hover:border-brand-400 hover:bg-brand-50 dark:hover:bg-forest-800"
                       }`}
                     >
                       {category.name}

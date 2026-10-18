@@ -120,7 +120,7 @@ export default function ReaderFloatingOverlay({ currentPostKey }: { currentPostK
             style={{ width: `${progressPercent}%` }}
           />
         </div>
-        <div className="flex justify-between text-[10px] text-gray-400 dark:text-gray-500">
+        <div className="flex justify-between text-[13px] text-gray-500 dark:text-gray-400">
           <span>ย่อหน้า {state.currentIdx + 1} จาก {state.totalChunks}</span>
           <span>{Math.round(progressPercent)}%</span>
         </div>

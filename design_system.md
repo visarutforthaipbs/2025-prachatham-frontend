@@ -1,88 +1,49 @@
 # Prachatham Design System
 
-## Core Philosophy
-The Prachatham design system is built to convey **trust, community empowerment, and local voice**. It balances modern digital aesthetics with the warmth of grassroots community engagement.
+Trust, community empowerment, local voice — applied with Apple HIG discipline
+(see `design-audit.md` for the audit that produced these rules).
+Source of truth: `src/app/globals.css` (`@theme` + semantic tokens). Tailwind v4, no component library.
 
----
+## 1. Colour — brand hexes are fixed
 
-## 1. Visual Identity
+| Role | Light | Dark | Use |
+|---|---|---|---|
+| Brand teal (`brand-600`, `--brand`) | `#044B41` | — | Logo, active nav pill, filled secondary actions, impact band |
+| Brand ink (`--brand-ink`) | `#044B41` | `#8AE0A0` | Teal **text/icons**. Never put `#044B41` text on a dark surface (1.4:1) |
+| CTA orange (`accent-500`, `--cta`) | `#C46211` | same | **The one prominent action** per band (`.btn-primary`). White label must stay bold ≥ 20 px (white on orange is 4.1:1 → only passes as large text) |
+| Label / secondary / tertiary | `#1d1d1f` / `#4b5563` / `#5f6672` | `#eef2f0` / `#c5cdc9` / `#9fb0aa` | Titles / body / metadata. Tertiary is still ≥ 4.5:1 |
+| Background / raised surface | `#f7f8f3` / `#fff` | `#071513` / `#0B201D` | Page / cards |
 
-### 1.1 Color Palette
-- **Brand (Prachatham Green):** `#059669` (600). Used for primary actions, branding, and emphasis.
-- **Nature (Environment):** `#14b8a6` (500). Used for environmental and nature-related content.
-- **Surface:** White, Gray 50 (backgrounds), Gray 100-900 (neutrals).
-- **Semantic:** 
-  - Success: `#059669`
-  - Warning: `#d97706`
-  - Error: `#dc2626`
-  - Info: `#0284c7`
+Rules: one accent per view; colour never carries meaning alone (links are underlined in articles); don't use `text-gray-400` on light surfaces (2.6:1) — use `text-gray-500`; every light-only class needs a `dark:` partner (a safety net in `globals.css` catches the common ones).
 
-### 1.2 Typography
-- **Primary Font:** `DB Helvethaica X` (Thai and English).
-- **Scale:**
-  - **Hero:** 3xl (mobile) to 6xl (desktop). Bold.
-  - **Page Title:** 2xl to 4xl. Bold.
-  - **Section Heading:** xl to 3xl. Semibold.
-  - **Card Heading:** md to lg. Semibold.
-  - **Body:** 1rem (base) to 1.125rem (lg). Line height 1.625 (relaxed).
+## 2. Typography — DB Helvethaica X
 
----
+The font draws ~20 % smaller than system fonts, so the Tailwind scale is shifted up in `@theme`:
+`text-xs` 14 · `text-sm` 16 · `text-base` 18 · `text-lg` 20 · `text-xl` 22 px. Floor: 13 px. Article body 19 px (phone) / 21 px, leading 1.8.
 
-## 2. Layout & Spacing
+- Weights available: 400 / 500 / 700 only — no `font-light`, no 800/900.
+- No `uppercase` or `tracking-*` on Thai text. Headlines `leading-[1.2]`; never `leading-none` on Thai (tone marks clip).
+- One `h1` per page; section headers are `h2` (`PageHeader` defaults to `h2`).
 
-### 2.1 Containers
-- **Content:** Max width `72rem` (7xl) for main content.
-- **Narrow Content:** Max width `48rem` (4xl) for articles and forms.
-- **Wide Content:** Max width `80rem` for immersive sections.
+## 3. Layout & targets
 
-### 2.2 Section Padding
-- **Small:** `3rem` (base 12)
-- **Standard (Medium):** `5rem` (base 20)
-- **Large:** `7rem` (base 28)
+- Containers: `max-w-7xl` pages, `max-w-3xl` article column, `max-w-4xl` narrow bands.
+- Section rhythm: `SectionWrapper` = 48 px (phone) / 80 px (desktop).
+- **Every control ≥ 44 × 44 pt on touch**: icon buttons `w-11 h-11`, chips/links `min-h-[44px]`, badges inside a 44 pt link wrapper.
+- Breadcrumbs are `<nav aria-label="Breadcrumb">`, links `whitespace-nowrap`, current page `truncate` + `aria-current`.
 
----
+## 4. Components
 
-## 3. Components & UI Patterns
+- **Buttons** (`@layer components`, so utilities can override layout): `.btn-primary` (orange, filled, one per band), `.btn-secondary` (white + teal border), `.btn-outline-green`. All 44 pt pills.
+- **Cards**: `.card` — solid surface, hairline border, hover lifts 2 px on pointer devices only. `PostCard` is one whole-card link (`.card-link` + `.card-link-target`); nested links use `.card-link-above`.
+- **Chips**: `CategoryChips` / `CategoryFilter` — 44 pt rounded-full, active = teal fill.
+- **Navigation**: translucent bar (functional layer), active item bold + tinted; light logo variant in dark mode.
 
-### 3.1 Buttons
-- **Primary:** Filled Prachatham Green. Rounded (`full`). Hover: Lifted with brand glow shadow.
-- **Secondary:** White background with Prachatham Green border. Rounded (`full`).
-- **Ghost:** Gray text, no border. Subtle gray background on hover.
+## 5. Motion & appearance
 
-### 3.2 Cards (Post/Project/Feature)
-- **Border Radius:** `xl` (1rem).
-- **Border:** `1px solid gray.100`.
-- **Shadow:** `sm` by default.
-- **Hover:** `cardHover` (lifted, deeper shadow, brand border color).
+- Motion only where it explains a change: one 350 ms hero entrance, `cubic-bezier(0.16,1,0.3,1)`, respects `prefers-reduced-motion`. No looping animation, no scroll-reveal on content.
+- Dark mode follows the system by default (pre-paint script in `layout.tsx`); the toggle stores an explicit choice in `localStorage` (`prachatham-theme`).
 
-### 3.3 Inputs
-- **Border Radius:** `lg` (0.75rem).
-- **Focus:** Prachatham Green 500 border with subtle outer glow.
+## 6. Checks before shipping UI
 
-### 3.4 Navigation
-- **Height:** `64px`.
-- **Background:** White with 92% opacity and 12px blur.
-- **Top Accent:** Linear gradient from brand green to nature green.
-
----
-
-## 4. Design Tokens (Technical)
-
-Tokens are managed in `src/theme/tokens.ts` and applied via Chakra UI in `src/theme/client.ts`.
-
-| Token | Value |
-|-------|-------|
-| prachatham.600 | #059669 |
-| radius.xl | 1rem |
-| radius.full | 9999px |
-| shadow.cardHover | 0 20px 40px -8px rgba(0, 0, 0, 0.12) |
-| shadow.brandGlow | 0 8px 30px -4px rgba(5, 150, 105, 0.35) |
-
----
-
-## 5. Implementation Guidelines
-
-1. **Use Variants:** Always prefer using Chakra UI component variants (e.g., `<Button variant="primary">`) over manual styling.
-2. **Consistency:** Ensure all cards have the same `borderRadius` and `hover` behavior.
-3. **Typography:** Use the `Heading` and `Text` variants defined in `theme/client.ts`.
-4. **Spacing:** Use the spacing scale (1, 2, 4, 6, 8, 12, 16, 20) for consistent rhythm.
+`npm run type-check && npm run lint && npm run build`, then the HIG capture (9 routes × 390/1280 × light/dark) must report 0 targets < 44 pt, 0 text < 4.5:1, 0 text < 13 px, one `h1` per page.

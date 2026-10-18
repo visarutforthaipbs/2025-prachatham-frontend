@@ -21,7 +21,7 @@ const socialLinks: {
   { label: "Twitter", icon: FaTwitter, href: "https://twitter.com/PrachathamF" },
   { label: "Instagram", icon: FaInstagram, href: "https://www.instagram.com/prachathammedia/" },
   { label: "TikTok", icon: FaTiktok, href: "https://www.tiktok.com/@prachathammedia" },
-  { label: "YouTube", icon: FaYoutube, href: "https://www.youtube.com/@pnnontv" },
+  { label: "YouTube", icon: FaYoutube, href: "https://www.youtube.com/user/pnnontv" },
   { label: "RSS", icon: FaRss, href: "/feed.xml", external: false },
 ];
 
@@ -41,36 +41,36 @@ export default function Footer() {
             height={32}
           />
 
-          <nav aria-label="เมนูท้ายเว็บไซต์" className="flex flex-wrap justify-center gap-x-4 gap-y-2">
-            <Link href="/posts" className="text-sm text-gray-300 hover:text-brand-300 transition-colors">
+          <nav aria-label="เมนูท้ายเว็บไซต์" className="flex flex-wrap justify-center gap-x-2">
+            <Link href="/posts" className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-2 text-base text-gray-200 hover:text-brand-200 transition-colors">
               สื่อ
             </Link>
-            <Link href="/causes" className="text-sm text-gray-300 hover:text-brand-300 transition-colors">
+            <Link href="/causes" className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-2 text-base text-gray-200 hover:text-brand-200 transition-colors">
               โครงการ
             </Link>
-            <Link href="/publications" className="text-sm text-gray-300 hover:text-brand-300 transition-colors">
+            <Link href="/publications" className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-2 text-base text-gray-200 hover:text-brand-200 transition-colors">
               สิ่งพิมพ์
             </Link>
-            <Link href="/contact" className="text-sm text-gray-300 hover:text-brand-300 transition-colors">
+            <Link href="/contact" className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-2 text-base text-gray-200 hover:text-brand-200 transition-colors">
               ติดต่อ
             </Link>
           </nav>
 
-          <div className="flex items-center justify-center gap-4">
+          <div className="flex items-center justify-center gap-1">
             {socialLinks.map(({ label, icon: IconComponent, href, external = true }) => (
               <a
                 key={label}
                 href={href}
                 {...(external && { target: "_blank", rel: "noopener noreferrer" })}
                 aria-label={label === "RSS" ? "ติดตามผ่าน RSS" : `ติดตามเราบน ${label}`}
-                className="text-gray-400 hover:text-brand-300 transition-colors duration-200"
+                className="w-11 h-11 inline-flex items-center justify-center rounded-full text-gray-300 hover:text-brand-200 hover:bg-white/10 transition-colors duration-200"
               >
-                <IconComponent className="w-4 h-4" />
+                <IconComponent className="w-5 h-5" aria-hidden="true" />
               </a>
             ))}
           </div>
 
-          <p className="text-xs text-gray-500 leading-relaxed">
+          <p className="text-sm text-gray-300">
             &copy; {new Date().getFullYear()} ประชาธรรม
           </p>
         </div>
@@ -84,10 +84,10 @@ export default function Footer() {
               width={160}
               height={40}
             />
-            <p className="text-sm text-gray-300 leading-relaxed">
+            <p className="text-base text-gray-200">
               สื่อ ประชาธรรม ประชาทำ
             </p>
-            <p className="text-sm text-gray-400 leading-relaxed">
+            <p className="text-base text-gray-300">
               77/1 หมู่ 5 ต.สุเทพ อ.เมือง
               <br />
               จ.เชียงใหม่ 50200
@@ -96,19 +96,19 @@ export default function Footer() {
 
           {/* About Foundation */}
           <div className="flex flex-col items-start gap-4">
-            <h3 className="text-sm font-semibold text-white tracking-wide">
+            <h3 className="text-base font-bold text-white">
               เกี่ยวกับมูลนิธิ
             </h3>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1">
               <Link
                 href="/about"
-                className="text-gray-300 text-sm hover:text-brand-300 transition-colors duration-150"
+                className="inline-flex items-center min-h-[32px] text-gray-300 text-base hover:text-brand-200 transition-colors duration-150"
               >
                 เกี่ยวกับเรา
               </Link>
               <Link
                 href="/contact"
-                className="text-gray-300 text-sm hover:text-brand-300 transition-colors duration-150"
+                className="inline-flex items-center min-h-[32px] text-gray-300 text-base hover:text-brand-200 transition-colors duration-150"
               >
                 ช่องทางติดต่อเรา
               </Link>
@@ -117,25 +117,25 @@ export default function Footer() {
 
           {/* Our Projects */}
           <div className="flex flex-col items-start gap-4">
-            <h3 className="text-sm font-semibold text-white tracking-wide">
+            <h3 className="text-base font-bold text-white">
               เมนูหลัก
             </h3>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1">
               <Link
                 href="/causes"
-                className="text-gray-300 text-sm hover:text-brand-300 transition-colors duration-150"
+                className="inline-flex items-center min-h-[32px] text-gray-300 text-base hover:text-brand-200 transition-colors duration-150"
               >
                 โครงการที่กำลังทำ
               </Link>
               <Link
                 href="/posts"
-                className="text-gray-300 text-sm hover:text-brand-300 transition-colors duration-150"
+                className="inline-flex items-center min-h-[32px] text-gray-300 text-base hover:text-brand-200 transition-colors duration-150"
               >
                 สื่อ
               </Link>
               <Link
                 href="/publications"
-                className="text-gray-300 text-sm hover:text-brand-300 transition-colors duration-150"
+                className="inline-flex items-center min-h-[32px] text-gray-300 text-base hover:text-brand-200 transition-colors duration-150"
               >
                 สิ่งพิมพ์
               </Link>
@@ -144,39 +144,39 @@ export default function Footer() {
 
           {/* Categories */}
           <div className="flex flex-col items-start gap-4">
-            <h3 className="text-sm font-semibold text-white tracking-wide">
+            <h3 className="text-base font-bold text-white">
               หมวดหมู่
             </h3>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1">
               <Link
                 href="/category/featured"
-                className="text-gray-300 text-sm hover:text-brand-300 transition-colors duration-150"
+                className="inline-flex items-center min-h-[32px] text-gray-300 text-base hover:text-brand-200 transition-colors duration-150"
               >
                 ข่าวเด่น
               </Link>
               <Link
                 href="/category/activist-journalist"
-                className="text-gray-300 text-sm hover:text-brand-300 transition-colors duration-150"
+                className="inline-flex items-center min-h-[32px] text-gray-300 text-base hover:text-brand-200 transition-colors duration-150"
               >
-                ACTIVIST JOURNALIST
+                Activist Journalist
               </Link>
               <Link
                 href="/category/envilocaleyes"
-                className="text-gray-300 text-sm hover:text-brand-300 transition-colors duration-150"
+                className="inline-flex items-center min-h-[32px] text-gray-300 text-base hover:text-brand-200 transition-colors duration-150"
               >
-                ENVILOCALEYES
+                Envilocaleyes
               </Link>
               <Link
                 href="/category/firedustdialogue"
-                className="text-gray-300 text-sm hover:text-brand-300 transition-colors duration-150"
+                className="inline-flex items-center min-h-[32px] text-gray-300 text-base hover:text-brand-200 transition-colors duration-150"
               >
-                ฝุ่นไฟ DIALOGUE
+                ฝุ่นไฟ Dialogue
               </Link>
               <Link
                 href="/category/breath-talk"
-                className="text-gray-300 text-sm hover:text-brand-300 transition-colors duration-150"
+                className="inline-flex items-center min-h-[32px] text-gray-300 text-base hover:text-brand-200 transition-colors duration-150"
               >
-                BREATH TALK
+                Breath Talk
               </Link>
             </div>
           </div>
@@ -186,20 +186,20 @@ export default function Footer() {
 
         {/* Bottom section */}
         <div className="hidden md:flex md:flex-row gap-6 justify-between items-center">
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-gray-300">
             &copy; {new Date().getFullYear()} ประชาธรรม — สื่อชุมชนเพื่อการเปลี่ยนแปลง
           </p>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1">
             {socialLinks.map(({ label, icon: IconComponent, href, external = true }) => (
               <a
                 key={label}
                 href={href}
                 {...(external && { target: "_blank", rel: "noopener noreferrer" })}
                 aria-label={label === "RSS" ? "ติดตามผ่าน RSS" : `ติดตามเราบน ${label}`}
-                className="text-gray-400 hover:text-brand-300 hover:-translate-y-0.5 transition-all duration-200"
+                className="w-10 h-10 inline-flex items-center justify-center rounded-full text-gray-300 hover:text-brand-200 hover:bg-white/10 transition-colors duration-200"
               >
-                <IconComponent className="w-5 h-5" />
+                <IconComponent className="w-5 h-5" aria-hidden="true" />
               </a>
             ))}
           </div>

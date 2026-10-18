@@ -66,7 +66,7 @@ export function SocialShare({
 
   return (
     <div className="flex flex-col gap-4">
-      <span className="font-semibold text-gray-700 text-sm">
+      <span className="font-bold text-gray-800 dark:text-gray-100 text-base">
         แชร์บทความ
       </span>
       <div className="flex items-center gap-2 flex-wrap">
@@ -74,7 +74,7 @@ export function SocialShare({
           onClick={shareToFacebook}
           aria-label="Share on Facebook"
           title="แชร์ใน Facebook"
-          className="p-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+          className="w-11 h-11 inline-flex items-center justify-center rounded-full transition-colors bg-[#1877F2] text-white hover:opacity-90"
         >
           <FaFacebook size={16} />
         </button>
@@ -82,7 +82,7 @@ export function SocialShare({
           onClick={shareToTwitter}
           aria-label="Share on Twitter"
           title="แชร์ใน Twitter"
-          className="p-2 rounded-md bg-sky-500 text-white hover:bg-sky-600 transition-colors"
+          className="w-11 h-11 inline-flex items-center justify-center rounded-full transition-colors bg-black text-white hover:opacity-85 dark:bg-white dark:text-black"
         >
           <FaTwitter size={16} />
         </button>
@@ -90,7 +90,7 @@ export function SocialShare({
           onClick={shareToLine}
           aria-label="Share on LINE"
           title="แชร์ใน LINE"
-          className="p-2 rounded-md bg-green-500 text-white hover:bg-green-600 transition-colors"
+          className="w-11 h-11 inline-flex items-center justify-center rounded-full transition-colors bg-[#06C755] text-white hover:opacity-90"
         >
           <FaLine size={16} />
         </button>
@@ -98,7 +98,7 @@ export function SocialShare({
           onClick={handleCopy}
           aria-label="Copy link"
           title={copied ? "คัดลอกแล้ว!" : "คัดลอกลิงก์"}
-          className="p-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
+          className="w-11 h-11 inline-flex items-center justify-center rounded-full transition-colors bg-black/5 text-gray-700 hover:bg-black/10 dark:bg-white/10 dark:text-gray-200 dark:hover:bg-white/15"
         >
           <FaCopy size={16} />
         </button>
@@ -106,12 +106,12 @@ export function SocialShare({
           onClick={handlePrint}
           aria-label="Print article"
           title="พิมพ์บทความ"
-          className="p-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
+          className="w-11 h-11 inline-flex items-center justify-center rounded-full transition-colors bg-black/5 text-gray-700 hover:bg-black/10 dark:bg-white/10 dark:text-gray-200 dark:hover:bg-white/15"
         >
           <FaPrint size={16} />
         </button>
         {copied && (
-          <span className="text-xs text-green-600 font-medium">คัดลอกลิงก์แล้ว</span>
+          <span className="text-sm text-brand-700 dark:text-brand-200 font-bold" role="status">คัดลอกลิงก์แล้ว</span>
         )}
       </div>
     </div>

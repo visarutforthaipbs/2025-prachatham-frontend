@@ -26,6 +26,7 @@
   --color-brand-100: #C3F38D;
   --color-brand-200: #8AE0A0;
   --color-brand-300: #5CC882;
+  --color-brand-400: #38A96A; /* was referenced (dark:text-brand-400) but undefined → headings fell back to #033D35 on the dark bg */
   --color-brand-500: #038B71;
   --color-brand-600: #044B41;
   --color-brand-700: #033D35;
@@ -59,6 +60,23 @@
 
   /* ─── Surface ─── */
   --color-surface: #F0F1E9;
+
+  /* ─── Type scale (HIG pass) ───
+     DB Helvethaica X draws ~20% smaller than system fonts at the same px,
+     so Tailwind's default scale put metadata at a visual ~10px and body at
+     ~13px. One step up across the small sizes brings Caption ≈ 13–14px and
+     Body ≈ 17px (HIG Body) without touching any call site. Thai needs
+     line-height ≥ 1.5 so tone marks never collide. */
+  --text-xs: 0.875rem;
+  --text-xs--line-height: 1.5;
+  --text-sm: 1rem;
+  --text-sm--line-height: 1.55;
+  --text-base: 1.125rem;
+  --text-base--line-height: 1.65;
+  --text-lg: 1.25rem;
+  --text-lg--line-height: 1.6;
+  --text-xl: 1.375rem;
+  --text-xl--line-height: 1.5;
 
   /* ─── Fonts ─── */
   --font-sans: "DB Helvethaica X", -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -111,6 +129,40 @@
   }
 }
 
+/* ─── Semantic tokens (HIG pass) ─────────────────────────
+   Brand hexes are unchanged; these roles say WHERE each one may be used.
+   - --brand (#044B41) and --cta (#C46211) are FILLS (logo, active
+     indicator, the one prominent button).
+   - --brand-ink is brand-coloured TEXT/ICONS: the same teal in light mode,
+     a lighter teal in dark mode where #044B41 on the dark bg is 1.4:1.
+   - Label roles follow HIG label → secondary → tertiary; tertiary is still
+     ≥ 4.5:1 so it can carry readable metadata (dates, authors). */
+:root {
+  --brand: #044B41;
+  --brand-ink: #044B41;
+  --cta: #C46211;
+  --cta-hover: #A8530E;
+  --label: #1d1d1f;
+  --label-secondary: #4b5563;
+  --label-tertiary: #5f6672;
+  --separator: rgba(0, 0, 0, 0.08);
+  --bg: #f7f8f3;
+  --bg-grouped: #fbfcf7;
+  --surface-raised: #ffffff;
+  --focus-ring: #038B71;
+}
+.dark {
+  --brand-ink: #8AE0A0;
+  --label: #eef2f0;
+  --label-secondary: #c5cdc9;
+  --label-tertiary: #9fb0aa;
+  --separator: rgba(255, 255, 255, 0.1);
+  --bg: #071513;
+  --bg-grouped: #071513;
+  --surface-raised: #0B201D;
+  --focus-ring: #8AE0A0;
+}
+
 /* ─── Base ────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
@@ -121,16 +173,17 @@ html {
 
 body {
   font-family: var(--font-sans);
-  color: #374151;
-  background-color: #f7f8f3;
-  line-height: 1.75;
+  font-size: var(--text-base);
+  color: var(--label-secondary);
+  background-color: var(--bg);
+  line-height: 1.65;
   overflow-x: clip;
   overflow-wrap: break-word;
 }
 
 .dark body {
-  color: #cbd5e1;
-  background-color: var(--color-forest-950);
+  color: var(--label-secondary);
+  background-color: var(--bg);
 }
 
 ::selection {
@@ -144,14 +197,19 @@ body {
 }
 
 /* ─── WordPress Content ──────────────────────────────── */
+/* Article body — HIG Body ≈ 17pt. DB Helvethaica X needs ~20px to read at
+   that size; 1.8 leading keeps Thai upper/lower marks clear. */
 .wordpress-content {
   font-family: var(--font-sans);
-  line-height: 1.9;
-  color: #334155;
-  font-size: 1.12rem;
+  line-height: 1.8;
+  color: #1f2937;
+  font-size: 1.1875rem;
+}
+@media (min-width: 768px) {
+  .wordpress-content { font-size: 1.3125rem; }
 }
 .dark .wordpress-content {
-  color: #cbd5e1;
+  color: #d9e1dd;
 }
 
 .wordpress-content h1,
@@ -193,7 +251,7 @@ body {
 }
 
 .wordpress-content figure { margin: 2rem 0; }
-.wordpress-content figcaption { font-size: 0.875rem; color: #94a3b8; text-align: center; margin-top: 0.75rem; }
+.wordpress-content figcaption { font-size: 1rem; color: var(--label-tertiary); text-align: center; margin-top: 0.75rem; }
 
 /* ─── WordPress Content: Alignment ───────────────────── */
 /* Gutenberg alignment classes (aligncenter/alignleft/...) so the layout
@@ -283,7 +341,7 @@ body {
   color: #94a3b8;
 }
 
-.wordpress-content a { color: #044B41; text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.15s ease; }
+.wordpress-content a { color: var(--brand-ink); text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); text-underline-offset: 3px; border-bottom: 1px solid transparent; transition: border-color 0.15s ease; }
 .wordpress-content a:hover { border-bottom-color: #044B41; }
 .dark .wordpress-content a { color: #5CC882; }
 .dark .wordpress-content a:hover { border-bottom-color: #5CC882; }
@@ -449,23 +507,37 @@ body {
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
-textarea:focus-visible {
-  outline: 2px solid #044B41;
+textarea:focus-visible,
+select:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
 /* ─── Component Utility Classes ─────────────────────── */
-/* Button variants */
+/* Button variants — HIG: ≥ 44pt targets, one prominent (filled) action per
+   view, label by weight not size. The CTA orange is kept exactly (#C46211);
+   white on it is 4.1:1, so the label is set as WCAG "large" text
+   (≥ 18.67px bold → 3:1 bar) instead of changing the brand colour. */
+/* In @layer components so call-site utilities (hidden, w-full, px-*) win. */
+@layer components {
 .btn-primary {
-  @apply bg-accent-500 text-white font-medium rounded-md px-6 py-2.5 transition-all duration-200;
+  @apply inline-flex items-center justify-center gap-2 bg-accent-500 text-white font-bold rounded-full px-6 py-2 transition-colors duration-200;
+  min-height: 44px;
+  font-size: 1.25rem;
+  line-height: 1.4;
 }
 .btn-primary:hover {
-  @apply bg-accent-600 shadow-md;
-  transform: translateY(-1px);
+  @apply bg-accent-600;
+}
+.btn-primary:active {
+  @apply bg-accent-700;
 }
 .btn-secondary {
-  @apply bg-white text-brand-700 font-medium rounded-md px-6 py-2.5 border border-brand-600 transition-all duration-200;
+  @apply inline-flex items-center justify-center gap-2 bg-white text-brand-700 font-bold rounded-full px-6 py-2 border border-brand-600 transition-colors duration-200;
+  min-height: 44px;
+  line-height: 1.4;
 }
 .dark .btn-secondary {
   background-color: #1e293b;
@@ -473,14 +545,19 @@ textarea:focus-visible {
   border-color: #044B41;
 }
 .btn-secondary:hover {
-  @apply bg-brand-50 shadow-sm;
-  transform: translateY(-1px);
+  @apply bg-brand-50;
+}
+.dark .btn-secondary {
+  background-color: var(--surface-raised);
+  color: var(--brand-ink);
+  border-color: color-mix(in srgb, var(--brand-ink) 55%, transparent);
 }
 .dark .btn-secondary:hover {
   background-color: #022F29;
 }
 .btn-outline-green {
-  @apply border border-brand-600 text-brand-700 font-medium rounded-md px-6 py-2.5 transition-all duration-200;
+  @apply inline-flex items-center justify-center gap-2 border border-brand-600 text-brand-700 font-bold rounded-full px-6 py-2 transition-colors duration-200;
+  min-height: 44px;
 }
 .dark .btn-outline-green {
   border-color: #5CC882;
@@ -488,29 +565,37 @@ textarea:focus-visible {
 }
 .btn-outline-green:hover {
   @apply bg-brand-50;
-  transform: translateY(-1px);
 }
 .dark .btn-outline-green:hover {
   background-color: #022F29;
 }
+}
 
-/* Card styling with premium borders, backgrounds, transitions and hover states */
+/* Card — content layer: solid surface, hairline border, no glow. Hover
+   lifts 2px (pointer only) so the whole card reads as one target. */
 .card {
-  @apply rounded-xl overflow-hidden border shadow-sm transition-all duration-300 bg-white dark:bg-forest-900 border-black/5 dark:border-forest-800/80;
+  @apply rounded-xl overflow-hidden border shadow-sm transition-[box-shadow,transform,border-color] duration-200 bg-white dark:bg-forest-900 border-black/5 dark:border-forest-800/80;
 }
-.card:hover {
-  @apply shadow-brand-glow;
-  border-color: color-mix(in srgb, var(--color-brand-500) 20%, transparent);
-  transform: translateY(-4px);
-}
-.dark .card:hover {
-  @apply shadow-brand-glow-dark;
-  border-color: color-mix(in srgb, var(--color-brand-400) 30%, transparent);
+@media (hover: hover) {
+  .card:hover {
+    box-shadow: var(--shadow-card-hover);
+    border-color: color-mix(in srgb, var(--color-brand-500) 25%, transparent);
+    transform: translateY(-2px);
+  }
+  .dark .card:hover {
+    border-color: color-mix(in srgb, #8AE0A0 30%, transparent);
+  }
 }
 
-/* Badge */
+/* Whole-card link: the title link's ::after covers the card, so the card
+   is one ≥44pt target; nested links (category badges) sit above it. */
+.card-link { position: relative; }
+.card-link .card-link-target::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.card-link .card-link-above { position: relative; z-index: 2; }
+
+/* Badge — no letter-spacing (it breaks Thai shaping) */
 .badge-brand {
-  @apply bg-brand-50 text-brand-700 border border-brand-200 rounded-md px-2.5 py-1 text-xs font-medium tracking-wide;
+  @apply inline-flex items-center bg-brand-50 text-brand-700 border border-brand-200 rounded-md px-2.5 py-0.5 text-xs font-medium;
 }
 .dark .badge-brand {
   background-color: #022F29;
@@ -535,4 +620,28 @@ textarea:focus-visible {
   .no-print {
     display: none !important;
   }
+}
+
+/* ─── HIG contrast & dark-mode safety net ───────────────
+   Kept in @layer utilities AFTER Tailwind so it wins at equal specificity
+   but still loses to an explicit `dark:` variant on the element.
+   Light-only text/bg classes with no dark: partner rendered dark-on-dark
+      (About page body 1.6:1, brand-700 headings 1.4:1, white board cards). */
+@layer utilities {
+  .dark .text-brand-700:not([class*="dark:text-"]),
+  .dark .text-brand-600:not([class*="dark:text-"]),
+  .dark .text-brand-800:not([class*="dark:text-"]) { color: var(--brand-ink); }
+  .dark .text-gray-900:not([class*="dark:text-"]),
+  .dark .text-gray-800:not([class*="dark:text-"]) { color: var(--label); }
+  .dark .text-gray-500:not([class*="dark:text-"]) { color: var(--label-tertiary); }
+  .dark .text-gray-700:not([class*="dark:text-"]),
+  .dark .text-gray-600:not([class*="dark:text-"]) { color: var(--label-secondary); }
+  .dark .bg-white:not([class*="dark:bg-"]) { background-color: var(--surface-raised); }
+  .dark .bg-gray-50:not([class*="dark:bg-"]),
+  .dark .bg-gray-100:not([class*="dark:bg-"]) { background-color: var(--surface-raised); }
+  .dark .bg-brand-50:not([class*="dark:bg-"]) { background-color: #022F29; }
+  .dark .border-brand-100:not([class*="dark:border-"]),
+  .dark .border-brand-200:not([class*="dark:border-"]) { border-color: #0d4a40; }
+  .dark .border-gray-100:not([class*="dark:border-"]),
+  .dark .border-gray-200:not([class*="dark:border-"]) { border-color: var(--separator); }
 }

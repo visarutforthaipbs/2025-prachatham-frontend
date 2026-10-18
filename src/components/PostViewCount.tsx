@@ -20,9 +20,10 @@ export function PostViewCount({ postId }: PostViewCountProps) {
     if (views === null) return null;
 
     return (
-        <div className="flex items-center gap-1">
-            <FaEye size={10} />
+        <span className="flex items-center gap-1.5">
+            <FaEye size={12} aria-hidden="true" />
             <span>{views}</span>
-        </div>
+            <span className="sr-only">ครั้งที่อ่าน</span>
+        </span>
     );
 }

@@ -35,10 +35,10 @@ export default function CategoryChips({
             <li key={category.id} className="snap-start shrink-0">
               <Link
                 href={`/category/${category.slug}`}
-                className={`inline-flex items-center whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-150 hover:no-underline ${
+                className={`inline-flex items-center min-h-[44px] whitespace-nowrap rounded-full border px-4 py-1.5 text-base font-medium transition-colors duration-150 hover:no-underline ${
                   active
                     ? "border-brand-600 bg-brand-600 text-white"
-                    : "border-black/10 bg-white text-gray-700 hover:border-brand-400 hover:bg-brand-50 hover:text-brand-700 dark:border-white/15 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
+                    : "border-black/10 bg-white text-gray-700 hover:border-brand-400 hover:bg-brand-50 hover:text-brand-700 dark:border-white/15 dark:bg-forest-900 dark:text-gray-200 dark:hover:bg-forest-800"
                 }`}
                 aria-current={active ? "page" : undefined}
               >

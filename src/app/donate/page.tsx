@@ -24,11 +24,11 @@ export default function DonatePage() {
     <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-8">
       <div className="flex flex-col gap-8">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-500">
-          <Link href="/" className="hover:text-brand-600">
+        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+          <Link href="/" className="inline-flex items-center min-h-[44px] whitespace-nowrap hover:text-brand-700 dark:hover:text-brand-200 transition-colors">
             หน้าแรก
           </Link>
-          <span className="dark:text-gray-600">/</span>
+          <span aria-hidden="true" className="text-gray-400 dark:text-gray-500">/</span>
           <span className="text-gray-700 dark:text-gray-200 font-medium">
             ร่วมทำงานกับเรา
           </span>
@@ -69,7 +69,7 @@ export default function DonatePage() {
                     href="https://www.facebook.com/prachatham"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-primary text-center text-lg py-3 w-full"
+                    className="btn-primary text-center py-3 w-full"
                   >
                     ติดต่อเราเพื่อสนับสนุน
                   </a>
@@ -169,7 +169,7 @@ export default function DonatePage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
             <a
               href="mailto:info@prachatham.com"
-              className="btn-primary text-base sm:text-lg px-6 py-3 w-full sm:w-auto"
+              className="btn-primary px-6 py-3 w-full sm:w-auto"
             >
               ติดต่อเรา
             </a>

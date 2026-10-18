@@ -1,8 +1,9 @@
 import { MetadataRoute } from "next";
 import { wordpressApi } from "@/lib/wordpress";
+import { SITE_URL } from "@/lib/site-url";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.prachatham.com";
+  const baseUrl = SITE_URL;
 
   try {
     // Fetch up to 50 latest posts for dynamic sitemap routing

@@ -349,7 +349,7 @@ export default function QuoteShareModal({
             
             {/* Theme selection */}
             <div>
-              <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 block mb-2">ธีมภาพพื้นหลัง</span>
+              <span className="text-[13px] md:text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 block mb-2">ธีมภาพพื้นหลัง</span>
               <div className="grid grid-cols-4 gap-2">
                 {(Object.keys(THEMES) as ThemeName[]).map((themeName) => (
                   <button
@@ -377,7 +377,7 @@ export default function QuoteShareModal({
 
             {/* Font Sizing */}
             <div>
-              <div className="flex justify-between text-[10px] md:text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-2">
+              <div className="flex justify-between text-[13px] md:text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">
                 <span className="flex items-center gap-1.5"><FaFont size={10} /> ขนาดตัวหนังสือ</span>
                 <span className="text-brand-600 dark:text-brand-400">{fontSize}px</span>
               </div>
@@ -397,7 +397,7 @@ export default function QuoteShareModal({
               <label className="flex items-center justify-between p-2.5 md:p-3 rounded-xl border border-black/5 dark:border-forest-800 cursor-pointer select-none">
                 <div className="flex flex-col">
                   <span className="text-xs md:text-sm font-semibold text-gray-900 dark:text-gray-150">เครดิตบทความ</span>
-                  <span className="text-[10px] text-gray-400">แสดงชื่อบทความและผู้แต่ง</span>
+                  <span className="text-[13px] text-gray-500">แสดงชื่อบทความและผู้แต่ง</span>
                 </div>
                 <input
                   type="checkbox"
@@ -410,7 +410,7 @@ export default function QuoteShareModal({
               <label className="flex items-center justify-between p-2.5 md:p-3 rounded-xl border border-black/5 dark:border-forest-800 cursor-pointer select-none">
                 <div className="flex flex-col">
                   <span className="text-xs md:text-sm font-semibold text-gray-900 dark:text-gray-150">ลายน้ำสื่อประชาธรรม</span>
-                  <span className="text-[10px] text-gray-400">แสดงตราสัญลักษณ์ที่ขอบล่าง</span>
+                  <span className="text-[13px] text-gray-500">แสดงตราสัญลักษณ์ที่ขอบล่าง</span>
                 </div>
                 <input
                   type="checkbox"
@@ -433,7 +433,7 @@ export default function QuoteShareModal({
             </button>
             <button
               onClick={handleDownload}
-              className="flex-[1.5] btn-primary flex items-center justify-center gap-2 py-2 md:py-2.5 rounded-xl transition-all cursor-pointer shadow-lg hover:shadow-brand-glow font-medium text-sm md:text-base"
+              className="flex-[1.5] btn-primary flex items-center justify-center gap-2 py-2 md:py-2.5 rounded-xl transition-all cursor-pointer shadow-lg hover:shadow-brand-glow"
             >
               <FaDownload size={13} />
               ดาวน์โหลดภาพ

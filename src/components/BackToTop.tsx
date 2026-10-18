@@ -32,9 +32,9 @@ export default function BackToTop() {
       <button
         aria-label="กลับขึ้นด้านบน"
         onClick={scrollToTop}
-        className="bg-white text-brand-600 p-2.5 rounded-full border border-gray-200 shadow-[0_4px_14px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] hover:bg-brand-50 hover:border-brand-200 transition-all duration-200"
+        className="w-12 h-12 inline-flex items-center justify-center rounded-full text-brand-700 dark:text-brand-200 border border-black/10 dark:border-white/15 bg-white/80 dark:bg-forest-900/80 backdrop-blur-xl backdrop-saturate-150 shadow-[0_4px_14px_rgba(0,0,0,0.12)] hover:bg-white dark:hover:bg-forest-900 transition-colors duration-200"
       >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-5 h-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
         </svg>
       </button>

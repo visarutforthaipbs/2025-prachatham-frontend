@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ContactPageClient from "./ContactPageClient";
+import { SITE_URL } from "@/lib/site-url";
 
 export const metadata: Metadata = {
   title: "ช่องทางติดต่อเรา | ประชาธรรม",
@@ -7,18 +8,18 @@ export const metadata: Metadata = {
     "ติดต่อประชาธรรม สื่อสิ่งแวดล้อมไทย - รับฟังความคิดเห็น คำแนะนำ และข้อเสนอแนะจากทุกท่าน ที่อยู่ เชียงใหม่ อีเมล pnn.thailand@gmail.com",
   keywords:
     "ติดต่อ ประชาธรรม, สื่อสิ่งแวดล้อม, ช่องทางติดต่อ, เชียงใหม่, pnn.thailand@gmail.com, contact, environmental media, thailand",
-  authors: [{ name: "Prachatham", url: "https://prachatham.org" }],
+  authors: [{ name: "Prachatham", url: SITE_URL }],
   openGraph: {
     title: "ช่องทางติดต่อเรา | ประชาธรรม",
     description:
       "ติดต่อประชาธรรม สื่อสิ่งแวดล้อมไทย - รับฟังความคิดเห็น คำแนะนำ และข้อเสนอแนะจากทุกท่าน",
-    url: `${process.env.NEXT_PUBLIC_SITE_URL}/contact`,
+    url: `${SITE_URL}/contact`,
     siteName: "ประชาธรรม",
     locale: "th_TH",
     type: "website",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/new-favicon.svg`,
+        url: `${SITE_URL}/new-favicon.svg`,
         width: 1200,
         height: 630,
         alt: "ติดต่อประชาธรรม สื่อสิ่งแวดล้อมไทย",
@@ -30,12 +31,12 @@ export const metadata: Metadata = {
     title: "ช่องทางติดต่อเรา | ประชาธรรม",
     description:
       "ติดต่อประชาธรรม สื่อสิ่งแวดล้อมไทย - รับฟังความคิดเห็น คำแนะนำ และข้อเสนอแนะจากทุกท่าน",
-    images: [`${process.env.NEXT_PUBLIC_SITE_URL}/new-favicon.svg`],
+    images: [`${SITE_URL}/new-favicon.svg`],
     site: "@PrachathamF",
     creator: "@PrachathamF",
   },
   alternates: {
-    canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/contact`,
+    canonical: `${SITE_URL}/contact`,
   },
   robots: {
     index: true,

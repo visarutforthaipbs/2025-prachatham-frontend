@@ -20,6 +20,7 @@ const AdSense = dynamic(() => import("@/components/AdSense"));
 const ReaderThaiFree = dynamic(() => import("@/components/ReaderThaiFree"));
 import ReaderFloatingOverlay from "@/components/ReaderFloatingOverlay";
 import QuoteCardManager from "@/components/QuoteCardManager";
+import { SITE_URL } from "@/lib/site-url";
 
 interface PostPageProps {
   params: Promise<{
@@ -209,8 +210,7 @@ export default async function PostPage({ params }: PostPageProps) {
     const categories = (post._embedded?.["wp:term"]?.[0] || []) as Category[];
     const title = decodeHtmlEntities(post.title.rendered);
     const readingTime = calculateReadingTime(post.content.rendered);
-    const currentUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
-      }/posts/${slug}`;
+    const currentUrl = `${SITE_URL}/posts/${slug}`;
 
     // Extract headings and inject IDs for TOC navigation
     const { html: contentWithIds, headings: tocHeadings } = extractAndInjectHeadingIds(post.content.rendered);
@@ -242,8 +242,7 @@ export default async function PostPage({ params }: PostPageProps) {
         name: "Prachatham Foundation",
         logo: {
           "@type": "ImageObject",
-          url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://cms.prachatham.com"
-            }/wp-content/uploads/2024/01/new-favicon.svg`,
+          url: `${SITE_URL}/new-favicon.svg`,
         },
       },
       datePublished: post.date,
@@ -269,38 +268,39 @@ export default async function PostPage({ params }: PostPageProps) {
         <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12">
           <div className="flex flex-col gap-8">
             {/* Breadcrumb */}
-            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 max-w-3xl mx-auto w-full">
+            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-base text-gray-500 dark:text-gray-400 max-w-3xl mx-auto w-full min-w-0">
               <Link
                 href="/"
-                className="hover:text-brand-600 transition-colors"
+                className="shrink-0 whitespace-nowrap inline-flex items-center min-h-[44px] hover:text-brand-700 dark:hover:text-brand-200 transition-colors"
               >
                 หน้าแรก
               </Link>
-              <span>/</span>
+              <span aria-hidden="true">/</span>
               <Link
                 href="/posts"
-                className="hover:text-brand-600 transition-colors"
+                className="shrink-0 whitespace-nowrap inline-flex items-center min-h-[44px] hover:text-brand-700 dark:hover:text-brand-200 transition-colors"
               >
                 บทความ
               </Link>
-              <span>/</span>
-              <span className="text-gray-700 dark:text-gray-200 font-medium line-clamp-1">
+              <span aria-hidden="true">/</span>
+              <span className="text-gray-700 dark:text-gray-200 font-medium truncate min-w-0" aria-current="page">
                 {title}
               </span>
-            </div>
+            </nav>
 
             {/* Article Header */}
-            <header className="max-w-3xl mx-auto w-full border-b border-gray-200 dark:border-gray-800 pb-8">
+            <header className="max-w-3xl mx-auto w-full pb-2">
               {/* Categories */}
               {categories.length > 0 && (
                 <div className="flex flex-wrap items-center gap-2 mb-4">
-                  <FaTags className="text-gray-400" size={14} />
+                  <FaTags className="text-gray-500" size={14} aria-hidden="true" />
                   {categories.map((category) => (
                     <Link
                       key={category.id}
                       href={`/category/${category.slug}`}
+                      className="group/badge inline-flex items-center min-h-[44px] hover:no-underline"
                     >
-                      <span className="badge-brand text-xs px-2 py-1 hover:bg-brand-200 transition-all duration-200">
+                      <span className="badge-brand group-hover/badge:bg-brand-100 dark:group-hover/badge:bg-brand-800 transition-colors duration-150">
                         {category.name}
                       </span>
                     </Link>
@@ -309,30 +309,30 @@ export default async function PostPage({ params }: PostPageProps) {
               )}
 
               {/* Title */}
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight text-gray-950 dark:text-gray-50 mb-6 font-bold">
+              <h1 className="text-[2.25rem] sm:text-5xl lg:text-6xl leading-[1.2] text-gray-950 dark:text-gray-50 mb-6 font-bold text-balance">
                 {title}
               </h1>
 
               {/* Meta Information with TTS */}
-              <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-5">
+              <div className="bg-white dark:bg-forest-900 border border-black/5 dark:border-white/10 rounded-xl p-4 md:p-5">
                 <div className="flex flex-col gap-4">
                   {/* Meta Info Row */}
                   <div className="flex justify-between flex-wrap gap-4">
-                    <div className="flex gap-6 flex-wrap">
+                    <div className="flex gap-x-5 gap-y-2 flex-wrap text-base text-gray-600 dark:text-gray-300">
                       {/* Author */}
                       {post.acf?.authornamepost && (
-                        <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 text-sm">
+                        <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 text-base">
                           <FaUser size={14} />
                           <span className="font-medium">
                             {post.acf.authornamepost}
                           </span>
                         </div>
                       )}
-                      <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 text-sm">
+                      <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 text-base">
                         <FaCalendarAlt size={14} />
                         <span>{formatThaiDate(post.date)}</span>
                       </div>
-                      <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 text-sm">
+                      <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 text-base">
                         <FaClock size={14} />
                         <span>อ่าน {readingTime} นาที</span>
                       </div>

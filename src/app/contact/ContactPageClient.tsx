@@ -13,6 +13,7 @@ import {
   FaTiktok,
   FaYoutube,
 } from "react-icons/fa";
+import { SITE_URL } from "@/lib/site-url";
 
 export default function ContactPageClient() {
   const organizationStructuredData = {
@@ -21,10 +22,8 @@ export default function ContactPageClient() {
     name: "ประชาธรรม",
     alternateName: "Prachatham",
     description: "องค์กรสื่อสิ่งแวดล้อมไทย เพื่อการอนุรักษ์และพัฒนาที่ยั่งยืน",
-    url: process.env.NEXT_PUBLIC_SITE_URL || "https://prachatham.org",
-    logo: `${
-      process.env.NEXT_PUBLIC_SITE_URL || "https://prachatham.org"
-    }/new-favicon.svg`,
+    url: SITE_URL,
+    logo: `${SITE_URL}/new-favicon.svg`,
     contactPoint: {
       "@type": "ContactPoint",
       telephone: "",
@@ -44,7 +43,7 @@ export default function ContactPageClient() {
       "https://twitter.com/PrachathamF",
       "https://www.instagram.com/prachathammedia/",
       "https://www.tiktok.com/@prachathammedia",
-      "https://www.youtube.com/@pnnontv",
+      "https://www.youtube.com/user/pnnontv",
     ],
   };
 
@@ -54,9 +53,7 @@ export default function ContactPageClient() {
     name: "ช่องทางติดต่อเรา | ประชาธรรม",
     description:
       "ติดต่อประชาธรรม สื่อสิ่งแวดล้อมไทย - รับฟังความคิดเห็น คำแนะนำ และข้อเสนอแนะจากทุกท่าน",
-    url: `${
-      process.env.NEXT_PUBLIC_SITE_URL || "https://prachatham.org"
-    }/contact`,
+    url: `${SITE_URL}/contact`,
     mainEntity: {
       "@type": "Organization",
       name: "ประชาธรรม",
@@ -94,11 +91,11 @@ export default function ContactPageClient() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500">
-                <Link href="/" className="hover:text-brand-600 transition-colors">
+              <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                <Link href="/" className="inline-flex items-center min-h-[44px] whitespace-nowrap hover:text-brand-700 dark:hover:text-brand-200 transition-colors">
                   หน้าแรก
                 </Link>
-                <span className="text-gray-300 dark:text-gray-600">/</span>
+                <span aria-hidden="true" className="text-gray-400 dark:text-gray-500">/</span>
                 <span className="text-gray-700 dark:text-gray-200 font-medium">
                   ช่องทางติดต่อเรา
                 </span>
@@ -161,7 +158,7 @@ export default function ContactPageClient() {
                                 href="https://www.facebook.com/prachatham"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2 text-brand-600 font-medium hover:text-brand-700 hover:underline"
+                                className="flex items-center gap-2 min-h-[44px] text-brand-700 dark:text-brand-200 font-bold underline-offset-4 hover:underline"
                               >
                                 <FaFacebook />
                                 Facebook
@@ -172,7 +169,7 @@ export default function ContactPageClient() {
                                 href="https://twitter.com/PrachathamF"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2 text-brand-600 font-medium hover:text-brand-700 hover:underline"
+                                className="flex items-center gap-2 min-h-[44px] text-brand-700 dark:text-brand-200 font-bold underline-offset-4 hover:underline"
                               >
                                 <FaTwitter />
                                 Twitter
@@ -183,7 +180,7 @@ export default function ContactPageClient() {
                                 href="https://www.instagram.com/prachathammedia/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2 text-brand-600 font-medium hover:text-brand-700 hover:underline"
+                                className="flex items-center gap-2 min-h-[44px] text-brand-700 dark:text-brand-200 font-bold underline-offset-4 hover:underline"
                               >
                                 <FaInstagram />
                                 Instagram
@@ -194,7 +191,7 @@ export default function ContactPageClient() {
                                 href="https://www.tiktok.com/@prachathammedia"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2 text-brand-600 font-medium hover:text-brand-700 hover:underline"
+                                className="flex items-center gap-2 min-h-[44px] text-brand-700 dark:text-brand-200 font-bold underline-offset-4 hover:underline"
                               >
                                 <FaTiktok />
                                 TikTok
@@ -202,10 +199,10 @@ export default function ContactPageClient() {
                             </motion.div>
                             <motion.div>
                               <a
-                                href="https://www.youtube.com/@pnnontv"
+                                href="https://www.youtube.com/user/pnnontv"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2 text-brand-600 font-medium hover:text-brand-700 hover:underline"
+                                className="flex items-center gap-2 min-h-[44px] text-brand-700 dark:text-brand-200 font-bold underline-offset-4 hover:underline"
                               >
                                 <FaYoutube />
                                 YouTube

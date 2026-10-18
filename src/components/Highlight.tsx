@@ -39,7 +39,7 @@ export function Highlight({ text, query, className = "" }: HighlightProps) {
         part.match ? (
           <mark
             key={i}
-            className={`bg-yellow-200 text-inherit rounded px-0.5 ${className}`}
+            className={`bg-yellow-200 text-gray-950 dark:bg-yellow-300/30 dark:text-inherit rounded px-0.5 ${className}`}
           >
             {part.text}
           </mark>

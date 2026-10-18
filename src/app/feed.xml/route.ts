@@ -1,12 +1,9 @@
 import { decodeHtmlEntities, getExcerpt, wordpressApi } from "@/lib/wordpress";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { normalizeWordPressMediaUrl, rewriteImageUrls } from "@/lib/image-urls";
+import { SITE_URL } from "@/lib/site-url";
 
 export const revalidate = 3600;
-
-const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.prachatham.com"
-).replace(/\/$/, "");
 
 const escapeXml = (value: string) =>
   value

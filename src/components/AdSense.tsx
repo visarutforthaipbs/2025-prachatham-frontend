@@ -90,7 +90,7 @@ export default function AdSense({
       className="ad-container my-4 mx-auto w-full text-center opacity-85 hover:opacity-100 transition-opacity duration-200 print:hidden overflow-hidden"
       style={{ maxHeight, minHeight: maxHeight }}
     >
-      <span className="text-[10px] text-gray-400 mb-1 block tracking-wider uppercase">
+      <span className="text-[13px] text-gray-500 mb-1 block tracking-wider uppercase">
         โฆษณา
       </span>
       <ins

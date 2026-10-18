@@ -42,11 +42,11 @@ function SearchContent() {
     <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
       <div className="flex flex-col gap-8">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500">
-          <Link href="/" className="hover:text-brand-600 transition-colors">
+        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+          <Link href="/" className="inline-flex items-center min-h-[44px] whitespace-nowrap hover:text-brand-700 dark:hover:text-brand-200 transition-colors">
             หน้าแรก
           </Link>
-          <span className="text-gray-300 dark:text-gray-600">/</span>
+          <span aria-hidden="true" className="text-gray-400 dark:text-gray-500">/</span>
           <span className="text-gray-700 dark:text-gray-200 font-medium">
             ผลการค้นหา
           </span>

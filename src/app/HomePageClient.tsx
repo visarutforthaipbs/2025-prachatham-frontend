@@ -10,7 +10,7 @@ import { SectionWrapper, PageHeader, StatCard } from "@/components/ui";
 import dynamic from "next/dynamic";
 const AdSense = dynamic(() => import("@/components/AdSense"), { ssr: false });
 import type { WordPressPost, WordPressProject, WordPressCategory } from "@/lib/wordpress";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 interface HomePageClientProps {
   featuredPosts: WordPressPost[];
@@ -18,19 +18,18 @@ interface HomePageClientProps {
   categories: WordPressCategory[];
 }
 
+/* HIG motion: one brief entrance on the hero only (purposeful, < 400 ms,
+   natural deceleration). Content below the fold is never hidden behind a
+   scroll-reveal — readers scan news, and a scroll-triggered fade on every
+   visit is motion on a frequent interaction. */
+const EASE = [0.16, 1, 0.3, 1] as const;
 const fadeInUp = {
-  hidden: { opacity: 0, y: 25 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: EASE } },
 };
-
 const staggerContainer = {
   hidden: { opacity: 1 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.12,
-    },
-  },
+  visible: { opacity: 1, transition: { staggerChildren: 0.06 } },
 };
 
 export default function HomePageClient({
@@ -38,6 +37,7 @@ export default function HomePageClient({
   latestProjects,
   categories,
 }: HomePageClientProps) {
+  const reduceMotion = useReducedMotion();
   const stats = [
     { label: "โครงการที่ดำเนินการ", value: "30+" },
     { label: "ชุมชนที่ร่วมงาน", value: "20+" },
@@ -47,100 +47,79 @@ export default function HomePageClient({
 
   return (
     <div>
-      {/* ═══ Hero Section ═══ */}
-      <div className="min-h-[78vh] md:min-h-[86vh] relative flex items-center overflow-hidden">
-        {/* Background image container with Ken Burns effect */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
+      {/* ═══ Hero ═══ */}
+      <div className="min-h-[72vh] md:min-h-[78vh] relative flex items-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
           <Image
             src="/images/hero-1-page-1.jpg"
-            alt="ประชาธรรม — สื่อชุมชน"
+            alt=""
             fill
             sizes="100vw"
             style={{ objectFit: "cover" }}
             priority
-            className="animate-ken-burns"
           />
         </div>
-        {/* Gradient overlay */}
+        {/* Scrim — keeps white type ≥ 4.5:1 over the photo */}
         <div
           className="absolute inset-0 z-[1]"
+          aria-hidden="true"
           style={{
             background:
-              "linear-gradient(90deg, rgba(1,33,29,0.92) 0%, rgba(4,75,65,0.76) 48%, rgba(4,75,65,0.3) 100%)",
+              "linear-gradient(90deg, rgba(1,33,29,0.92) 0%, rgba(4,75,65,0.8) 50%, rgba(4,75,65,0.4) 100%)",
           }}
         />
 
-        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 relative z-[2] w-full">
-          <motion.div 
+        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-16 relative z-[2] w-full">
+          <motion.div
             variants={staggerContainer}
-            initial="hidden"
+            initial={reduceMotion ? false : "hidden"}
             animate="visible"
-            className="flex flex-col gap-8 max-w-3xl text-white"
+            className="flex flex-col gap-6 max-w-3xl text-white"
           >
-            {/* Overline */}
-            <motion.span 
-              variants={fadeInUp}
-              className="inline-block self-start border-l-2 border-accent-300 pl-4 text-white/90 text-sm font-semibold tracking-normal"
-            >
+            <motion.p variants={fadeInUp} className="text-base md:text-lg font-bold text-accent-200">
               มูลนิธิสื่อประชาธรรม
-            </motion.span>
+            </motion.p>
 
-            <motion.h1 
+            <motion.h1
               variants={fadeInUp}
-              className="text-[clamp(1.5rem,7.4vw,4.5rem)] font-bold leading-[1.22] overflow-visible"
+              className="text-[clamp(1.75rem,7.4vw,4.5rem)] font-bold leading-[1.2]"
             >
               <span className="block whitespace-nowrap">เราสนับสนุนการเปลี่ยนแปลง</span>
               <span className="block whitespace-nowrap">ผ่านสื่อชุมชน</span>
             </motion.h1>
 
-            <motion.p 
-              variants={fadeInUp}
-              className="text-lg md:text-xl text-white/88 max-w-2xl font-light"
-            >
+            <motion.p variants={fadeInUp} className="text-lg md:text-2xl text-white/90 max-w-2xl">
               มูลนิธิประชาธรรม เป็นองค์กรที่มุ่งหวังสร้างการเปลี่ยนแปลงเชิงบวก
               ผ่านการเสริมสร้างพลังของชุมชนในการสื่อสารและเล่าเรื่องราวของตัวเอง
             </motion.p>
 
-            <motion.div 
-              variants={fadeInUp}
-              className="flex items-center gap-4 flex-wrap pt-2"
-            >
+            <motion.div variants={fadeInUp} className="flex items-center gap-3 flex-wrap pt-2">
+              {/* One prominent action (filled), one secondary (outline) */}
               <Link
                 href="/about"
-                className="btn-secondary bg-white border-none hover:bg-gray-50 hover:-translate-y-0.5 hover:shadow-xl transition-all text-lg px-8 py-3"
+                className="inline-flex items-center justify-center gap-2 min-h-[48px] px-7 py-2 rounded-full bg-white dark:bg-white text-brand-700 dark:text-brand-700 text-lg font-bold hover:bg-brand-50 transition-colors"
               >
-                เรียนรู้เพิ่มเติม
+                รู้จักประชาธรรม
+                <FaArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
               </Link>
               <Link
                 href="/causes"
-                className="text-white border border-white/50 rounded-md px-8 py-3 text-lg hover:bg-white/15 hover:border-white hover:-translate-y-0.5 transition-all"
+                className="inline-flex items-center justify-center min-h-[48px] px-7 py-2 rounded-full border border-white/60 text-white text-lg font-bold hover:bg-white/15 transition-colors"
               >
                 ดูโครงการ
               </Link>
             </motion.div>
           </motion.div>
         </div>
-
-        {/* Bouncing scroll indicator */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[2] flex flex-col items-center gap-1.5 opacity-70 animate-bounce-indicator pointer-events-none">
-          <span className="text-white/60 text-xs tracking-wider uppercase font-semibold">เลื่อนลงเพื่อดูเพิ่มเติม</span>
-          <div className="w-5 h-8 border border-white/40 rounded-full flex justify-center p-1">
-            <motion.div 
-              animate={{ y: [0, 6, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" as const }}
-              className="w-1.5 h-1.5 bg-white rounded-full" 
-            />
-          </div>
-        </div>
       </div>
 
       {/* ═══ Browse by topic ═══ */}
       {categories && categories.length > 0 && (
         <div className="bg-[#fbfcf7] dark:bg-forest-950 border-b border-black/5 dark:border-white/5">
-          <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-4 md:py-5 flex flex-col gap-3 md:flex-row md:items-center">
-            <span className="shrink-0 text-sm font-semibold text-gray-500 dark:text-gray-400">
+          <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-4 md:py-5 flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
+            <h2 className="shrink-0 text-sm font-bold text-gray-700 dark:text-gray-300">
               เลือกอ่านตามหัวข้อ
-            </span>
+            </h2>
             <CategoryChips categories={categories} />
           </div>
         </div>
@@ -155,32 +134,19 @@ export default function HomePageClient({
         />
 
         {featuredPosts && featuredPosts.length > 0 ? (
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={staggerContainer}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 mb-12"
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 mb-10">
             {featuredPosts.map((post) => (
-              <motion.div key={post.id} variants={fadeInUp} className="h-full">
-                <PostCard post={post} />
-              </motion.div>
+              <PostCard key={post.id} post={post} />
             ))}
-          </motion.div>
-        ) : (
-          <div className="text-center py-8">
-            <p className="text-gray-400 dark:text-gray-550">ไม่พบข่าวเด่นในขณะนี้</p>
           </div>
+        ) : (
+          <EmptyState text="ยังไม่มีข่าวเด่นในขณะนี้" href="/posts" cta="ดูบทความทั้งหมด" />
         )}
 
         <div className="flex justify-center">
-          <Link
-            href="/posts"
-            className="btn-secondary px-8 py-3 text-lg inline-flex items-center gap-2"
-          >
+          <Link href="/posts" className="btn-secondary">
             ดูข่าวทั้งหมด
-            <FaArrowRight className="w-3 h-3" />
+            <FaArrowRight className="w-3 h-3" aria-hidden="true" />
           </Link>
         </div>
       </SectionWrapper>
@@ -194,34 +160,26 @@ export default function HomePageClient({
         />
       </div>
 
-      {/* ═══ Mission Section ═══ */}
+      {/* ═══ Mission ═══ */}
       <SectionWrapper bg="bg-white dark:bg-forest-900">
-        <motion.div 
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={staggerContainer}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
-        >
-          <motion.div variants={fadeInUp} className="flex flex-col items-start gap-6">
-            <p className="text-xs font-semibold tracking-widest uppercase text-brand-600">ABOUT US</p>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-brand-700">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+          <div className="flex flex-col items-start gap-4">
+            <p className="text-sm font-bold text-brand-700 dark:text-brand-200">เกี่ยวกับเรา</p>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-950 dark:text-gray-50 leading-[1.2]">
               ภารกิจของเรา
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
+            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-xl">
               เราเชื่อว่าการเปลี่ยนแปลงที่ยั่งยืนเกิดขึ้นได้เมื่อชุมชนมีเสียง
               มีพื้นที่ในการเล่าเรื่องราวของตัวเอง
               และมีเครื่องมือในการสื่อสารกับสังคมที่กว้างขึ้น
             </p>
-            <Link href="/about" className="btn-primary">
-              เรียนรู้เพิ่มเติม
+            <Link href="/about" className="btn-secondary mt-2">
+              อ่านเรื่องราวของเรา
+              <FaArrowRight className="w-3 h-3" aria-hidden="true" />
             </Link>
-          </motion.div>
+          </div>
 
-          <motion.div 
-            variants={fadeInUp} 
-            className="rounded-lg overflow-hidden shadow-xl border border-black/5 dark:border-white/5"
-          >
+          <div className="rounded-xl overflow-hidden">
             <Image
               src="/images/about-1.jpg"
               alt="ภารกิจของมูลนิธิประชาธรรม"
@@ -229,13 +187,10 @@ export default function HomePageClient({
               height={400}
               sizes="(max-width: 1024px) 100vw, 50vw"
               loading="lazy"
-              style={{
-                width: "100%",
-                height: "auto",
-              }}
+              style={{ width: "100%", height: "auto" }}
             />
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </SectionWrapper>
 
       {/* ═══ Latest Projects ═══ */}
@@ -247,87 +202,52 @@ export default function HomePageClient({
         />
 
         {latestProjects && latestProjects.length > 0 ? (
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={staggerContainer}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 mb-12"
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 mb-10">
             {latestProjects.slice(0, 3).map((project) => (
-              <motion.div key={project.id} variants={fadeInUp}>
-                <ProjectCard project={project} />
-              </motion.div>
+              <ProjectCard key={project.id} project={project} />
             ))}
-          </motion.div>
-        ) : (
-          <div className="text-center py-8">
-            <p className="text-gray-400 dark:text-gray-500">ไม่พบโครงการในขณะนี้</p>
           </div>
+        ) : (
+          <EmptyState text="ยังไม่มีโครงการในขณะนี้" href="/about" cta="รู้จักประชาธรรม" />
         )}
 
         <div className="flex justify-center">
-          <Link
-            href="/causes"
-            className="btn-secondary px-8 py-3 text-lg inline-flex items-center gap-2"
-          >
+          <Link href="/causes" className="btn-secondary">
             ดูโครงการทั้งหมด
-            <FaArrowRight className="w-3 h-3" />
+            <FaArrowRight className="w-3 h-3" aria-hidden="true" />
           </Link>
         </div>
       </SectionWrapper>
 
-      {/* ═══ Statistics Section ═══ */}
-      <div
-        className="py-16 md:py-20 text-white relative overflow-hidden"
-        style={{
-          background:
-            "linear-gradient(135deg, var(--color-brand-600), var(--color-brand-700), var(--color-forest-950))",
-        }}
-      >
-        <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 relative z-[1]">
-          <div className="flex flex-col gap-4 text-center mb-12">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold">
-              ผลงานของเรา
-            </h2>
-            <p className="text-base md:text-lg text-white/80 max-w-lg mx-auto">
+      {/* ═══ Impact ═══ */}
+      <section className="py-14 md:py-20 text-white bg-brand-600">
+        <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
+          <div className="flex flex-col gap-2 text-center mb-8 md:mb-12">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-[1.2]">ผลงานของเรา</h2>
+            <p className="text-lg md:text-xl text-white/85 max-w-lg mx-auto">
               ตัวเลขที่สะท้อนถึงผลกระทบเชิงบวกที่เราสร้างให้กับชุมชน
             </p>
           </div>
 
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={staggerContainer}
-            className="grid grid-cols-2 md:grid-cols-4 gap-8"
-          >
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6 md:divide-x md:divide-white/20">
             {stats.map((stat) => (
-              <motion.div key={stat.label} variants={fadeInUp}>
-                <StatCard value={stat.value} label={stat.label} />
-              </motion.div>
+              <StatCard key={stat.label} value={stat.value} label={stat.label} />
             ))}
-          </motion.div>
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* ═══ Call to Action ═══ */}
       <SectionWrapper bg="bg-white dark:bg-forest-950" narrow>
-        <motion.div 
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={fadeInUp}
-          className="flex flex-col gap-8 text-center"
-        >
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-brand-700">
+        <div className="flex flex-col gap-6 text-center items-center">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-950 dark:text-gray-50 leading-[1.2]">
             ร่วมเป็นส่วนหนึ่งกับเรา
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed max-w-lg mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-lg">
             หากคุณมีเรื่องราวที่ต้องการเล่า หรือต้องการสนับสนุนงานของเรา
             เรายินดีต้อนรับทุกคน
           </p>
-          <div className="flex items-center gap-4 flex-wrap justify-center">
+          <div className="flex items-center gap-3 flex-wrap justify-center">
             <Link href="/contact" className="btn-primary">
               ติดต่อเรา
             </Link>
@@ -335,8 +255,20 @@ export default function HomePageClient({
               สนับสนุนเรา
             </Link>
           </div>
-        </motion.div>
+        </div>
       </SectionWrapper>
+    </div>
+  );
+}
+
+/** Empty state: say what the section is for and offer the next step. */
+function EmptyState({ text, href, cta }: { text: string; href: string; cta: string }) {
+  return (
+    <div className="text-center py-10 flex flex-col items-center gap-3">
+      <p className="text-gray-600 dark:text-gray-300">{text}</p>
+      <Link href={href} className="text-brand-700 dark:text-brand-200 font-bold underline underline-offset-4">
+        {cta}
+      </Link>
     </div>
   );
 }

@@ -14,7 +14,7 @@ export default function ThemeToggle() {
     // Prevent hydration mismatch — render a placeholder
     return (
       <button
-        className="p-2 rounded-md text-gray-400 hover:bg-gray-100 transition-colors"
+        className="shrink-0 w-11 h-11 inline-flex items-center justify-center rounded-full"
         aria-label="สลับธีม"
       >
         <span className="w-4 h-4 block" />
@@ -27,11 +27,11 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="p-2 rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200 transition-colors"
+      className="shrink-0 w-11 h-11 inline-flex items-center justify-center rounded-full text-gray-600 hover:bg-black/5 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-gray-100 transition-colors"
       aria-label={isDark ? "สลับเป็นโหมดสว่าง" : "สลับเป็นโหมดมืด"}
       title={isDark ? "โหมดสว่าง" : "โหมดมืด"}
     >
-      {isDark ? <FaSun size={16} /> : <FaMoon size={16} />}
+      {isDark ? <FaSun size={18} aria-hidden="true" /> : <FaMoon size={18} aria-hidden="true" />}
     </button>
   );
 }

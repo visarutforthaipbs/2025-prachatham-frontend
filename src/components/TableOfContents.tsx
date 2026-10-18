@@ -115,7 +115,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
                 </p>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-400 dark:text-gray-500 text-lg"
+                  className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 text-lg"
                   aria-label="ปิดสารบัญ"
                 >
                   ✕

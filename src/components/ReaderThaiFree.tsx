@@ -301,7 +301,7 @@ export default function ReaderThaiFree({
             onClick={playFromStart}
             disabled={!chunks.length}
             aria-label="เริ่มอ่านบทความตั้งแต่ต้น"
-            className="inline-flex items-center gap-1.5 bg-brand-600 text-white text-xs font-medium px-3 py-1 rounded-full hover:bg-brand-700 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-2 min-h-[44px] bg-brand-600 text-white text-base font-bold px-5 py-1.5 rounded-full hover:bg-brand-700 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 disabled:opacity-50 disabled:cursor-not-allowed"
             title={!chunks.length ? "ไม่พบเนื้อหาสำหรับอ่านออกเสียง" : undefined}
           >
             <FaPlay size={12} aria-hidden="true" />
@@ -312,7 +312,7 @@ export default function ReaderThaiFree({
             <button
               onClick={playFromSaved}
               aria-label="อ่านต่อจากตำแหน่งเดิม"
-              className="bg-brand-500 text-white text-xs font-medium px-3 py-1 rounded-full hover:bg-brand-600 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+              className="inline-flex items-center min-h-[44px] border border-brand-600 dark:border-brand-300 text-brand-700 dark:text-brand-200 text-base font-bold px-5 py-1.5 rounded-full hover:bg-brand-50 dark:hover:bg-forest-800 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
             >
               อ่านต่อ
             </button>
@@ -322,7 +322,7 @@ export default function ReaderThaiFree({
             <button
               onClick={pause}
               aria-label="หยุดชั่วคราว"
-              className="w-8 h-8 flex items-center justify-center bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+              className="w-11 h-11 flex items-center justify-center rounded-full border border-black/10 dark:border-white/15 text-brand-700 dark:text-brand-200 bg-white dark:bg-forest-900 hover:bg-brand-50 dark:hover:bg-forest-800 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
             >
               <FaPause aria-hidden="true" />
             </button>
@@ -332,7 +332,7 @@ export default function ReaderThaiFree({
             <button
               onClick={resume}
               aria-label="เล่นต่อ"
-              className="w-8 h-8 flex items-center justify-center bg-orange-500 text-white rounded-full hover:bg-orange-600 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+              className="w-11 h-11 flex items-center justify-center rounded-full border border-black/10 dark:border-white/15 text-brand-700 dark:text-brand-200 bg-white dark:bg-forest-900 hover:bg-brand-50 dark:hover:bg-forest-800 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
             >
               <FaPlay aria-hidden="true" />
             </button>
@@ -342,7 +342,7 @@ export default function ReaderThaiFree({
             <button
               onClick={stopAll}
               aria-label="หยุดการอ่าน"
-              className="w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+              className="w-11 h-11 flex items-center justify-center rounded-full border border-black/10 dark:border-white/15 text-brand-700 dark:text-brand-200 bg-white dark:bg-forest-900 hover:bg-brand-50 dark:hover:bg-forest-800 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
             >
               <FaStop aria-hidden="true" />
             </button>
@@ -352,10 +352,10 @@ export default function ReaderThaiFree({
             onClick={() => setShowSettings(!showSettings)}
             aria-label="ตั้งค่าการอ่านออกเสียง"
             aria-expanded={showSettings}
-            className={`w-8 h-8 flex items-center justify-center rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 ${
+            className={`w-11 h-11 flex items-center justify-center rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 ${
               showSettings
-                ? "bg-gray-600 text-white"
-                : "border border-gray-300 text-gray-600 hover:bg-gray-100"
+                ? "bg-gray-700 text-white dark:bg-gray-200 dark:text-gray-900"
+                : "border border-black/10 dark:border-white/15 text-gray-600 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10"
             }`}
           >
             <FaCog aria-hidden="true" />

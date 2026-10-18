@@ -8,6 +8,7 @@ import ErrorBoundaryWrapper from "@/components/ErrorBoundary";
 import "./globals.css";
 import "@/styles/fonts.css";
 import "@/styles/print.css";
+import { SITE_URL } from "@/lib/site-url";
 
 const Footer = dynamic(() => import("@/components/Footer"), {
   loading: () => null,
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
   creator: "Prachatham Foundation",
   publisher: "Prachatham Foundation",
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://www.prachatham.com"
+    SITE_URL
   ),
   icons: {
     icon: "/new-favicon.svg",
@@ -88,6 +89,14 @@ export default function RootLayout({
   return (
     <html lang="th" suppressHydrationWarning>
       <head>
+        {/* HIG Dark Mode: follow the system appearance by default and set the
+            class before first paint so dark-mode readers never get a white flash.
+            A reader's explicit choice from the toggle (localStorage) still wins. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('prachatham-theme');var d=t==='dark'||((!t||t==='system')&&matchMedia('(prefers-color-scheme: dark)').matches);if(d)document.documentElement.classList.add('dark');}catch(e){}})();`,
+          }}
+        />
         {/* Preload critical fonts */}
         <link
           rel="preload"
@@ -116,7 +125,7 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <Providers>
           <SkipLink />
-          <div className="min-h-screen bg-[#f7f8f3] dark:bg-gray-950 flex flex-col">
+          <div className="min-h-screen bg-[var(--bg)] flex flex-col">
             <Navigation />
             <main id="main-content" className="flex-1" tabIndex={-1}>
               <ErrorBoundaryWrapper>

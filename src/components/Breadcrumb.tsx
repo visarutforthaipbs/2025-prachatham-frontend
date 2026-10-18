@@ -13,12 +13,12 @@ interface BreadcrumbProps {
 
 export default function Breadcrumb({ items }: BreadcrumbProps) {
   return (
-    <div className="bg-white py-3 border-b border-gray-100">
+    <div className="bg-white dark:bg-forest-950 py-1 border-b border-black/5 dark:border-white/10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <nav className="flex items-center gap-2 text-sm" aria-label="Breadcrumb">
           <Link
             href="/"
-            className="text-gray-500 hover:text-brand-600 transition-colors duration-150"
+            className="inline-flex items-center min-h-[44px] whitespace-nowrap text-gray-600 dark:text-gray-300 hover:text-brand-700 dark:hover:text-brand-200 transition-colors duration-150"
           >
             หน้าแรก
           </Link>
@@ -27,16 +27,16 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
             const isLast = index === items.length - 1;
             return (
               <span key={index} className="flex items-center gap-2">
-                <span className="text-gray-300 text-xs">&gt;</span>
+                <span aria-hidden="true" className="text-gray-400">/</span>
                 {item.href && !isLast ? (
                   <Link
                     href={item.href}
-                    className="text-gray-500 hover:text-brand-600 transition-colors duration-150"
+                    className="inline-flex items-center min-h-[44px] whitespace-nowrap text-gray-600 dark:text-gray-300 hover:text-brand-700 dark:hover:text-brand-200 transition-colors duration-150"
                   >
                     {item.label}
                   </Link>
                 ) : (
-                  <span className="text-gray-800 font-medium">
+                  <span className="text-gray-800 dark:text-gray-100 font-medium truncate" aria-current="page">
                     {item.label}
                   </span>
                 )}

@@ -51,17 +51,17 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               objectFit: "cover",
               transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
-            className="group-hover:scale-[1.04]"
+            className="motion-safe:group-hover:scale-[1.03]"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
 
           {/* Status Badge */}
           {project.acf?.projectStatus && (
             <span
-              className={`absolute top-3 right-3 text-xs px-3 py-1 rounded-md font-medium ${
+              className={`absolute top-3 right-3 text-sm px-3 py-1 rounded-full font-bold shadow-sm ${
                 project.acf.projectStatus === "active"
                   ? "badge-brand"
-                  : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
+                  : "bg-white/95 dark:bg-gray-900/95 text-gray-700 dark:text-gray-200"
               }`}
             >
               {project.acf.projectStatus === "active" ? "ดำเนินการ" : "เสร็จสิ้น"}
@@ -71,28 +71,28 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
         {/* Project Content */}
         <div className="p-5 flex-grow flex flex-col">
-          <h3 className="text-[1.7rem] md:text-[1.85rem] font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:text-brand-700 dark:group-hover:text-brand-300 line-clamp-2 transition-colors duration-200 leading-tight">
+          <h3 className="text-[1.7rem] md:text-[1.85rem] font-bold text-gray-950 dark:text-gray-50 mb-3 group-hover:text-brand-700 dark:group-hover:text-brand-200 line-clamp-2 transition-colors duration-200 leading-[1.2]">
             {title}
           </h3>
 
           {/* Project Details */}
           <div className="flex flex-col gap-2 mb-4 flex-grow">
             {project.acf?.project_duration && (
-              <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                <FaClock className="w-3 h-3 text-gray-400 dark:text-gray-500" />
+              <div className="flex items-center gap-2 text-base text-gray-600 dark:text-gray-300">
+                <FaClock className="w-3 h-3 text-gray-500 dark:text-gray-400" />
                 <span>{project.acf.project_duration}</span>
               </div>
             )}
             {project.acf?.project_location && (
-              <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                <FaMapMarkerAlt className="w-3 h-3 text-gray-400 dark:text-gray-500" />
+              <div className="flex items-center gap-2 text-base text-gray-600 dark:text-gray-300">
+                <FaMapMarkerAlt className="w-3 h-3 text-gray-500 dark:text-gray-400" />
                 <span>{project.acf.project_location}</span>
               </div>
             )}
           </div>
 
           {/* Read More */}
-          <div className="flex items-center gap-1 mt-auto pt-4 border-t border-gray-100 dark:border-gray-800 text-brand-700 dark:text-brand-300 text-sm font-medium hover:gap-2 transition-all duration-200">
+          <div className="flex items-center gap-1 mt-auto pt-3 border-t border-black/5 dark:border-white/10 text-brand-700 dark:text-brand-200 text-base font-bold">
             อ่านเพิ่มเติม
             <FaArrowRight className="w-2.5 h-2.5" />
           </div>

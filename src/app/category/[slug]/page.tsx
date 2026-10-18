@@ -48,16 +48,16 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       <div className="flex flex-col gap-8">
         {/* Breadcrumb */}
         <nav aria-label="Breadcrumb">
-          <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500">
-            <Link href="/" className="hover:text-brand-600 transition-colors">
+          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+            <Link href="/" className="inline-flex items-center min-h-[44px] whitespace-nowrap hover:text-brand-700 dark:hover:text-brand-200 transition-colors">
               หน้าแรก
             </Link>
-            <span className="text-gray-300 dark:text-gray-600">/</span>
-            <Link href="/posts" className="hover:text-brand-600 transition-colors">
+            <span aria-hidden="true" className="text-gray-400 dark:text-gray-500">/</span>
+            <Link href="/posts" className="inline-flex items-center min-h-[44px] whitespace-nowrap hover:text-brand-700 dark:hover:text-brand-200 transition-colors">
               บทความ
             </Link>
-            <span className="text-gray-300 dark:text-gray-600">/</span>
-            <span className="text-gray-700 dark:text-gray-200 font-medium">{categoryName}</span>
+            <span aria-hidden="true" className="text-gray-400 dark:text-gray-500">/</span>
+            <span className="text-gray-700 dark:text-gray-200 font-medium truncate min-w-0" aria-current="page">{categoryName}</span>
           </div>
         </nav>
 

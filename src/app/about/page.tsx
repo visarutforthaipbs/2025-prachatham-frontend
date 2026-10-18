@@ -25,11 +25,11 @@ export default function AboutPage() {
     <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-8">
       <div className="flex flex-col gap-12">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500">
-          <Link href="/" className="hover:text-brand-600 transition-colors">
+        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+          <Link href="/" className="inline-flex items-center min-h-[44px] whitespace-nowrap hover:text-brand-700 dark:hover:text-brand-200 transition-colors">
             หน้าแรก
           </Link>
-          <span className="text-gray-300 dark:text-gray-600">/</span>
+          <span aria-hidden="true" className="text-gray-400 dark:text-gray-500">/</span>
           <span className="text-gray-700 dark:text-gray-200 font-medium">
             ประชาธรรมคือใคร
           </span>
@@ -180,7 +180,7 @@ export default function AboutPage() {
             <h2 className="text-xl md:text-2xl font-bold text-brand-700 mb-6">
               กรรมการมูลนิธิ
             </h2>
-            <span className="inline-block bg-blue-100 text-blue-700 text-sm px-3 py-1 rounded-full mb-6">
+            <span className="inline-block bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-200 text-sm px-3 py-1 rounded-full mb-6">
               BOARD OF DIRECTORS
             </span>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -521,13 +521,13 @@ export default function AboutPage() {
             77/1 หมู่ 5 ต.สุเทพ อ.เมืองจ.เชียงใหม่ 50200
           </p>
           <div className="flex items-center justify-center gap-4 flex-wrap">
-            <Link href="/donate" className="text-brand-600 font-medium hover:text-brand-700 hover:underline transition-colors">
+            <Link href="/donate" className="inline-flex items-center min-h-[44px] px-1 text-brand-700 dark:text-brand-200 font-bold underline-offset-4 hover:underline transition-colors">
               ร่วมทำงานกับเรา
             </Link>
-            <Link href="/contact" className="text-brand-600 font-medium hover:text-brand-700 hover:underline transition-colors">
+            <Link href="/contact" className="inline-flex items-center min-h-[44px] px-1 text-brand-700 dark:text-brand-200 font-bold underline-offset-4 hover:underline transition-colors">
               ช่องทางติดต่อเรา
             </Link>
-            <Link href="/causes" className="text-brand-600 font-medium hover:text-brand-700 hover:underline transition-colors">
+            <Link href="/causes" className="inline-flex items-center min-h-[44px] px-1 text-brand-700 dark:text-brand-200 font-bold underline-offset-4 hover:underline transition-colors">
               โครงการของเรา
             </Link>
           </div>
