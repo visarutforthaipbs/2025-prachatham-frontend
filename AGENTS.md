@@ -21,6 +21,7 @@ editors ──► cms.prachatham.com (WordPress, headless)  ──REST──► 
 | Need | File |
 |---|---|
 | Fetch posts/categories/projects | `src/lib/wordpress.ts` (`getPosts`, `getAllPostSlugs`, `getProjects`, …) |
+| Home hero slideshow (photo picking rules / component) | `src/lib/hero-slides.ts` (tested by `test-hero-slides.mjs`) · `src/components/HeroSlideshow.tsx` |
 | Clean CMS HTML (XSS) | `src/lib/sanitize.ts` — every post body goes through it |
 | Old media URLs → current host | `src/lib/image-urls.ts` (tested by `test-image-urls.mjs`) |
 | Canonical origin | `src/lib/site-url.ts` → `SITE_URL` (fallback `https://www.prachatham.com`). Never use `process.env.NEXT_PUBLIC_SITE_URL` directly — it is unset on Vercel |

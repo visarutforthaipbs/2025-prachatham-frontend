@@ -42,6 +42,7 @@ The font draws ~20 % smaller than system fonts, so the Tailwind scale is shifted
 ## 5. Motion & appearance
 
 - Motion only where it explains a change: one 350 ms hero entrance, `cubic-bezier(0.16,1,0.3,1)`, respects `prefers-reduced-motion`. No looping animation, no scroll-reveal on content.
+- **One owner-approved exception — the home hero slideshow** (`HeroSlideshow`): 1 s crossfade every 6 s, first slide is the static house photo (LCP), then up to 5 field photos auto-picked from "ข่าวเด่น" featured images by `src/lib/hero-slides.ts` (JPEG, landscape 1.25–1.8, ≥ 1200 px — filters out posters/social cards). It must keep: a visible pause button (WCAG 2.2.2), pause on hover/focus of the control bar and on hidden tab, no autoplay under reduced motion, credit line linking to the source story. Don't add other auto-moving content.
 - Dark mode follows the system by default (pre-paint script in `layout.tsx`); the toggle stores an explicit choice in `localStorage` (`prachatham-theme`).
 
 ## 6. Checks before shipping UI
