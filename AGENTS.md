@@ -61,11 +61,10 @@ npm run type-check && npm run lint && npm run build && npm test
 
 ## 5. CMS server (DigitalOcean)
 
-SSH: `ssh prachatham-cms` (alias in `~/.ssh/config`, key `~/.ssh/prachatham_cms`, user root). Ubuntu 22.04, OpenLiteSpeed 1.9 + lsphp 8.3, MariaDB 10.6, WordPress at `/var/www/html`, `wp … --allow-root`. After editing anything WP-side: `wp litespeed-purge all --allow-root`. Backups: `/root/backups/`. Full notes + upgrade gotchas: `cms/README.md`.
+SSH: `ssh prachatham-cms` (alias in `~/.ssh/config`, key `~/.ssh/prachatham_cms`, user root). Ubuntu 22.04, OpenLiteSpeed 1.9 + lsphp 8.3, MariaDB 10.6, WordPress at `/var/www/html`, `wp … --allow-root`. After editing anything WP-side: `wp litespeed-purge all --allow-root`. Backups: `/root/backups/`. PHP: only lsphp83 is installed (lsphp80 removed 2026-10-22); patched to 8.3.36 for CVE-2026-109618/109619 — upgrade with `apt-get install --only-upgrade` on installed `lsphp83*` names only, then `systemctl restart lsws` and check no `lsphp` worker predates the restart. Admin console :7080 is firewalled (ufw) — reach it via `ssh -L 7080:127.0.0.1:7080 prachatham-cms`. Full notes + upgrade gotchas: `cms/README.md`.
 
 ## 6. Open items (keep current)
 
 - Google Search Console: owner to submit `https://www.prachatham.com/sitemap.xml` and, if `cms.` is a verified property, run *Change of address* → www. Track the "เชียงดาว ประชาธรรม" query moving from cms.* to www.
 - `npm audit`: postcss inside Next 15 (fix requires Next 16 — planned upgrade, not urgent).
-- OpenLiteSpeed admin port 7080 is open to the internet (password-protected) — owner to decide whether to close it.
 - Stale docs: `README.md`, `DEPLOYMENT*.md`, `ISSUES-FIXED.md` predate the 2026 rebuild; trust this file over them.
