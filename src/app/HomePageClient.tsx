@@ -11,8 +11,10 @@ import dynamic from "next/dynamic";
 const AdSense = dynamic(() => import("@/components/AdSense"), { ssr: false });
 import type { WordPressPost, WordPressProject, WordPressCategory } from "@/lib/wordpress";
 import { motion, useReducedMotion } from "framer-motion";
+import HeroSlideshow, { type HeroSlideView } from "@/components/HeroSlideshow";
 
 interface HomePageClientProps {
+  heroSlides: HeroSlideView[];
   featuredPosts: WordPressPost[];
   latestProjects: WordPressProject[];
   categories: WordPressCategory[];
@@ -33,6 +35,7 @@ const staggerContainer = {
 };
 
 export default function HomePageClient({
+  heroSlides,
   featuredPosts,
   latestProjects,
   categories,
@@ -49,16 +52,7 @@ export default function HomePageClient({
     <div>
       {/* ═══ Hero ═══ */}
       <div className="min-h-[72vh] md:min-h-[78vh] relative flex items-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/images/hero-1-page-1.jpg"
-            alt=""
-            fill
-            sizes="100vw"
-            style={{ objectFit: "cover" }}
-            priority
-          />
-        </div>
+        <HeroSlideshow slides={heroSlides} />
         {/* Scrim — keeps white type ≥ 4.5:1 over the photo */}
         <div
           className="absolute inset-0 z-[1]"
@@ -69,7 +63,11 @@ export default function HomePageClient({
           }}
         />
 
-        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-16 relative z-[2] w-full">
+        <div
+          className={`max-w-7xl mx-auto px-4 md:px-6 lg:px-8 pt-16 relative z-[2] w-full ${
+            heroSlides.length > 1 ? "pb-32 md:pb-28" : "pb-16"
+          }`}
+        >
           <motion.div
             variants={staggerContainer}
             initial={reduceMotion ? false : "hidden"}

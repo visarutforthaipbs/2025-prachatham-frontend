@@ -1,6 +1,16 @@
 import { Metadata } from "next";
-import { wordpressApi } from "@/lib/wordpress";
+import { wordpressApi, decodeHtmlEntities } from "@/lib/wordpress";
+import { normalizeWordPressMediaUrl } from "@/lib/image-urls";
+import { pickHeroSlides } from "@/lib/hero-slides";
+import type { HeroSlideView } from "@/components/HeroSlideshow";
 import HomePageClient from "./HomePageClient";
+
+// First hero slide is always the house photo: static, preloaded (fast LCP),
+// and the hero still works when the CMS is unreachable.
+const HOUSE_HERO: HeroSlideView = { src: "/images/hero-1-page-1.jpg", alt: "" };
+const FEATURED_NEWS_COUNT = 6;
+const HERO_PHOTO_SOURCE_POSTS = 20; // scan recent featured posts for usable photos
+const MAX_HERO_PHOTOS = 5;
 
 export const metadata: Metadata = {
   title: "ประชาธรรม | มูลนิธิสนับสนุนสื่อภาคประชาชน",
@@ -37,23 +47,34 @@ async function getFeaturedNews() {
     );
 
     if (featuredCategory) {
-      // Fetch posts from the featured news category
+      // One request feeds both the news grid (first 6) and the hero photos.
       const postsData = await wordpressApi.getPosts({
         categories: featuredCategory.id.toString(),
-        per_page: 6,
+        per_page: HERO_PHOTO_SOURCE_POSTS,
       });
+      const heroPhotos: HeroSlideView[] = pickHeroSlides(
+        postsData.posts,
+        MAX_HERO_PHOTOS
+      ).map((s) => ({
+        ...s,
+        src: normalizeWordPressMediaUrl(s.src),
+        title: decodeHtmlEntities(s.title),
+      }));
       return {
-        posts: postsData.posts,
+        posts: postsData.posts.slice(0, FEATURED_NEWS_COUNT),
+        heroSlides: [HOUSE_HERO, ...heroPhotos],
       };
     } else {
       return {
         posts: [],
+        heroSlides: [HOUSE_HERO],
       };
     }
   } catch (error) {
     console.error("Error fetching featured news:", error);
     return {
       posts: [],
+      heroSlides: [HOUSE_HERO],
     };
   }
 }
@@ -92,7 +113,7 @@ async function getTopCategories() {
 
 export default async function HomePage() {
   // Fetch featured posts, latest projects, and categories in parallel
-  const [{ posts: featuredPosts }, { projects: latestProjects }, categories] =
+  const [{ posts: featuredPosts, heroSlides }, { projects: latestProjects }, categories] =
     await Promise.all([
       getFeaturedNews(),
       getLatestProjects(),
@@ -122,6 +143,7 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <HomePageClient
+        heroSlides={heroSlides}
         featuredPosts={featuredPosts}
         latestProjects={latestProjects}
         categories={categories}
