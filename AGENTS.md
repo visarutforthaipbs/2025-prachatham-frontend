@@ -12,7 +12,7 @@ editors ──► cms.prachatham.com (WordPress, headless)  ──REST──► 
             every public URL 301 → www (mu-plugin)
 ```
 
-- **Frontend** (this repo): Next.js 15.5 App Router, React 19, TypeScript, Tailwind CSS v4, framer-motion, sanitize-html, sharp. **No Chakra UI** (README/old docs that mention it are stale).
+- **Frontend** (this repo): Next.js 16.4 App Router (Turbopack build), React 19.3, TypeScript, Tailwind CSS v4, framer-motion, sanitize-html, sharp. **No Chakra UI** (README/old docs that mention it are stale).
 - **Content**: WordPress REST API at `https://cms.prachatham.com/?rest_route=/wp/v2/...` (query-string form, not `/wp-json`). Client: `src/lib/wordpress.ts`. Env: `NEXT_PUBLIC_WORDPRESS_API_URL`. Pages revalidate every 60 s (ISR); sitemap/feed hourly.
 - **CMS is not public.** `cms/mu-plugins/headless-redirect.php` (copy of what's on the server) redirects every public page to www; admin, login, REST, GraphQL, uploads stay open. Ops notes: `cms/README.md`.
 
@@ -67,5 +67,5 @@ SSH: `ssh prachatham-cms` (alias in `~/.ssh/config`, key `~/.ssh/prachatham_cms`
 ## 6. Open items (keep current)
 
 - Google Search Console: owner to submit `https://www.prachatham.com/sitemap.xml` and, if `cms.` is a verified property, run *Change of address* → www. Track the "เชียงดาว ประชาธรรม" query moving from cms.* to www.
-- `npm audit`: postcss inside Next 15 (fix requires Next 16 — planned upgrade, not urgent).
+- Lint debt from the Next 16 upgrade: `react-hooks/error-boundaries` (41, try/catch in async server pages) and `react-hooks/set-state-in-effect` (9) are set to `warn` in `eslint.config.mjs`. Refactor, then restore them to `error`.
 - Stale docs: `README.md`, `DEPLOYMENT*.md`, `ISSUES-FIXED.md` predate the 2026 rebuild; trust this file over them.
