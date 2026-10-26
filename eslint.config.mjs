@@ -1,15 +1,8 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
-import jsxA11y from "eslint-plugin-jsx-a11y";
+// eslint-config-next 16 ships native flat configs (FlatCompat no longer works).
+// It already registers the jsx-a11y plugin, so we only add rules for it here.
+import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
+import nextTypescript from "eslint-config-next/typescript";
 import unusedImports from "eslint-plugin-unused-imports";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
 
 const eslintConfig = [
   {
@@ -21,10 +14,10 @@ const eslintConfig = [
       "tsconfig.tsbuildinfo",
     ],
   },
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...nextCoreWebVitals,
+  ...nextTypescript,
   {
     plugins: {
-      "jsx-a11y": jsxA11y,
       "unused-imports": unusedImports,
     },
     rules: {
@@ -44,6 +37,15 @@ const eslintConfig = [
       "jsx-a11y/no-redundant-roles": "warn",
       "jsx-a11y/role-has-required-aria-props": "warn",
       "jsx-a11y/role-supports-aria-props": "warn",
+
+      // New in eslint-plugin-react-hooks 7 (eslint-config-next 16). Kept as
+      // warnings during the Next 16 upgrade so it stays a dependency bump:
+      // - error-boundaries flags try/catch around data fetching in async server
+      //   pages (intentional CMS-down fallback, e.g. causes/page.tsx)
+      // - set-state-in-effect flags hydration-safe mount/theme/media-query code
+      // Follow-up to refactor and restore "error": AGENTS.md section 6.
+      "react-hooks/error-boundaries": "warn",
+      "react-hooks/set-state-in-effect": "warn",
 
       // Dead code detection
       "unused-imports/no-unused-imports": "error",
