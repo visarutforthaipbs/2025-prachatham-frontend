@@ -62,7 +62,7 @@ npm run type-check && npm run lint && npm run build && npm test
 
 ## 5. CMS server (DigitalOcean)
 
-SSH: `ssh prachatham-cms` (alias in `~/.ssh/config`, key `~/.ssh/prachatham_cms`, user root). Ubuntu 22.04, OpenLiteSpeed 1.9 + lsphp 8.3, MariaDB 10.6, WordPress at `/var/www/html`, `wp … --allow-root`. After editing anything WP-side: `wp litespeed-purge all --allow-root`. Backups: `/root/backups/`. PHP: only lsphp83 is installed (lsphp80 removed 2026-10-22); patched to 8.3.36 for CVE-2026-109618/109619 — upgrade with `apt-get install --only-upgrade` on installed `lsphp83*` names only, then `systemctl restart lsws` and check no `lsphp` worker predates the restart. Admin console :7080 is firewalled (ufw) — reach it via `ssh -L 7080:127.0.0.1:7080 prachatham-cms`. Full notes + upgrade gotchas: `cms/README.md`.
+SSH: `ssh prachatham-cms` (alias in `~/.ssh/config`, key `~/.ssh/prachatham_cms`, user root). Ubuntu 22.04, OpenLiteSpeed 1.9 + lsphp 8.3, MariaDB 10.6, WordPress at `/var/www/html`, `wp … --allow-root`. After editing anything WP-side: `wp litespeed-purge all --allow-root`. Backups: `/root/backups/`. PHP: only lsphp83 is installed (lsphp80 removed 2026-10-22); patched to 8.3.36 for CVE-2026-109618/109619 — upgrade with `apt-get install --only-upgrade` on installed `lsphp83*` names only, then `systemctl restart lsws` and check no `lsphp` worker predates the restart — detached lsphp parents (ppid 1) survive the restart; `kill -TERM` them and they respawn on demand. Admin console :7080 is firewalled (ufw) — reach it via `ssh -L 7080:127.0.0.1:7080 prachatham-cms`. Full notes + upgrade gotchas: `cms/README.md`.
 
 ## 6. Open items (keep current)
 
