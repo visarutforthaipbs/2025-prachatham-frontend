@@ -38,9 +38,13 @@ sanitizer, which strips `<script>` from the post body itself).
   self-contained. External CDN scripts loaded from inside the file are fine.
 - `_template.html` is a working starting point — copy it and build from there.
 
-### Optional: auto-resize the iframe to content height
+### Auto-resize the iframe to content height
 
-If your infographic changes height, the template posts its height to the parent
-via `postMessage`. To make the iframe grow automatically, that requires a small
-client-side listener in the app. Ask to have it wired up if you need it —
-otherwise a fixed `aspect-ratio`/`height` on the iframe is simplest.
+Charts post their height to the parent (`postMessage({type:"infographic-height",height})`). Nothing in
+the app listens yet, so use a fixed px `height` on the iframe (the sanitizer allows px heights only).
+
+### Full reference build
+
+`green-inequality/` is the reference for a data-driven, CI-compliant chart pair: `data.json` as the only
+number source, `build.py` (inlines CSS/JS/data, fails on hand-typed numbers), `render_png.py`
+(PNG fallback), `build_embed.py` → `EMBED.md` (Thai newsroom snippets). See "Infographics" in `AGENTS.md`.

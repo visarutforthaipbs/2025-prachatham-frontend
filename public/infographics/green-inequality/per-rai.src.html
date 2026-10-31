@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>เงินดูแลไฟต่อไร่ บ้านหัวทุ่ง เทียบ หย่อมบ้านแม่คองซ้าย</title>
+<style>
+/*__SHARED_CSS__*/
+/* chart A */
+.vill{margin-top:22px}
+.vill h3{font-size:20px;font-weight:700;color:var(--label);line-height:1.3}
+.vill .land{font-size:16px;color:var(--label-3);line-height:1.4}
+.track{position:relative;margin-top:10px}
+.bar{display:flex;gap:2px;align-items:stretch}
+.seg{flex:0 0 auto;min-width:0;min-height:44px;border:1px solid var(--sep-strong);border-radius:6px;padding:0 2px;display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:17px;line-height:1.3;overflow:hidden;white-space:nowrap;transition:filter .15s,box-shadow .15s}
+.seg:hover{filter:brightness(1.1)}
+.seg[aria-pressed=true]{box-shadow:0 0 0 3px var(--label)}
+.bracket{position:relative;height:40px;margin-top:6px}
+.bracket .line{position:absolute;top:0;height:10px;border:2px solid var(--label-2);border-top:0;border-radius:0 0 5px 5px}
+.bracket .txt{position:absolute;top:13px;left:0;right:0;font-size:16px;line-height:1.35;color:var(--label)}
+.total{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 8px;margin-top:2px}
+.total .big{font-size:36px;font-weight:700;line-height:1.2;color:var(--label)}
+.total .u{font-size:16px;color:var(--label-3)}
+.mk{display:flex;align-items:center;gap:12px;margin-top:10px}
+.mkbar{flex:0 0 auto;min-height:44px;border:0;border-radius:6px;background:var(--cta);padding:0}
+.mkbar[aria-pressed=true]{box-shadow:0 0 0 3px var(--label)}
+.mk .v{font-size:36px;font-weight:700;line-height:1.2;color:var(--label);white-space:nowrap}
+.mk .lab{font-size:16px;color:var(--label-2);line-height:1.4}
+.detail{margin-top:16px;padding:12px 14px;background:var(--raised);border:1px solid var(--sep-strong);border-radius:12px;min-height:118px}
+.detail .dn{font-weight:700;color:var(--label);font-size:19px;line-height:1.35}
+.detail .db{font-size:17px;color:var(--label-2);margin-top:4px;line-height:1.5}
+.detail .tag{display:inline-block;font-size:15px;font-weight:700;padding:0 10px;border-radius:6px;background:var(--tint);color:var(--label);margin-right:6px}
+.nb{white-space:nowrap}
+.hint{font-size:16px;color:var(--label-3);margin-top:8px}
+.legend{list-style:none;padding:0;margin:10px 0 0;display:grid;grid-template-columns:1fr;gap:2px 16px;font-size:16px;color:var(--label-2)}
+.legend li{display:flex;align-items:center;gap:8px;line-height:1.4}
+.legend i{width:14px;height:14px;border-radius:3px;flex:0 0 auto}
+/* area comparison */
+.area{margin-top:26px;padding-top:18px;border-top:1px solid var(--sep-strong)}
+.area h3{font-size:20px;font-weight:700;color:var(--label);line-height:1.3}
+.area .sub{font-size:16px;color:var(--label-3)}
+.sq{margin-top:12px;max-width:420px}
+.sq .big{background:var(--tint);border:1px solid var(--sep-strong);border-radius:8px;position:relative}
+.sq .small{position:absolute;right:0;bottom:0;background:var(--s1);border-radius:3px 0 7px 0}
+.sq .cap{position:absolute;left:12px;top:8px;right:12px}
+.sq .cap b{display:block;font-size:19px;color:var(--label);line-height:1.35}
+.sq .cap span{font-size:16px;color:var(--label-2);line-height:1.4;display:block}
+.sqlab{margin-top:8px;font-size:17px;color:var(--label);line-height:1.5}
+.sqlab .nb{white-space:nowrap}
+.sqlab i{display:inline-block;width:12px;height:12px;background:var(--s1);border-radius:3px;margin-right:6px}
+/* wide iframe (article column on desktop): bar + area side by side */
+@media(min-width:640px){
+  .layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:28px;align-items:start}
+  .area{margin-top:22px;padding-top:0;border-top:0}
+  .sq{max-width:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <figure id="chart" role="img" aria-label="">
+    <div class="kicker">เงินดูแลไฟต่อไร่</div>
+    <h2 class="title" id="t"></h2>
+    <p class="lede" id="lede"></p>
+
+    <div class="layout">
+      <div>
+        <div id="bars"></div>
+        <div class="hint" id="hint"></div>
+        <div class="detail" id="detail" aria-live="polite"></div>
+        <ul class="legend" id="legend"></ul>
+      </div>
+      <div class="area" id="area"></div>
+    </div>
+  </figure>
+
+  <div style="margin-top:16px"><button class="btn" id="tbtn" type="button" aria-pressed="false" aria-controls="tbl">ดูเป็นตาราง</button></div>
+  <div class="tbl" id="tbl" hidden></div>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>/*__SHARED_JS__*/</script>
+<script>
+var DATA=/*__DATA__*/null;
+(function(){
+  var A=DATA.chartA,H=A.villages[0],M=A.villages[1];
+  var SHADE=["s1","s2","s3","s4"];
+  var GAP=2,MIN_PX=44; // MIN_PX keeps the small bar visible and tappable (44px target)
+
+  $("#t").textContent=A.title;
+  $("#lede").textContent="หน่วย: "+A.unit+" · เงินที่ลงถึงชุมชนในหนึ่งปี หารด้วยพื้นที่ป่าที่ชุมชนดูแล";
+  $("#hint").textContent="แตะหรือชี้ที่ช่องสีเพื่อดูรายละเอียด";
+
+  var bars=$("#bars"),detail=$("#detail"),pressed=null;
+  function show(btn,nodes){
+    if(pressed)pressed.setAttribute("aria-pressed","false");
+    pressed=btn;btn.setAttribute("aria-pressed","true");
+    detail.textContent="";nodes.forEach(function(n){detail.appendChild(n)});
+  }
+  function detailFor(s,tag){
+    return[el("div",{class:"dn",text:s.name}),
+      el("div",{class:"db"},[el("span",{class:"tag",text:tag}),
+        el("span",{class:"nb",text:"≈ "+fmtT(s.per_rai)+" บาท/ไร่"})," · ",el("span",{class:"nb",text:fmt(s.baht)+" บาท/ปี"})]),
+      el("div",{class:"db",text:s.detail})];
+  }
+  function tagOf(s){return s.kind==="private"?"เงินเอกชน":"เงินรัฐ"}
+  function hover(b,fn){b.addEventListener("mouseenter",fn);b.addEventListener("focus",fn)}
+
+  // Village 1: stacked bar
+  var v1=el("div",{class:"vill"});
+  v1.appendChild(el("h3",{text:H.name}));
+  v1.appendChild(el("div",{class:"land",text:H.land}));
+  var bar=el("div",{class:"bar",role:"group","aria-label":H.name+" แยกตามแหล่งเงิน"});
+  var first=null,segs=[];
+  H.sources.forEach(function(s,i){
+    var b=el("button",{type:"button",class:"seg","aria-pressed":"false",
+      "aria-label":s.name+" "+fmtT(s.per_rai)+" "+A.unit,text:fmt(s.per_rai)});
+    b.style.background="var(--"+SHADE[i]+")";b.style.color="var(--"+SHADE[i]+"-on)";
+    b.addEventListener("click",function(){show(b,detailFor(s,tagOf(s)))});
+    segs.push(b);bar.appendChild(b);if(!first)first=b;
+  });
+  var track=el("div",{class:"track"},[bar]);
+  v1.appendChild(track);
+  var br=el("div",{class:"bracket"},[el("div",{class:"line"}),el("div",{class:"txt"})]);
+  v1.appendChild(br);
+  v1.appendChild(el("div",{class:"total"},[el("span",{class:"big num",text:"≈ "+fmt(H.per_rai)}),
+    el("span",{class:"u",text:A.unit+" รวมทุกแหล่ง"})]));
+  bars.appendChild(v1);
+
+  // Village 2: single bar, label OUTSIDE so it never wraps
+  var v2=el("div",{class:"vill"});
+  v2.appendChild(el("h3",{text:M.name}));
+  v2.appendChild(el("div",{class:"land",text:M.land}));
+  var S=M.sources[0];
+  var mb=el("button",{type:"button",class:"mkbar","aria-pressed":"false",
+    "aria-label":M.name+" "+fmtT(M.per_rai)+" "+A.unit});
+  mb.addEventListener("click",function(){show(mb,detailFor(S,"เงินรัฐ"))});
+  var mk=el("div",{class:"mk"},[mb,el("span",{class:"v num",text:"≈ "+fmtT(M.per_rai)}),
+    el("span",{class:"lab",text:"ไม่มีเงินคาร์บอน · แท่งนี้วาดกว้างกว่าจริงเพื่อให้มองเห็น"})]);
+  v2.appendChild(mk);
+  bars.appendChild(v2);
+
+  // Scale: the longest bar (หัวทุ่ง total) fills the track. Everything derives from data.
+  function layout(){
+    var W=bar.clientWidth-(H.sources.length-1)*GAP;
+    var k=W/H.per_rai;                       // px per baht-per-rai
+    // True widths are proportional. A segment narrower than the 44px touch target gets
+    // 44px, and the extra pixels are taken evenly from the segments wide enough to spare them,
+    // so the bar still fills the track and the largest segments stay within a few % of scale.
+    var w=H.sources.map(function(s){return s.per_rai*k});
+    var short=0,spare=0;
+    w.forEach(function(v){if(v<MIN_PX)short+=MIN_PX-v;else spare+=v-MIN_PX});
+    w=w.map(function(v){return v<MIN_PX?MIN_PX:v-(v-MIN_PX)/spare*short});
+    segs.forEach(function(b,i){b.style.width=w[i]+"px"});
+    // bracket spans the state-only part: from end of the carbon segment to end of the bar
+    var cw=w[0]+GAP;
+    var line=$(".line",br),txt=$(".txt",br);
+    line.style.left=cw+"px";line.style.width=(bar.clientWidth-cw)+"px";
+    txt.textContent="ตัดเงินคาร์บอนออก ยังเหลือบรัฐ ≈ "+fmt(H.per_rai_state_only)+" บาท/ไร่";
+    var mw=Math.max(MIN_PX,M.per_rai*k);mb.style.width=mw+"px";
+  }
+  var lg=$("#legend");
+  H.sources.forEach(function(s,i){var li=el("li"),sw=el("i");sw.style.background="var(--"+SHADE[i]+")";
+    li.appendChild(sw);li.appendChild(document.createTextNode(s.name));lg.appendChild(li)});
+  var li=el("li"),sw=el("i");sw.style.background="var(--cta)";li.appendChild(sw);
+  li.appendChild(document.createTextNode(M.name+" · "+S.name));lg.appendChild(li);
+
+  // Area comparison: side of each square proportional to sqrt(rai)
+  var ar=$("#area");
+  ar.appendChild(el("h3",{text:"พื้นที่ที่ดูแล เทียบตามสัดส่วนจริง"}));
+  ar.appendChild(el("div",{class:"sub",text:"พื้นที่สี่เหลี่ยมเป็นสัดส่วนกับจำนวนไร่"}));
+  var sq=el("div",{class:"sq"});
+  var big=el("div",{class:"big","aria-hidden":"true"});
+  big.appendChild(el("div",{class:"cap"},[el("b",{text:M.name}),
+    el("span",{text:fmt(M.rai)+" ไร่"}),el("span",{text:"≈ "+fmt(M.baht_year)+" บาท/ปี"})]));
+  var sm=el("div",{class:"small"});big.appendChild(sm);sq.appendChild(big);ar.appendChild(sq);
+  ar.appendChild(el("div",{class:"sqlab"},[el("i"),el("b",{text:H.name}),
+    " "+fmt(H.rai)+" ไร่ · ",el("span",{class:"nb",text:"≈ "+fmt(H.baht_year)+" บาท/ปี"})]));
+  function sizeSq(){
+    var w=sq.clientWidth;big.style.width=w+"px";big.style.height=w+"px";
+    var side=w*Math.sqrt(H.rai/M.rai);sm.style.width=side+"px";sm.style.height=side+"px";
+  }
+
+  // Real table alternative
+  var tb=$("#tbl"),tbl=el("table");
+  tbl.appendChild(el("caption",{text:A.title+" ("+A.unit+")"}));
+  tbl.appendChild(el("thead",{},[el("tr",{},[el("th",{scope:"col",text:"พื้นที่ / แหล่งเงิน"}),
+    el("th",{scope:"col",class:"r",text:"บาท/ไร่/ปี"}),el("th",{scope:"col",class:"r",text:"บาท/ปี"}),el("th",{scope:"col",text:"รายละเอียด"})])]));
+  var tbd=el("tbody");
+  H.sources.forEach(function(s){tbd.appendChild(el("tr",{},[el("td",{text:H.name+" · "+s.name}),
+    el("td",{class:"r num",text:fmtT(s.per_rai)}),el("td",{class:"r num",text:fmt(s.baht)}),el("td",{text:s.detail})]))});
+  tbd.appendChild(el("tr",{},[el("th",{scope:"row",text:H.name+" รวม"}),el("td",{class:"r num",text:fmt(H.per_rai)}),
+    el("td",{class:"r num",text:fmt(H.baht_year)}),el("td",{text:fmt(H.rai)+" ไร่ · ไม่รวมเงินคาร์บอน ≈ "+fmt(H.per_rai_state_only)+" บาท/ไร่"})]));
+  tbd.appendChild(el("tr",{},[el("th",{scope:"row",text:M.name+" · "+S.name}),el("td",{class:"r num",text:fmtT(M.per_rai)}),
+    el("td",{class:"r num",text:fmt(M.baht_year)}),el("td",{text:fmt(M.rai)+" ไร่ · "+S.detail})]));
+  tbl.appendChild(tbd);tb.appendChild(tbl);
+  tableToggle($("#tbtn"),tb,$("#chart"));
+
+  var f=$("#foot");
+  f.appendChild(el("p",{},[el("b",{text:"หมายเหตุ: "}),A.note]));
+  f.appendChild(el("p",{},[el("b",{text:"ที่มา: "}),A.source]));
+
+  $("#chart").setAttribute("aria-label",A.title+". "+H.name+" ได้ราว "+fmt(H.per_rai)+" "+A.unit+
+    " แบ่งเป็น "+H.sources.map(function(s){return s.name+" "+fmtT(s.per_rai)}).join(", ")+
+    " ถ้าไม่นับเงินคาร์บอนเหลือราว "+fmt(H.per_rai_state_only)+". "+M.name+" ได้ราว "+fmtT(M.per_rai)+" "+A.unit+
+    ". กดปุ่ม ดูเป็นตาราง เพื่อดูข้อมูลทั้งหมด");
+
+  layout();sizeSq();show(first,detailFor(H.sources[0],tagOf(H.sources[0])));
+  H.sources.forEach(function(s,i){hover(segs[i],function(){if(matchMedia("(hover:hover)").matches)show(segs[i],detailFor(s,tagOf(s)))})});
+  hover(mb,function(){if(matchMedia("(hover:hover)").matches)show(mb,detailFor(S,"เงินรัฐ"))});
+  var rt;addEventListener("resize",function(){clearTimeout(rt);rt=setTimeout(function(){layout();sizeSq()},100)});
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){layout();sizeSq()});
+  function ph(){try{parent.postMessage({type:"infographic-height",height:document.documentElement.scrollHeight},location.origin)}catch(e){}}
+  addEventListener("load",ph);if(window.ResizeObserver)new ResizeObserver(ph).observe(document.body);
+})();
+</script>
+</body>
+</html>

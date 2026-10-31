@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>เส้นทางเงินดูแลไฟ: ใครส่ง ผ่านใคร ติดเงื่อนไขอะไร มาถึงเมื่อไร</title>
+<style>
+/* Shared Prachatham-CI styles for the green-inequality charts.
+   Inlined into each chart by build.py. Tokens mirror src/app/globals.css
+   and design_system.md; do not invent colours here. */
+@font-face{font-family:"DB Helvethaica X";src:url("/font/dbhelvethaicax-webfont.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"DB Helvethaica X";src:url("/font/dbhelvethaicaxmed-webfont.woff2") format("woff2");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"DB Helvethaica X";src:url("/font/dbhelvethaicaxbd-webfont.woff2") format("woff2");font-weight:700;font-style:normal;font-display:swap}
+
+:root{
+  color-scheme:light;
+  --brand:#044B41;--brand-ink:#044B41;--cta:#C46211;
+  --label:#1d1d1f;--label-2:#4b5563;--label-3:#5f6672;
+  --sep:rgba(0,0,0,.08);--sep-strong:rgba(0,0,0,.18);
+  --bg:#f7f8f3;--raised:#ffffff;--focus:#038B71;
+  --tint:#e9efe6;            /* brand-tinted neutral for chips / rails */
+  --s1:#044B41;--s2:#3d7a6d;--s3:#7fa89d;--s4:#b9cfc8; /* teal ramp: 4 sources */
+  --s1-on:#ffffff;--s2-on:#ffffff;--s3-on:#1d1d1f;--s4-on:#1d1d1f;
+  --font:"DB Helvethaica X",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+}
+:root[data-theme=dark]{
+  color-scheme:dark;
+  --brand-ink:#8AE0A0;
+  --label:#eef2f0;--label-2:#c5cdc9;--label-3:#9fb0aa;
+  --sep:rgba(255,255,255,.1);--sep-strong:rgba(255,255,255,.22);
+  --bg:#071513;--raised:#0B201D;--focus:#8AE0A0;
+  --tint:#12302b;
+  --s1:#38A96A;--s2:#267d68;--s3:#3f6f64;--s4:#6f8f87;
+  --s1-on:#01211D;--s2-on:#ffffff;--s3-on:#ffffff;--s4-on:#01211D;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;padding:16px;background:var(--bg);color:var(--label-2);font-family:var(--font);
+  font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased}
+@media(min-width:700px){body{padding:24px}}
+h2,h3,p,ul,dl,dd,figure{margin:0}
+.wrap{max-width:760px;margin:0 auto}
+.kicker{font-size:16px;font-weight:700;color:var(--brand-ink)}
+.title{font-size:26px;font-weight:700;line-height:1.25;color:var(--label);margin-top:2px}
+@media(min-width:700px){.title{font-size:32px}}
+.lede{font-size:18px;color:var(--label-2);margin-top:6px}
+.num{font-variant-numeric:tabular-nums}
+
+/* controls: 44px targets, visible focus */
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
+.btn{min-height:44px;min-width:44px;padding:8px 16px;border-radius:999px;border:1.5px solid var(--brand-ink);
+  background:transparent;color:var(--brand-ink);font-weight:700;font-size:18px;line-height:1.4}
+.btn[aria-pressed=true]{background:var(--brand);color:#fff;border-color:var(--brand)}
+:root[data-theme=dark] .btn[aria-pressed=true]{background:var(--s1);color:var(--s1-on);border-color:var(--s1)}
+
+/* notes + source */
+.foot{margin-top:18px;padding-top:12px;border-top:1px solid var(--sep-strong);font-size:15px;line-height:1.55;color:var(--label-3)}
+.foot p+p{margin-top:6px}
+.foot b{font-weight:700;color:var(--label-2)}
+
+/* real table alternative */
+.tbl[hidden]{display:none}
+.tbl{margin-top:14px;overflow-x:auto}
+.tbl table{width:100%;border-collapse:collapse;font-size:16px;line-height:1.5}
+.tbl caption{text-align:left;font-weight:700;color:var(--label);padding-bottom:6px;font-size:17px}
+.tbl th,.tbl td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--sep-strong)}
+.tbl th{font-weight:700;color:var(--label);background:var(--tint)}
+.tbl td.r,.tbl th.r{text-align:right}
+
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+
+/* chart B */
+.grp{margin-top:22px;font-size:18px;font-weight:700;color:var(--brand-ink);line-height:1.3}
+.grp.state{color:var(--label-2)}
+.rows{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:10px}
+.row{background:var(--raised);border:1px solid var(--sep-strong);border-radius:12px;overflow:hidden}
+.rowbox{padding:12px 14px;display:grid;gap:8px;grid-template-columns:minmax(0,1fr);grid-template-areas:"src" "via" "arr" "rules";align-items:start}
+.c-src{grid-area:src}.c-via{grid-area:via}.c-arr{grid-area:arr}.c-rules{grid-area:rules}
+.rbtn{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:44px;padding:6px 12px;background:transparent;
+  border:1.5px solid var(--sep-strong);border-radius:10px;color:var(--label);font:inherit;font-size:17px;font-weight:700;line-height:1.35;text-align:left}
+.rbtn:hover{background:var(--tint)}
+.chev{font-size:18px;color:var(--label-3);transition:transform .2s}
+.rbtn[aria-expanded=true] .chev{transform:rotate(180deg)}
+.rules{margin-top:8px}
+.src{font-size:19px;font-weight:700;line-height:1.35;color:var(--label)}
+.via{font-size:17px;color:var(--label-2);line-height:1.45}
+.size{font-size:16px;color:var(--label-3);line-height:1.45;margin-top:2px}
+/* arrival badge: glyph + the data's own words + a distinct border style. Never colour alone. */
+.arr{display:inline-flex;align-items:flex-start;gap:8px;padding:6px 12px;border-radius:8px;font-size:17px;font-weight:700;line-height:1.4;max-width:100%}
+.arr .g{font-size:18px;flex:0 0 auto;line-height:1.4}
+.arr.before{background:var(--brand);color:#fff;border:2px solid var(--brand)}
+:root[data-theme=dark] .arr.before{background:var(--s1);color:var(--s1-on);border-color:var(--s1)}
+.arr.late{background:transparent;color:var(--label);border:2px solid var(--label)}
+.arr.uncertain{background:var(--tint);color:var(--label);border:2px dashed var(--label-3)}
+.arr.cycle{background:var(--tint);color:var(--label);border:2px solid transparent}
+.chips{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px}
+.chips li{font-size:16px;line-height:1.4;padding:3px 12px;border:1px solid var(--sep-strong);border-radius:999px;color:var(--label-2);background:var(--bg)}
+/* the single orange element on screen */
+.callout{margin-top:10px;padding:12px 14px;border:2px dashed var(--cta);border-radius:12px;background:var(--raised);font-size:17px;color:var(--label);line-height:1.5}
+.callout .x{font-weight:700}
+/* budget */
+.bud{margin-top:28px;padding-top:18px;border-top:1px solid var(--sep-strong)}
+.bud h3{font-size:20px;font-weight:700;color:var(--label);line-height:1.3}
+.bud .sub{font-size:16px;color:var(--label-3);line-height:1.4;margin-top:2px}
+.bl{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:12px}
+.bl .v{font-size:22px;font-weight:700;color:var(--label);line-height:1.25}
+.bl .n{font-size:16px;color:var(--label-2);line-height:1.4}
+.bl .tr{height:14px;background:var(--tint);border-radius:4px;margin-top:4px;overflow:hidden}
+.bl .fi{height:100%;border-radius:4px;min-width:4px}
+.bl li:nth-child(1) .fi{background:var(--s1)}
+.bl li:nth-child(2) .fi{background:var(--s2)}
+.bl li:nth-child(3) .fi{background:var(--s3)}
+.bl li:nth-child(4) .fi{background:var(--label)}
+.colh{display:none}
+/* iframe >= 640px wide (article column on tablet/desktop): real 4-column grid, chips inline */
+@media(min-width:640px){
+  .colh{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1.2fr) minmax(0,1.35fr) minmax(0,1.3fr);gap:16px;padding:8px 14px;margin-top:16px;font-size:16px;font-weight:700;color:var(--label-3);border-bottom:2px solid var(--label)}
+  .rows{gap:0;margin-top:0}
+  .row{border-radius:0;border:0;border-bottom:1px solid var(--sep-strong);background:transparent}
+  .rowbox{grid-template-columns:minmax(0,1.25fr) minmax(0,1.2fr) minmax(0,1.35fr) minmax(0,1.3fr);grid-template-areas:"src via rules arr";gap:16px;padding:14px}
+  /* wide: the rules column is always shown; the toggle button and its collapsed state are mobile-only */
+  .rbtn{display:none}
+  .rules[hidden]{display:block!important}
+  .rules{margin-top:0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <figure id="chart" role="img" aria-label="">
+    <div class="kicker">เงินดูแลไฟมาจากไหน</div>
+    <h2 class="title" id="t"></h2>
+    <p class="lede" id="lede"></p>
+
+    <div class="colh" id="colh" aria-hidden="true"><span>แหล่งเงิน</span><span>ส่งผ่าน / ขนาด</span><span>เงื่อนไขที่ติดมา</span><span>มาถึงเมื่อไร</span></div>
+    <div id="groups"></div>
+    <div class="bud" id="bud"></div>
+  </figure>
+
+  <div style="margin-top:16px"><button class="btn" id="tbtn" type="button" aria-pressed="false" aria-controls="tbl">ดูเป็นตาราง</button></div>
+  <div class="tbl" id="tbl" hidden></div>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>/* Shared helpers. Inlined by build.py. No data lives here. */
+(function(){
+  // Theme: explicit site choice wins; otherwise follow the system.
+  // Same key + semantics as src/app/layout.tsx pre-paint script.
+  var root=document.documentElement,mq=matchMedia("(prefers-color-scheme: dark)");
+  function apply(){
+    var t=null;try{t=localStorage.getItem("prachatham-theme")}catch(e){}
+    var dark=t==="dark"||((!t||t==="system")&&mq.matches);
+    root.setAttribute("data-theme",dark?"dark":"light");
+  }
+  apply();
+  (mq.addEventListener?mq.addEventListener("change",apply):mq.addListener(apply));
+  addEventListener("storage",function(e){if(e.key==="prachatham-theme")apply()});
+})();
+window.$=function(s,r){return(r||document).querySelector(s)};
+window.el=function(tag,attrs,kids){
+  var n=document.createElement(tag);
+  for(var k in(attrs||{})){var v=attrs[k];if(v===false||v==null)continue;
+    if(k==="text")n.textContent=v;else n.setAttribute(k,v===true?"":v)}
+  (kids||[]).forEach(function(c){n.appendChild(typeof c==="string"?document.createTextNode(c):c)});
+  return n};
+window.fmt=function(n,d){return Number(n).toLocaleString("en-US",{minimumFractionDigits:d||0,maximumFractionDigits:d||0})};
+// Display rule for per-rai values: TRUNCATE (never round up) to <=1 decimal and drop a trailing ".0".
+// Why: the article prints 60,000/10,808 = 5.551.. as "5.5"; toFixed(1) would show 5.6 and contradict the text.
+window.fmtT=function(n){var t=Math.floor(Number(n)*10+1e-9)/10;return fmt(t,t%1?1:0)};
+// "ดูเป็นตาราง": the table is an ALTERNATIVE view. It replaces the chart in place (chart hidden, table shown),
+// so the document is never taller than max(chart, table) and the fixed iframe height holds with no inner scrollbar.
+window.tableToggle=function(btn,panel,chart){
+  btn.addEventListener("click",function(){
+    var open=panel.hasAttribute("hidden");
+    if(open){panel.removeAttribute("hidden");chart.setAttribute("hidden","")}
+    else{panel.setAttribute("hidden","");chart.removeAttribute("hidden")}
+    btn.setAttribute("aria-pressed",open?"true":"false");
+    btn.textContent=open?"ดูเป็นกราฟ":"ดูเป็นตาราง";
+    btn.setAttribute("aria-label",open?"กลับไปดูกราฟ":"ดูข้อมูลเป็นตาราง");
+  });
+};
+</script>
+<script>
+var DATA={"_note":"Generated by export_data.py; numbers asserted against the article. Do not hand-edit.","chartA":{"title":"ดอยลูกเดียวกัน เงินดูแลไฟต่อไร่ห่างกันกว่าร้อยเท่า","unit":"บาทต่อไร่ต่อปี","villages":[{"id":"huathung","name":"บ้านหัวทุ่ง","land":"ป่าชุมชนขึ้นทะเบียนในป่าสงวนแห่งชาติ","rai":883,"baht_year":550900,"per_rai":623.9,"per_rai_state_only":323.9,"sources":[{"name":"เงินคาร์บอน (มูลนิธิแม่ฟ้าหลวงฯ)","baht":264900,"per_rai":300.0,"kind":"private","detail":"ไร่ละ 300 บาท × 883 ไร่ โอนก่อนฤดูไฟ ใช้ตามมติประชาคม"},{"name":"จ้างลาดตระเวน เขตรักษาพันธุ์สัตว์ป่า","baht":135000,"per_rai":152.9,"kind":"state","detail":"5 คน × 9,000 บาท × 3 เดือน หมู่บ้านต้องสำรองจ่ายก่อน"},{"name":"จ้างลาดตระเวน สถานีควบคุมไฟป่า","baht":81000,"per_rai":91.7,"kind":"state","detail":"3 คน × 9,000 บาท × 3 เดือน"},{"name":"เครือข่ายป่าชุมชน กรมป่าไม้","baht":70000,"per_rai":79.3,"kind":"state","detail":"หมุนเวียน ไม่ได้ทุกปี"}]},{"id":"maekhongsai","name":"หย่อมบ้านแม่คองซ้าย","land":"ในเขตรักษาพันธุ์สัตว์ป่าเชียงดาว เข้าโครงการคาร์บอนไม่ได้","rai":10808,"baht_year":60000,"per_rai":5.55,"sources":[{"name":"งบรัฐหลายหน่วยรวมกัน","baht":60000,"per_rai":5.55,"kind":"state","detail":"ยังไม่ทราบสัดส่วนแยกตามหน่วยงาน"}]}],"ratio_total":112.4,"ratio_state_only":58.3,"headline_ratio_text":"กว่าร้อยเท่า","note":"พื้นที่แม่คองซ้ายมาจากแผนที่ที่ชุมชนทำเอง ส่วนหัวทุ่งนับเฉพาะป่าชุมชนที่ขึ้นทะเบียน 883 ไร่ เงินคาร์บอนไร่ละ 300 บาทเป็นเงินพัฒนาโครงการระหว่างรอทวนสอบ ตัวเลขปัดเศษ","source":"สัมภาษณ์ ศิริวรรณ ศรีเงิน และกอบกุล ตั้งใจสู้ (2569) · คำนวณโดยผู้เขียน"},"chartB":{"title":"เงินรัฐมาหลายทางแต่ทุกทางมีกรอบ ส่วนเงินที่มาถึงก่อนไฟมีทางเดียว","flows":[{"group":"private","source":"บริษัทที่ซื้อคาร์บอนเครดิตเพื่อเป้า Net Zero","via":"มูลนิธิแม่ฟ้าหลวงฯ → กองทุนหมู่บ้าน","size":"อย่างน้อย 55 บาทจากทุก 100 บาทถึงชุมชน","rules":["ต้องเป็นป่าชุมชนที่ขึ้นทะเบียน","ไฟไหม้เกิน 15% ถูกหักเงิน","ใช้ตามมติประชาคม"],"arrival":"before","arrival_text":"โอนก่อนฤดูไฟ ไม่ต้องสำรองจ่าย","blocked":"แม่คองซ้ายผ่านประตูนี้ไม่ได้ ป่าชุมชนขึ้นทะเบียนได้เฉพาะนอกเขตป่าอนุรักษ์ ชุมชนในเขตอนุรักษ์ทั่วประเทศกว่า 4,000 หมู่บ้านจึงเข้าไม่ได้"},{"group":"state","source":"เขตรักษาพันธุ์สัตว์ป่า และสถานีควบคุมไฟป่า","via":"จ้างชาวบ้านลาดตระเวน","size":"คนละ 9,000 บาท/เดือน 3 เดือน","rules":["ระเบียบราชการ","หมู่บ้านต้องสำรองจ่ายก่อน","จำนวนคนขึ้นกับงบแต่ละปี"],"arrival":"late","arrival_text":"เบิกคืนทีหลัง อาจมาถึงปลายฤดู"},{"group":"state","source":"กรมป่าไม้ (สจป.)","via":"เงินเครือข่ายป่าชุมชน","size":"70,000 บาท","rules":["เฉพาะหมู่บ้านที่มีป่าชุมชน","หมุนเวียน ไม่ได้ทุกปี"],"arrival":"uncertain","arrival_text":"ไม่แน่นอน"},{"group":"state","source":"สถ. (กรมส่งเสริมการปกครองท้องถิ่น)","via":"งบถ่ายโอนภารกิจไฟป่า → อบต.","size":"ทาเหนือ: 25,000 + 15,000 บาท สำหรับป่ากว่า 50,000 ไร่","rules":["กรอบ 5 ภารกิจตามแบบกรมป่าไม้","เบี้ยเลี้ยง 240 บาท ต้องทำงาน 12 ชม."],"arrival":"cycle","arrival_text":"ตามรอบงบประมาณ"},{"group":"state","source":"จังหวัด (งบกลาง ปี 2567 และ 2568)","via":"→ อบต.","size":"ทาเหนือได้ราว 800,000 บาท ใช้ได้ไม่ถึง 400,000 บาท","rules":["กรอบเดียวกับงบถ่ายโอน","เติมน้ำมันเครื่องเป่าลมไม่ได้"],"arrival":"late","arrival_text":"ปี 2567 มาถึง พ.ค. เหลือเวลาใช้เดือนเดียว"},{"group":"state","source":"อบจ.","via":"→ อำเภอ → หมู่บ้าน","size":"หมู่บ้านละ 14,000 บาท","rules":["ระเบียบจัดซื้อจัดจ้าง","ค่าอาหารต้องเป็นข้าวกล่องครบชุด"],"arrival":"cycle","arrival_text":"ตามรอบงบประมาณ"}],"budget_cm_2569_million":[{"label":"งบที่เกี่ยวกับไฟป่าจากกระทรวงทรัพยากรธรรมชาติฯ","value":73.4},{"label":"ในจำนวนนั้นเป็นของกรมอุทยานแห่งชาติฯ","value":63.6},{"label":"อบต. และเทศบาล 191 แห่งรวมกัน","value":18.4},{"label":"โครงการทำแนวกันไฟโดยตรงของท้องถิ่น (41 โครงการ)","value":1.7}],"note":"วงเงินตัวอย่างจากบ้านหัวทุ่ง อ.เชียงดาว และ อบต.ทาเหนือ อ.แม่ออน ไม่ใช่ทุกหมู่บ้านได้ทุกก้อน","source":"สัมภาษณ์ ศิริวรรณ ศรีเงิน, วิสันต์ ปัญญากาศ, สมิทธิ หาเรือนพืชน์ (2569) · Rocket Media Lab (17 เม.ย. 2569) · กรมอุทยานแห่งชาติฯ (ส.ค. 2569)"}};
+(function(){
+  var B=DATA.chartB;
+  // Glyph + label per arrival code. Text always shown; glyph is a second cue.
+  var ARR={
+    before:{g:"✓",l:"มาก่อนไฟ"},
+    late:{g:"⏱",l:"มาช้า"},
+    uncertain:{g:"?",l:"ไม่แน่นอน"},
+    cycle:{g:"↻",l:"ตามรอบงบ"}
+  };
+  $("#t").textContent=B.title;
+  $("#lede").textContent="ใครส่ง ผ่านใคร ติดเงื่อนไขอะไร และมาถึงเมื่อไร · แตะ \"เงื่อนไขที่ติดมา\" เพื่อดูรายละเอียด";
+
+  function chips(rules){var u=el("ul",{class:"chips"});rules.forEach(function(r){u.appendChild(el("li",{text:r}))});return u}
+  // Collapsed card = source + via/size + arrival badge (arrival is the story: never hidden).
+  // Rules sit behind a real <button aria-expanded>. The first (private-money) card starts open.
+  function row(f,idx,openFirst){
+    var a=ARR[f.arrival]||{g:"",l:""};
+    var li=el("li",{class:"row"}),id="rules"+idx;
+    var box=el("div",{class:"rowbox"});
+    box.appendChild(el("div",{class:"c-src"},[el("div",{class:"src",text:f.source})]));
+    box.appendChild(el("div",{class:"c-via"},[el("div",{class:"via",text:f.via}),el("div",{class:"size",text:f.size})]));
+    box.appendChild(el("div",{class:"c-arr"},[el("span",{class:"arr "+f.arrival,"aria-label":a.l+": "+f.arrival_text},
+      [el("span",{class:"g","aria-hidden":"true",text:a.g}),el("span",{"aria-hidden":"true",text:f.arrival_text})])]));
+    var btn=el("button",{type:"button",class:"rbtn","aria-expanded":"false","aria-controls":id},
+      [el("span",{class:"rbl",text:"เงื่อนไขที่ติดมา ("+f.rules.length+")"}),el("span",{class:"chev","aria-hidden":"true",text:"▾"})]);
+    var panel=el("div",{class:"rules",id:id,hidden:true},[chips(f.rules)]);
+    function set(open){btn.setAttribute("aria-expanded",open?"true":"false");if(open)panel.removeAttribute("hidden");else panel.setAttribute("hidden","")}
+    btn.addEventListener("click",function(){set(btn.getAttribute("aria-expanded")!=="true")});
+    box.appendChild(el("div",{class:"c-rules"},[btn,panel]));
+    li.appendChild(box);
+    if(openFirst)set(true);
+    return li;
+  }
+
+  var G=$("#groups"),idx=0;
+  var groups=[["private","เงินเอกชน"],["state","เงินรัฐ"]];
+  groups.forEach(function(g){
+    var items=B.flows.filter(function(f){return f.group===g[0]});
+    if(!items.length)return;
+    G.appendChild(el("div",{class:"grp "+g[0],text:g[1]}));
+    var ul=el("ul",{class:"rows"});
+    items.forEach(function(f){ul.appendChild(row(f,idx,idx===0));idx++});
+    G.appendChild(ul);
+    // blocked callout sits directly under the private-money row
+    items.forEach(function(f){
+      if(f.blocked){
+        // Text comes verbatim from data.json; only the glyph is added here.
+        G.appendChild(el("div",{class:"callout",role:"note"},[el("span",{class:"x","aria-hidden":"true",text:"✕ "}),
+          f.blocked]));
+      }
+    });
+  });
+
+  // Budget bars: width = value / max
+  var bud=$("#bud");
+  bud.appendChild(el("h3",{text:"เงินก้อนใหญ่อยู่ที่หน่วยงานรัฐ ไม่ใช่คนที่ขึ้นไปทำแนวกันไฟ"}));
+  bud.appendChild(el("div",{class:"sub",text:"งบเกี่ยวกับไฟป่าและฝุ่นควัน จ.เชียงใหม่ ปีงบประมาณ 2569 (ล้านบาท)"}));
+  var maxB=Math.max.apply(null,B.budget_cm_2569_million.map(function(b){return b.value}));
+  var bl=el("ul",{class:"bl"});
+  B.budget_cm_2569_million.forEach(function(b){
+    var fi=el("div",{class:"fi"});fi.style.width=(b.value/maxB*100)+"%";
+    bl.appendChild(el("li",{},[el("div",{class:"v num",text:fmt(b.value,1)+" ล้านบาท"}),el("div",{class:"n",text:b.label}),
+      el("div",{class:"tr","aria-hidden":"true"},[fi])]));
+  });
+  bud.appendChild(bl);
+
+  // Table alternative
+  var tb=$("#tbl"),tbl=el("table");
+  tbl.appendChild(el("caption",{text:B.title}));
+  tbl.appendChild(el("thead",{},[el("tr",{},["กลุ่ม","แหล่งเงิน","ส่งผ่าน","ขนาด","เงื่อนไขที่ติดมา","มาถึงเมื่อไร"].map(function(h){return el("th",{scope:"col",text:h})}))]));
+  var tbd=el("tbody");
+  B.flows.forEach(function(f){tbd.appendChild(el("tr",{},[el("td",{text:f.group==="private"?"เงินเอกชน":"เงินรัฐ"}),el("td",{text:f.source}),
+    el("td",{text:f.via}),el("td",{text:f.size}),el("td",{text:f.rules.join(" · ")}),
+    el("td",{text:(ARR[f.arrival]||{}).l+" · "+f.arrival_text})]))});
+  tbl.appendChild(tbd);
+  var cap=el("table");
+  cap.appendChild(el("caption",{text:"งบเกี่ยวกับไฟป่าและฝุ่นควัน จ.เชียงใหม่ ปีงบประมาณ 2569 (ล้านบาท)"}));
+  cap.appendChild(el("thead",{},[el("tr",{},[el("th",{scope:"col",text:"รายการ"}),el("th",{scope:"col",class:"r",text:"ล้านบาท"})])]));
+  var cb=el("tbody");B.budget_cm_2569_million.forEach(function(b){cb.appendChild(el("tr",{},[el("td",{text:b.label}),el("td",{class:"r num",text:fmt(b.value,1)})]))});
+  cap.appendChild(cb);
+  tb.appendChild(tbl);tb.appendChild(el("div",{style:"height:14px"}));tb.appendChild(cap);
+  tableToggle($("#tbtn"),tb,$("#chart"));
+
+  var f=$("#foot");
+  f.appendChild(el("p",{},[el("b",{text:"หมายเหตุ: "}),B.note]));
+  f.appendChild(el("p",{},[el("b",{text:"ที่มา: "}),B.source]));
+
+  $("#chart").setAttribute("aria-label",B.title+". "+B.flows.length+" แหล่งเงิน: "+
+    B.flows.map(function(x){return x.source+" ("+(ARR[x.arrival]||{}).l+")"}).join("; ")+
+    ". มีแหล่งเดียวที่มาก่อนฤดูไฟคือเงินเอกชน. กดปุ่ม ดูเป็นตาราง เพื่อดูข้อมูลทั้งหมด");
+
+  function ph(){try{parent.postMessage({type:"infographic-height",height:document.documentElement.scrollHeight},location.origin)}catch(e){}}
+  addEventListener("load",ph);if(window.ResizeObserver)new ResizeObserver(ph).observe(document.body);
+})();
+</script>
+</body>
+</html>
