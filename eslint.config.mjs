@@ -11,6 +11,8 @@ const eslintConfig = [
       "node_modules/**",
       "next-env.d.ts",
       "public/**",
+      // Infographic build inputs are browser ES5 inlined into public/ HTML, linted like public/.
+      "scripts/infographics/**",
       "tsconfig.tsbuildinfo",
     ],
   },

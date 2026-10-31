@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Build the two self-contained chart files from the *.src.html templates.
 
-  python3 build.py            # writes per-rai.html + money-flow.html
+  python3 scripts/infographics/green-inequality/build.py
+      # writes public/infographics/green-inequality/per-rai.html + money-flow.html
 
 Inlines _shared.css, _shared.js and data.json so each output is a single
 file (safe inside an <iframe>, no extra requests, no CDN).
@@ -13,7 +14,9 @@ into a *.src.html template: this script fails the build if it finds one.
 """
 import json, pathlib, re, sys
 
-HERE = pathlib.Path(__file__).parent
+HERE = pathlib.Path(__file__).resolve().parent          # build inputs (not shipped)
+ROOT = HERE.parents[2]                                  # repo root
+OUT = ROOT / "public/infographics/green-inequality"     # shipped files only
 data = json.loads((HERE / "data.json").read_text(encoding="utf-8"))
 css = (HERE / "_shared.css").read_text(encoding="utf-8")
 js = (HERE / "_shared.js").read_text(encoding="utf-8")
@@ -57,7 +60,7 @@ for stem in ("per-rai", "money-flow"):
               .replace("/*__SHARED_JS__*/", js)
               .replace("/*__DATA__*/null", json.dumps(data, ensure_ascii=False, separators=(",", ":"))))
     assert "__SHARED" not in out and "__DATA__" not in out, "placeholder left behind"
-    (HERE / f"{stem}.html").write_text(out, encoding="utf-8")
+    (OUT / f"{stem}.html").write_text(out, encoding="utf-8")
     print(f"wrote {stem}.html  {len(out.encode('utf-8')):,} bytes")
 
 if problems:

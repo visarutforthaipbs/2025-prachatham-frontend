@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Render the CI-styled PNG fallbacks (light, 2x) from the real HTML charts.
 
-  python3 render_png.py        # run from the repo root; needs playwright + local Google Chrome
+  python3 scripts/infographics/green-inequality/render_png.py   # needs playwright + local Google Chrome
 
 Output: per-rai.png, money-flow.png (1440 px wide). Used under each iframe in the WP post
 for LINE/Facebook/Google and readers without JS. The interactive-only bits (table toggle,
@@ -11,7 +11,8 @@ Re-run whenever data.json or a *.src.html template changes (after build.py).
 import threading, http.server, socketserver, functools, pathlib
 from playwright.sync_api import sync_playwright
 
-PUB = pathlib.Path("public"); OUT = PUB / "infographics/green-inequality"
+ROOT = pathlib.Path(__file__).resolve().parents[3]
+PUB = ROOT / "public"; OUT = PUB / "infographics/green-inequality"
 class Q(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *a): pass
 srv = socketserver.TCPServer(("127.0.0.1", 0), functools.partial(Q, directory=str(PUB)))

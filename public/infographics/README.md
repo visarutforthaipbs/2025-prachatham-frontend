@@ -53,6 +53,10 @@ Keep a fixed desktop-sized `height` on the iframe as the fallback (the sanitizer
 
 ### Full reference build
 
-`green-inequality/` is the reference for a data-driven, CI-compliant chart pair: `data.json` as the only
-number source, `build.py` (inlines CSS/JS/data, fails on hand-typed numbers), `render_png.py`
-(PNG fallback), `build_embed.py` → `EMBED.md` (Thai newsroom snippets). See "Infographics" in `AGENTS.md`.
+`green-inequality/` is the reference for a data-driven, CI-compliant chart pair. Only the shipped files live
+here (`per-rai.html`, `money-flow.html`, the two PNG fallbacks). Build inputs are NOT in `public/` (anything
+here is downloadable): `scripts/infographics/green-inequality/` holds `data.json` (the only number source),
+`*.src.html`, `_shared.css/js`, `build.py` (inlines CSS/JS/data, fails on hand-typed numbers),
+`render_png.py` (PNG fallback) and `build_embed.py`, which writes the Thai newsroom guide
+[`docs/infographics/green-inequality-EMBED.md`](../../docs/infographics/green-inequality-EMBED.md).
+See "Infographics" in `AGENTS.md`.

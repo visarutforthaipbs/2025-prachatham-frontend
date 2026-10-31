@@ -33,7 +33,7 @@ editors ──► cms.prachatham.com (WordPress, headless)  ──REST──► 
 | Sitemap (all posts) / robots / RSS | `src/app/sitemap.ts`, `src/app/robots.ts`, `src/app/feed.xml/route.ts` |
 | Security headers / CSP | `vercel.json` (add new third-party hosts to CSP or they break silently) |
 | Editor guide (Thai, for the newsroom) | `editor-instruction.md` |
-| Interactive infographics (iframe charts in a post) | `public/infographics/` — how-to in the "Infographics" section below; newsroom snippets in `public/infographics/green-inequality/EMBED.md` |
+| Interactive infographics (iframe charts in a post) | `public/infographics/` — how-to in the "Infographics" section below; newsroom snippets in `docs/infographics/green-inequality-EMBED.md`; build inputs (templates, data, generators) in `scripts/infographics/green-inequality/` |
 | Infographic iframe auto-height | `src/lib/infographic-height.ts` (tested by `test-infographic-height.mjs`) · `src/components/InfographicAutoHeight.tsx` (mounted in `src/app/posts/[slug]/page.tsx`) |
 | Weekly health check | `scripts/health_check.py` |
 
@@ -55,15 +55,15 @@ npm run type-check && npm run lint && npm run build && npm test
 
 ## Infographics (interactive charts inside a post)
 
-The article is a normal WordPress post on www. A chart is a self-contained HTML file in `public/infographics/<topic>/`, embedded by an editor with a Custom HTML block holding an `<iframe src="/infographics/...">`. The sanitizer strips `<script>` from post bodies but allows same-origin iframes (`allowIframeRelativeUrls`), so the chart's own scripts run inside the frame. Reference build: `public/infographics/green-inequality/`.
+The article is a normal WordPress post on www. A chart is a self-contained HTML file in `public/infographics/<topic>/` (only shipped files live there: built HTML + PNG fallbacks; build inputs live in `scripts/infographics/<topic>/` because everything in `public/` is publicly downloadable), embedded by an editor with a Custom HTML block holding an `<iframe src="/infographics/...">`. The sanitizer strips `<script>` from post bodies but allows same-origin iframes (`allowIframeRelativeUrls`), so the chart's own scripts run inside the frame. Reference build: `public/infographics/green-inequality/`.
 
 Rules for every new chart:
-1. **One source of numbers.** Charts read `data.json` (inlined at build by `build.py`); never type a data value into a template (`build.py` fails the build if it finds one). The newsroom guide `EMBED.md` and the PNGs are generated from the same file (`build_embed.py`, `render_png.py`). Run `build.py` → `render_png.py` → `build_embed.py` after any data/template change.
+1. **One source of numbers.** Charts read `scripts/infographics/<topic>/data.json` (inlined at build by `build.py`, so it is not shipped); never type a data value into a template (`build.py` fails the build if it finds one). The newsroom guide `EMBED.md` and the PNGs are generated from the same file (`build_embed.py`, `render_png.py`). Run `build.py` → `render_png.py` → `build_embed.py` after any data/template change.
 2. **CI + design_system.md.** Site tokens, DB Helvethaica X from `/font/` (400/500/700, min 13 px), 44 px targets, orange once per screen, never colour alone (glyph + text), no external CDN, no looping animation, `prefers-reduced-motion` honoured, `role="img"` + `aria-label`, and a "ดูเป็นตาราง" button that swaps in a real `<table>`.
 3. **Theme.** The iframe is same-origin, so `_shared.js` reads `localStorage['prachatham-theme']` (`light`/`dark`; `system` or unset → `prefers-color-scheme`) and sets `data-theme` on `<html>`. Without this the chart follows the OS while the site follows the toggle.
 4. **PNG fallback is mandatory.** Every chart ships a CI-styled light 2× PNG (rendered from the HTML) for the post body under the iframe: LINE/Facebook/Google and no-JS readers cannot see the iframe. Never reuse an off-brand static image.
 5. **Height.** The iframe snippet carries a fixed desktop-sized `height` as the no-JS fallback (sanitizer allows px heights only — `clamp()`/`<style>` are stripped). `InfographicAutoHeight` then sets the real height from the chart's `postMessage({type:"infographic-height",height})`. It accepts only same-origin messages, only for `<iframe>`s under `/infographics/` whose `contentWindow` is the sender, clamps to 200–6000 px, and no-ops on anything else. Removing the component is safe: frames keep the fallback height.
-6. **Verify like a reader.** Screenshot the chart inside an iframe in the 768 px article column at 390/1280, light/dark (`hig_check.py` on the raw file is the minimum), and run the snippets in `EMBED.md` through `sanitizeHtml` to prove they survive.
+6. **Verify like a reader.** Screenshot the chart inside an iframe in the 768 px article column at 390/1280, light/dark (`hig_check.py` on the raw file is the minimum), and run the snippets in `docs/infographics/<topic>-EMBED.md` through `sanitizeHtml` to prove they survive.
 
 ## 4. Known traps
 
@@ -86,4 +86,4 @@ SSH: `ssh prachatham-cms` (alias in `~/.ssh/config`, key `~/.ssh/prachatham_cms`
 - Lint debt from the Next 16 upgrade: `react-hooks/error-boundaries` (41, try/catch in async server pages) and `react-hooks/set-state-in-effect` (9) are set to `warn` in `eslint.config.mjs`. Refactor, then restore them to `error`.
 - Stale docs: `README.md`, `DEPLOYMENT*.md`, `ISSUES-FIXED.md` predate the 2026 rebuild; trust this file over them.
 - DB Helvethaica X **web-font licence is unconfirmed** by the owner. The infographics reuse the woff2 files the site already serves from `/font/` (no new exposure) but the licence still needs his confirmation.
-- Infographic PNG fallbacks in `public/infographics/<topic>/` are uploaded to the WP Media Library by the newsroom (see `EMBED.md`); the copies in the repo are the render source, not what the post serves.
+- Infographic PNG fallbacks in `public/infographics/<topic>/` are uploaded to the WP Media Library by the newsroom (see `docs/infographics/green-inequality-EMBED.md`); the copies in the repo are the render source, not what the post serves.

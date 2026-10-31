@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """Generate EMBED.md (Thai newsroom guide) from data.json so no number is retyped by hand.
-   python3 build_embed.py
+   python3 scripts/infographics/green-inequality/build_embed.py
 """
 import json, pathlib, struct
-H = pathlib.Path(__file__).parent
+H = pathlib.Path(__file__).resolve().parent
+ROOT = H.parents[2]
+PUBDIR = ROOT / "public/infographics/green-inequality"
+DOC = ROOT / "docs/infographics/green-inequality-EMBED.md"
 d = json.loads((H / "data.json").read_text(encoding="utf-8")); A, B = d["chartA"], d["chartB"]
 hv, mk = A["villages"]
 def png(n):
-    w, h = struct.unpack(">II", (H / f"{n}.png").read_bytes()[16:24]); return w, h
+    w, h = struct.unpack(">II", (PUBDIR / f"{n}.png").read_bytes()[16:24]); return w, h
 n = lambda v: f"{v:,.0f}"
 def t1(v):  # truncate to 1 decimal like the chart (5.55 -> 5.5), same rule as fmtT in _shared.js
     t = int(v * 10 + 1e-9) / 10; return f"{t:,.1f}".rstrip("0").rstrip(".") if t % 1 else f"{t:,.0f}"
@@ -39,8 +42,8 @@ bud += ["</tbody></table></figure>"]
 fence = "```"
 md = f"""# วิธีใส่กราฟ "ความเหลื่อมล้ำของเงินดูแลไฟ" ลงในบทความ (สำหรับกอง บก.)
 
-ไฟล์นี้สร้างอัตโนมัติจาก `data.json` ด้วย `python3 build_embed.py` อย่าแก้ตัวเลขในไฟล์นี้ด้วยมือ
-ถ้าตัวเลขเปลี่ยน ให้แก้ที่ต้นทาง (`export_data.py`) แล้วรัน `build.py`, `render_png.py`, `build_embed.py` ตามลำดับ
+ไฟล์นี้สร้างอัตโนมัติจาก `scripts/infographics/green-inequality/data.json` ด้วย `build_embed.py` อย่าแก้ตัวเลขในไฟล์นี้ด้วยมือ
+ถ้าตัวเลขเปลี่ยน ให้แก้ที่ต้นทาง (`export_data.py`) แล้วรัน `build.py`, `render_png.py`, `build_embed.py` ใน `scripts/infographics/green-inequality/` ตามลำดับ
 
 ## ภาพรวม: กราฟ 1 ตัว = 3 ชิ้นในโพสต์
 1. **กราฟโต้ตอบ** (iframe) สำหรับคนอ่านบนเว็บ
@@ -50,7 +53,7 @@ md = f"""# วิธีใส่กราฟ "ความเหลื่อม�
 บทความเป็นโพสต์ปกติบน prachatham.com กราฟอยู่ในโพสต์นั้นเลย ไม่ต้องมีหน้าแยก
 
 ## ขั้นตอน (ทำซ้ำสำหรับกราฟแต่ละตัว)
-1. อัปโหลดไฟล์ PNG (`per-rai.png`, `money-flow.png`) เข้า Media Library ของ WordPress
+1. อัปโหลดไฟล์ PNG (`public/infographics/green-inequality/per-rai.png`, `money-flow.png`) เข้า Media Library ของ WordPress
 2. ในโพสต์ เพิ่มบล็อก **Custom HTML** ตรงตำแหน่งที่อยากให้กราฟขึ้น แล้ววางโค้ด "iframe" ด้านล่าง
 3. ใต้บล็อกนั้น เพิ่มบล็อก **Custom HTML** อีกอัน วางโค้ด "ภาพ PNG" (เปลี่ยน `YYYY/MM` ให้ตรงกับที่อัปโหลด หรือใช้บล็อก "รูปภาพ" ของ WordPress แล้วกรอก Alt ตามข้อความด้านล่างก็ได้)
 4. ใต้ภาพ เพิ่มบล็อก **ตาราง** แล้ววางข้อมูลตามด้านล่าง (หรือวางโค้ดตารางผ่าน Custom HTML)
@@ -101,7 +104,7 @@ md = f"""# วิธีใส่กราฟ "ความเหลื่อม�
 ## ข้อควรรู้
 - กราฟเปลี่ยนสีตามโหมดมืด/สว่างของเว็บอัตโนมัติ
 - ภาพ PNG เป็นโหมดสว่างเสมอ ความกว้าง 1,440 px (ขนาดจริง {png('per-rai')[0]}×{png('per-rai')[1]} และ {png('money-flow')[0]}×{png('money-flow')[1]})
-- ตัวเลขและข้อความทั้งหมดมาจาก `data.json` ที่ตรวจกับต้นฉบับบทความแล้ว ห้ามแก้ตัวเลขในกราฟด้วยมือ ถ้าต้นฉบับบทความเปลี่ยนให้แจ้งทีมเว็บ
+- ตัวเลขและข้อความทั้งหมดมาจาก `scripts/infographics/green-inequality/data.json` ที่ตรวจกับต้นฉบับบทความแล้ว ห้ามแก้ตัวเลขในกราฟด้วยมือ ถ้าต้นฉบับบทความเปลี่ยนให้แจ้งทีมเว็บ
 - ถ้ากราฟไม่ขึ้น: ตรวจว่า `src` ขึ้นต้นด้วย `/infographics/` และไม่มีช่องว่างแปลก ๆ ในโค้ด
 """
-(H / "EMBED.md").write_text(md, encoding="utf-8"); print("EMBED.md", len(md.encode()), "bytes")
+DOC.write_text(md, encoding="utf-8"); print(DOC.relative_to(ROOT), len(md.encode()), "bytes")
