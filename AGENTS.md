@@ -33,7 +33,7 @@ editors ──► cms.prachatham.com (WordPress, headless)  ──REST──► 
 | Sitemap (all posts) / robots / RSS | `src/app/sitemap.ts`, `src/app/robots.ts`, `src/app/feed.xml/route.ts` |
 | Security headers / CSP | `vercel.json` (add new third-party hosts to CSP or they break silently) |
 | Editor guide (Thai, for the newsroom) | `editor-instruction.md` |
-| Interactive infographics (iframe charts inside a post) | `public/infographics/<topic>/` = shipped files only (served on www as-is, outside the sanitizer); build inputs in `scripts/infographics/<topic>/`; newsroom snippets in `docs/infographics/<topic>-EMBED.md`; how-to in `public/infographics/README.md`. **The files must be on `main` before the post goes live**, or the iframe shows www's 404 page inside the post. |
+| Interactive infographics (iframe charts inside a post) | `public/infographics/<topic>/` = shipped files only (served on www as-is, outside the sanitizer); build inputs in `scripts/infographics/<topic>/`; newsroom snippets in `docs/infographics/<topic>-EMBED.md`; how-to in `public/infographics/README.md`. **The files must be on `main` before the post goes live**, or the iframe shows www's 404 page inside the post. Height: `src/components/InfographicAutoHeight.tsx` (mounted in `src/app/posts/[slug]/page.tsx`) resizes same-origin `/infographics/` iframes from their `{type:"infographic-height",height}` postMessage (rules + 200–6000 px clamp in `src/lib/infographic-height.ts`, tests in `test-infographic-height.mjs`); the snippet's fixed px height is only the no-JS fallback. Droppable: removing the component just leaves the fixed heights. |
 | Weekly health check | `scripts/health_check.py` |
 
 Routes: `/` · `/posts` · `/posts/[slug]` · `/category/[slug]` · `/projects/[slug]` · `/causes` · `/publications` · `/search` · `/about` · `/contact` · `/donate` · `/feed.xml` · `/sitemap.xml` · `/api/{posts,categories,projects,views}`.
@@ -69,5 +69,4 @@ SSH: `ssh prachatham-cms` (alias in `~/.ssh/config`, key `~/.ssh/prachatham_cms`
 
 - Google Search Console: owner to submit `https://www.prachatham.com/sitemap.xml` and, if `cms.` is a verified property, run *Change of address* → www. Track the "เชียงดาว ประชาธรรม" query moving from cms.* to www.
 - Lint debt from the Next 16 upgrade: `react-hooks/error-boundaries` (41, try/catch in async server pages) and `react-hooks/set-state-in-effect` (9) are set to `warn` in `eslint.config.mjs`. Refactor, then restore them to `error`.
-- Infographic auto-height listener (PR #3, commit `426f733`) not merged: `/posts/netzero-cnx` charts use fixed iframe heights 1000/2000 px, so on phones (needs ~1,600 / ~2,730 px) they scroll inside the frame. Merging PR #3 fixes it; until then this is expected.
 - Stale docs: `README.md`, `DEPLOYMENT*.md`, `ISSUES-FIXED.md` predate the 2026 rebuild; trust this file over them.
