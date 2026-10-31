@@ -40,8 +40,16 @@ sanitizer, which strips `<script>` from the post body itself).
 
 ### Auto-resize the iframe to content height
 
-Charts post their height to the parent (`postMessage({type:"infographic-height",height})`). Nothing in
-the app listens yet, so use a fixed px `height` on the iframe (the sanitizer allows px heights only).
+Done: `src/components/InfographicAutoHeight.tsx` (mounted on the post page, logic in
+`src/lib/infographic-height.ts`) listens for `{type:"infographic-height", height}` from a chart.
+It only trusts same-origin messages, only resizes `<iframe>`s under `/infographics/` whose
+`contentWindow` sent the message, and clamps to 200–6000 px. A chart opts in by posting its height:
+
+```js
+parent.postMessage({type:"infographic-height",height:document.documentElement.scrollHeight},location.origin)
+```
+
+Keep a fixed desktop-sized `height` on the iframe as the fallback (the sanitizer allows px heights only).
 
 ### Full reference build
 

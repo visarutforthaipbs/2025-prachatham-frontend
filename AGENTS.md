@@ -34,6 +34,7 @@ editors ──► cms.prachatham.com (WordPress, headless)  ──REST──► 
 | Security headers / CSP | `vercel.json` (add new third-party hosts to CSP or they break silently) |
 | Editor guide (Thai, for the newsroom) | `editor-instruction.md` |
 | Interactive infographics (iframe charts in a post) | `public/infographics/` — how-to in the "Infographics" section below; newsroom snippets in `public/infographics/green-inequality/EMBED.md` |
+| Infographic iframe auto-height | `src/lib/infographic-height.ts` (tested by `test-infographic-height.mjs`) · `src/components/InfographicAutoHeight.tsx` (mounted in `src/app/posts/[slug]/page.tsx`) |
 | Weekly health check | `scripts/health_check.py` |
 
 Routes: `/` · `/posts` · `/posts/[slug]` · `/category/[slug]` · `/projects/[slug]` · `/causes` · `/publications` · `/search` · `/about` · `/contact` · `/donate` · `/feed.xml` · `/sitemap.xml` · `/api/{posts,categories,projects,views}`.
@@ -61,7 +62,7 @@ Rules for every new chart:
 2. **CI + design_system.md.** Site tokens, DB Helvethaica X from `/font/` (400/500/700, min 13 px), 44 px targets, orange once per screen, never colour alone (glyph + text), no external CDN, no looping animation, `prefers-reduced-motion` honoured, `role="img"` + `aria-label`, and a "ดูเป็นตาราง" button that swaps in a real `<table>`.
 3. **Theme.** The iframe is same-origin, so `_shared.js` reads `localStorage['prachatham-theme']` (`light`/`dark`; `system` or unset → `prefers-color-scheme`) and sets `data-theme` on `<html>`. Without this the chart follows the OS while the site follows the toggle.
 4. **PNG fallback is mandatory.** Every chart ships a CI-styled light 2× PNG (rendered from the HTML) for the post body under the iframe: LINE/Facebook/Google and no-JS readers cannot see the iframe. Never reuse an off-brand static image.
-5. **Height.** The iframe snippet carries a fixed `height` (sanitizer allows px heights only — `clamp()`/`<style>` are stripped), sized for desktop; phones are taller, so without an auto-height listener a phone shows an inner scrollbar. Charts already post `{type:"infographic-height",height}` to the parent for a listener to use.
+5. **Height.** The iframe snippet carries a fixed desktop-sized `height` as the no-JS fallback (sanitizer allows px heights only — `clamp()`/`<style>` are stripped). `InfographicAutoHeight` then sets the real height from the chart's `postMessage({type:"infographic-height",height})`. It accepts only same-origin messages, only for `<iframe>`s under `/infographics/` whose `contentWindow` is the sender, clamps to 200–6000 px, and no-ops on anything else. Removing the component is safe: frames keep the fallback height.
 6. **Verify like a reader.** Screenshot the chart inside an iframe in the 768 px article column at 390/1280, light/dark (`hig_check.py` on the raw file is the minimum), and run the snippets in `EMBED.md` through `sanitizeHtml` to prove they survive.
 
 ## 4. Known traps
@@ -73,7 +74,7 @@ Rules for every new chart:
 5. While the CMS is down, www article/list pages fail too (they fetch on revalidate).
 6. Don't block `cms.prachatham.com` in robots.txt: Google must crawl the 301s to move rankings to www.
 7. Infographic per-rai values are **truncated**, not rounded, in the UI (`fmtT` in `_shared.js`): 60,000 ÷ 10,808 = 5.551… must read 5.5 like the article, `toFixed(1)` would print 5.6.
-8. A post-body `<iframe>` can only carry px `height`/`aspect-ratio` (`src/lib/sanitize.ts` `allowedStyles`); responsive heights cannot be written in the snippet.
+8. A post-body `<iframe>` can only carry px `height`/`aspect-ratio` (`src/lib/sanitize.ts` `allowedStyles`); responsive heights are impossible in the snippet, which is why the auto-height listener exists.
 
 ## 5. CMS server (DigitalOcean)
 

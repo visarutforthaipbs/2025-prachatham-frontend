@@ -15,6 +15,7 @@ import { PostViewTracker } from "@/components/PostViewTracker";
 import { PostViewCount } from "@/components/PostViewCount";
 import { TableOfContents } from "@/components/TableOfContents";
 import ReadingProgressBar from "@/components/ReadingProgressBar";
+import InfographicAutoHeight from "@/components/InfographicAutoHeight";
 import dynamic from "next/dynamic";
 const AdSense = dynamic(() => import("@/components/AdSense"));
 const ReaderThaiFree = dynamic(() => import("@/components/ReaderThaiFree"));
@@ -256,6 +257,7 @@ export default async function PostPage({ params }: PostPageProps) {
     return (
       <>
         <ReadingProgressBar />
+        <InfographicAutoHeight />
         {/* JSON-LD Structured Data — escaped to prevent XSS */}
         <script
           type="application/ld+json"
