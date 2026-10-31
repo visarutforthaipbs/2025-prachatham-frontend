@@ -38,14 +38,15 @@ sanitizer, which strips `<script>` from the post body itself).
   self-contained. External CDN scripts loaded from inside the file are fine.
 - `_template.html` is a working starting point — copy it and build from there.
 
-### Optional: auto-resize the iframe to content height
+### Auto-resize the iframe to content height
 
-If your infographic changes height, the template posts its height to the parent
-via `postMessage`. To make the iframe grow automatically, that requires a small
-client-side listener in the app. It is written and waiting in PR #3 (commit
-`426f733`, `src/components/InfographicAutoHeight.tsx`); until it is merged, give the
-iframe a fixed px `height` (the sanitizer allows px heights only). Taller-than-iframe
-content scrolls inside the frame.
+Done. The template posts its height to the parent via `postMessage`
+(`{type: "infographic-height", height}`); `src/components/InfographicAutoHeight.tsx`,
+mounted on every post page, resizes the matching iframe. It only accepts messages
+from the same origin, from an iframe whose `src` path starts with `/infographics/`
+and whose `contentWindow` sent the message, with a numeric height clamped to
+200–6000 px. Still give the iframe a fixed px `height` in the snippet: it is the
+fallback before JS runs (the sanitizer allows px heights only).
 
 ### Full reference build
 
