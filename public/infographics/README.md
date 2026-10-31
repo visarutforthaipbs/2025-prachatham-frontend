@@ -42,5 +42,17 @@ sanitizer, which strips `<script>` from the post body itself).
 
 If your infographic changes height, the template posts its height to the parent
 via `postMessage`. To make the iframe grow automatically, that requires a small
-client-side listener in the app. Ask to have it wired up if you need it —
-otherwise a fixed `aspect-ratio`/`height` on the iframe is simplest.
+client-side listener in the app. It is written and waiting in PR #3 (commit
+`426f733`, `src/components/InfographicAutoHeight.tsx`); until it is merged, give the
+iframe a fixed px `height` (the sanitizer allows px heights only). Taller-than-iframe
+content scrolls inside the frame.
+
+### Full reference build
+
+`green-inequality/` is the reference for a data-driven, CI-compliant chart pair. Only the shipped files live
+here (`per-rai.html`, `money-flow.html`, the two PNG fallbacks). Build inputs are NOT in `public/` (anything
+here is downloadable): `scripts/infographics/green-inequality/` holds `data.json` (the only number source),
+`*.src.html`, `_shared.css/js`, `build.py` (inlines CSS/JS/data, fails on hand-typed numbers),
+`render_png.py` (PNG fallback) and `build_embed.py`, which writes the Thai newsroom guide
+[`docs/infographics/green-inequality-EMBED.md`](../../docs/infographics/green-inequality-EMBED.md).
+See "Infographics" in `AGENTS.md`.

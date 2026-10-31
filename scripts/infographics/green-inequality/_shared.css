@@ -1,0 +1,65 @@
+/* Shared Prachatham-CI styles for the green-inequality charts.
+   Inlined into each chart by build.py. Tokens mirror src/app/globals.css
+   and design_system.md; do not invent colours here. */
+@font-face{font-family:"DB Helvethaica X";src:url("/font/dbhelvethaicax-webfont.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"DB Helvethaica X";src:url("/font/dbhelvethaicaxmed-webfont.woff2") format("woff2");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"DB Helvethaica X";src:url("/font/dbhelvethaicaxbd-webfont.woff2") format("woff2");font-weight:700;font-style:normal;font-display:swap}
+
+:root{
+  color-scheme:light;
+  --brand:#044B41;--brand-ink:#044B41;--cta:#C46211;
+  --label:#1d1d1f;--label-2:#4b5563;--label-3:#5f6672;
+  --sep:rgba(0,0,0,.08);--sep-strong:rgba(0,0,0,.18);
+  --bg:#f7f8f3;--raised:#ffffff;--focus:#038B71;
+  --tint:#e9efe6;            /* brand-tinted neutral for chips / rails */
+  --s1:#044B41;--s2:#3d7a6d;--s3:#7fa89d;--s4:#b9cfc8; /* teal ramp: 4 sources */
+  --s1-on:#ffffff;--s2-on:#ffffff;--s3-on:#1d1d1f;--s4-on:#1d1d1f;
+  --font:"DB Helvethaica X",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+}
+:root[data-theme=dark]{
+  color-scheme:dark;
+  --brand-ink:#8AE0A0;
+  --label:#eef2f0;--label-2:#c5cdc9;--label-3:#9fb0aa;
+  --sep:rgba(255,255,255,.1);--sep-strong:rgba(255,255,255,.22);
+  --bg:#071513;--raised:#0B201D;--focus:#8AE0A0;
+  --tint:#12302b;
+  --s1:#38A96A;--s2:#267d68;--s3:#3f6f64;--s4:#6f8f87;
+  --s1-on:#01211D;--s2-on:#ffffff;--s3-on:#ffffff;--s4-on:#01211D;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;padding:16px;background:var(--bg);color:var(--label-2);font-family:var(--font);
+  font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased}
+@media(min-width:700px){body{padding:24px}}
+h2,h3,p,ul,dl,dd,figure{margin:0}
+.wrap{max-width:760px;margin:0 auto}
+.kicker{font-size:16px;font-weight:700;color:var(--brand-ink)}
+.title{font-size:26px;font-weight:700;line-height:1.25;color:var(--label);margin-top:2px}
+@media(min-width:700px){.title{font-size:32px}}
+.lede{font-size:18px;color:var(--label-2);margin-top:6px}
+.num{font-variant-numeric:tabular-nums}
+
+/* controls: 44px targets, visible focus */
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
+.btn{min-height:44px;min-width:44px;padding:8px 16px;border-radius:999px;border:1.5px solid var(--brand-ink);
+  background:transparent;color:var(--brand-ink);font-weight:700;font-size:18px;line-height:1.4}
+.btn[aria-pressed=true]{background:var(--brand);color:#fff;border-color:var(--brand)}
+:root[data-theme=dark] .btn[aria-pressed=true]{background:var(--s1);color:var(--s1-on);border-color:var(--s1)}
+
+/* notes + source */
+.foot{margin-top:18px;padding-top:12px;border-top:1px solid var(--sep-strong);font-size:15px;line-height:1.55;color:var(--label-3)}
+.foot p+p{margin-top:6px}
+.foot b{font-weight:700;color:var(--label-2)}
+
+/* real table alternative */
+.tbl[hidden]{display:none}
+.tbl{margin-top:14px;overflow-x:auto}
+.tbl table{width:100%;border-collapse:collapse;font-size:16px;line-height:1.5}
+.tbl caption{text-align:left;font-weight:700;color:var(--label);padding-bottom:6px;font-size:17px}
+.tbl th,.tbl td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--sep-strong)}
+.tbl th{font-weight:700;color:var(--label);background:var(--tint)}
+.tbl td.r,.tbl th.r{text-align:right}
+
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
