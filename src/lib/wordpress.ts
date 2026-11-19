@@ -171,7 +171,7 @@ export class WordPressAPI {
       const url = buildApiUrl("posts", searchParams);
 
       const response = await fetch(url, {
-        next: { revalidate: 60 },
+        next: { revalidate: 300 },
       });
 
       if (!response.ok) {
@@ -205,7 +205,7 @@ export class WordPressAPI {
       });
 
       const response = await fetch(buildApiUrl("posts", searchParams), {
-        next: { revalidate: 60 },
+        next: { revalidate: 300 },
       });
 
       if (!response.ok) {
@@ -263,7 +263,7 @@ export class WordPressAPI {
       const url = buildApiUrl("posts", searchParams);
 
       const response = await fetch(url, {
-        next: { revalidate: 60 },
+        next: { revalidate: 300 },
       });
 
       if (!response.ok) {
@@ -322,7 +322,7 @@ export class WordPressAPI {
       const response = await fetch(
         buildApiUrl("posts", postsParams),
         {
-          next: { revalidate: 60 },
+          next: { revalidate: 300 },
         }
       );
 
@@ -396,7 +396,7 @@ export class WordPressAPI {
       const response = await fetch(
         buildApiUrl("posts", searchParams),
         {
-          next: { revalidate: 60 },
+          next: { revalidate: 300 },
         }
       );
 
@@ -466,7 +466,7 @@ export class WordPressAPI {
       const url = buildApiUrl("projects", searchParams);
 
       const response = await fetch(url, {
-        next: { revalidate: 60 },
+        next: { revalidate: 300 },
       });
 
       if (!response.ok) {
@@ -498,7 +498,7 @@ export class WordPressAPI {
       });
 
       const response = await fetch(buildApiUrl("projects", searchParams), {
-        next: { revalidate: 60 },
+        next: { revalidate: 300 },
       });
 
       if (!response.ok) {

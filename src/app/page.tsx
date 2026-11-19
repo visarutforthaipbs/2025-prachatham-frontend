@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 };
 
 // Revalidate every 60 seconds
-export const revalidate = 60;
+export const revalidate = 300;
 
 async function getFeaturedNews() {
   try {

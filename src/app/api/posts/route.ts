@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
       headers: {
         "Content-Type": "application/json",
       },
-      next: { revalidate: 60 }, // Cache for 60 seconds
+      next: { revalidate: 300 }, // Cache for 5 minutes
     });
 
     if (!response.ok) {
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(data, {
       status: 200,
       headers: {
-        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=300",
         "X-WP-TotalPages": totalPages,
         "X-WP-Total": total,
       },
