@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 """Render the CI-styled PNG fallbacks (light, 2x) from the real HTML charts.
 
-  python3 scripts/infographics/green-inequality/render_png.py   # needs playwright + local Google Chrome
+  python3 scripts/infographics/green-inequality/render_png.py   # needs playwright + Chrome for Testing ($BOT_CHROME overrides)
 
 Output: per-rai.png, money-flow.png (1440 px wide). Used under each iframe in the WP post
 for LINE/Facebook/Google and readers without JS. The interactive-only bits (table toggle,
 "tap for detail" hint) are hidden in the image because they mean nothing in a still.
 Re-run whenever data.json or a *.src.html template changes (after build.py).
 """
-import threading, http.server, socketserver, functools, pathlib
+import os, threading, http.server, socketserver, functools, pathlib
 from playwright.sync_api import sync_playwright
 
+# Fleet rule (bot-browser skill): never launch the owner's /Applications Chrome; use Chrome for Testing, override with $BOT_CHROME.
+# browser.launch() gives each run a throwaway temp profile.
+BOT_CHROME = os.environ.get("BOT_CHROME", os.path.expanduser("~/.lighthouse/browsers/current/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"))
 ROOT = pathlib.Path(__file__).resolve().parents[3]
 PUB = ROOT / "public"; OUT = PUB / "infographics/green-inequality"
 class Q(http.server.SimpleHTTPRequestHandler):
@@ -18,7 +21,7 @@ class Q(http.server.SimpleHTTPRequestHandler):
 srv = socketserver.TCPServer(("127.0.0.1", 0), functools.partial(Q, directory=str(PUB)))
 port = srv.server_address[1]; threading.Thread(target=srv.serve_forever, daemon=True).start()
 with sync_playwright() as p:
-    b = p.chromium.launch(headless=True, executable_path="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
+    b = p.chromium.launch(headless=True, executable_path=BOT_CHROME)
     for n in ("per-rai", "money-flow"):
         ctx = b.new_context(viewport={"width": 720, "height": 900}, device_scale_factor=2, color_scheme="light")
         ctx.add_init_script("localStorage.setItem('prachatham-theme','light')")

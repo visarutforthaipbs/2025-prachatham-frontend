@@ -28,7 +28,7 @@ editors ──► cms.prachatham.com (WordPress, headless)  ──REST──► 
 | Light/dark theme | `src/lib/theme.tsx` + pre-paint script in `src/app/layout.tsx` (defaults to system) |
 | Design tokens, type scale, dark-mode safety net | `src/app/globals.css` |
 | Design rules | `design_system.md` (rules) · `design-audit.md` (why) |
-| HIG regression check | `scripts/hig_check.py` (needs a running prod server) |
+| HIG regression check | `scripts/hig_check.py` (needs a running prod server; launches Chrome for Testing, never `/Applications/Google Chrome.app` — fleet `bot-browser` rule; override with `$BOT_CHROME`. Same for `scripts/infographics/green-inequality/render_png.py`) |
 | Redirects (legacy WP permalinks, /tag, /about-us…) | `next.config.ts` → `redirects()` |
 | Sitemap (all posts) / robots / RSS | `src/app/sitemap.ts`, `src/app/robots.ts`, `src/app/feed.xml/route.ts` |
 | Security headers / CSP | `vercel.json` (add new third-party hosts to CSP or they break silently) |

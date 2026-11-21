@@ -3,11 +3,11 @@
 
 Usage:  npm run build && npx next start -p 3311 &
         python3 scripts/hig_check.py http://localhost:3311 /tmp/hig-out
-Needs: playwright (pip) + a local Google Chrome. Writes <route>-<width>-<scheme>.png
+Needs: playwright (pip) + Chrome for Testing (fleet bot browser; override path with $BOT_CHROME). Writes <route>-<width>-<scheme>.png
 + measure.json; prints one JSON line per capture. Pass = fails 0, lowc_count 0,
 small_count 0, h1count 1 on every line (see design_system.md section 6).
 """
-import json, sys, pathlib
+import json, os, sys, pathlib
 from playwright.sync_api import sync_playwright
 BASE = sys.argv[1]; OUT = pathlib.Path(sys.argv[2]); OUT.mkdir(parents=True, exist_ok=True)
 ROUTES = json.loads(sys.argv[3]) if len(sys.argv) > 3 else {
@@ -42,7 +42,10 @@ MEASURE = r"""() => {
  const fills = [...document.querySelectorAll('a,button')].filter(e=>{const r=e.getBoundingClientRect(); if(r.top>innerHeight||r.bottom<0||r.width<2) return false; const c=getComputedStyle(e).backgroundColor.match(/[\d.]+/g); if(!c) return false; if(c.length>3&&+c[3]<0.9) return false; const [R,G,B]=c.map(Number); return Math.max(R,G,B)-Math.min(R,G,B)>60;}).map(e=>(e.textContent||e.getAttribute('aria-label')||'').trim().slice(0,20));
  return {body: bs.fontSize+' '+bs.lineHeight, h1count: document.querySelectorAll('h1').length, heads, target_fails: ctl, small_text: [...new Set(small)].slice(0,25), small_count: small.length, low_contrast: [...new Set(lowc)].slice(0,25), lowc_count: lowc.length, filled_accent_above_fold: fills, overflowX: document.documentElement.scrollWidth > innerWidth, anims: [...document.querySelectorAll('*')].filter(e=>getComputedStyle(e).animationName!=='none' && getComputedStyle(e).animationIterationCount==='infinite').length};
 }"""
-exe = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+# Fleet rule (bot-browser skill): never launch the owner's /Applications Chrome; use Chrome for Testing, override with $BOT_CHROME.
+# browser.launch() gives each run a throwaway temp profile.
+BOT_CHROME = os.environ.get("BOT_CHROME", os.path.expanduser("~/.lighthouse/browsers/current/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"))
+exe = BOT_CHROME
 res = []
 with sync_playwright() as p:
     b = p.chromium.launch(headless=True, executable_path=exe)
